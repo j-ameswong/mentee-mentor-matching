@@ -10,8 +10,8 @@ get "/login" do
   erb :login
 end
 
-get "/singup" do
-  erb :singup
+get "/signup" do
+  erb :signup
 end
 
 get "/match" do
