@@ -16,7 +16,7 @@ end
 # Require application files and directories
 require_if_exist "controllers"
 require_if_exist "helpers/helpers"
-require_if_exist "db/db"
+require_if_exist "db/db.rb" #changed to db.rb because it didn't work for me without it for some reason
 require_if_exist "models"
 
 # Sessions
