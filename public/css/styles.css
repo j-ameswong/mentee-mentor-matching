@@ -1,0 +1,40 @@
+html {
+    width: 100%;
+    height: 100%;
+}
+
+header {
+    display: flex;
+    width: fit-content;
+    background-color: #18a999;
+}
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    width: fit-content;
+    height: fit-content;
+    background-color: #18a999;
+}
+
+li {
+    display: inline-block;
+}
+
+li a {
+    display: block;
+    color: black;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+li a:hover {
+    background-color: #1E2EDE;
+}
+
+#logo {
+    width: 30%;
+}
