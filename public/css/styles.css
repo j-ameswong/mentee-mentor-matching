@@ -3,38 +3,66 @@ html {
     height: 100%;
 }
 
+body {
+    margin: 0%;
+}
+
 header {
-    display: flex;
-    width: fit-content;
+    display: grid;
+    grid-template-columns: 30vw 20vw 20vw 20vw 10vw;
+    grid-template-rows: 10vh;
     background-color: #18a999;
-}
-
-ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    width: fit-content;
-    height: fit-content;
-    background-color: #18a999;
-}
-
-li {
-    display: inline-block;
-}
-
-li a {
-    display: block;
-    color: black;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
-}
-
-li a:hover {
-    background-color: #1E2EDE;
+    margin: 0%;
 }
 
 #logo {
-    width: 30%;
+    display: inline-block;
+    grid-column: 1 / 2;
+    grid-row: 1 / 2;
+    
+    max-width: 40vw;
+    max-height: 9vh;
+    margin-left: 0.5vw;
+    margin-top: 0.5vh;
+    margin-bottom: 0.5vh;
+}
+
+#navHome {
+    display: inline-block;
+    grid-column: 2 / 3;
+    grid-row: 1 / 2;
+
+    place-self: center;
+}
+
+#navMatches {
+    display: inline-block;
+    grid-column: 3 / 4;
+    grid-row: 1 / 2;
+    
+    place-self: center;
+}
+
+#navProfile {
+    display: inline-block;
+    grid-column: 5 / 6;
+    grid-row: 1 / 2;
+
+    place-self: center;
+}
+
+header a {
+    display: block;
+    color: black;
+    text-align: center;
+    width: 90%;
+    height: 8vh;
+    
+    font-size: 2em;
+    line-height: 8vh;    
+    text-decoration: none;
+}
+
+header a:hover {
+    background-color: #8AF3FF;
 }
