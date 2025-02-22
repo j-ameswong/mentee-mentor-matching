@@ -1,9 +1,18 @@
-html {
-    width: 100%;
-    height: 100%;
+.centerer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-self: center;
 }
 
+/* html {
+    width: 100%;
+    height: 100%;
+} */
+
 body {
+    width: 100vw;
+    height: 100vh;
     margin: 0%;
 }
 
@@ -13,13 +22,15 @@ header {
     grid-template-rows: 10vh;
     background-color: #18a999;
     margin: 0%;
+
+    position: sticky;
 }
 
 #logo {
     display: inline-block;
     grid-column: 1 / 2;
     grid-row: 1 / 2;
-    
+
     max-width: 40vw;
     max-height: 9vh;
     margin-left: 0.5vw;
@@ -39,7 +50,7 @@ header {
     display: inline-block;
     grid-column: 3 / 4;
     grid-row: 1 / 2;
-    
+
     place-self: center;
 }
 
@@ -51,18 +62,67 @@ header {
     place-self: center;
 }
 
+#signupPage {
+    width: 100%;
+    height: 80%;
+}
+
+#signup {
+    display: flex;
+    flex-direction: column;
+
+    outline-style: solid;
+    outline-width: thin;
+    outline-color: black;
+    line-height: 8px;
+
+    width: 50vw;
+    height: 60vh;
+}
+
+input {
+    width: 90%;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+    flex-basis: 90%;
+    flex: 1;
+}
+
 header a {
     display: block;
     color: black;
     text-align: center;
     width: 90%;
     height: 8vh;
-    
+
     font-size: 2em;
-    line-height: 8vh;    
+    line-height: 8vh;
     text-decoration: none;
 }
 
 header a:hover {
     background-color: #8AF3FF;
+}
+
+footer {
+    display: grid;
+    grid-template-columns: 10vw 20vw 40vw 20vw 10vw;
+    width: 100%;
+    height: 10vh;
+    background-color: #18a999;
+    margin: 0%;
+
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
 }

@@ -14,8 +14,8 @@ get "/signup" do
   erb :signup
 end
 
-get "/match" do
-  erb :match
+get "/matches" do
+  erb :matches
 end
 
 get "/profile" do

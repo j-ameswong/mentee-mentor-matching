@@ -6,13 +6,63 @@
   <meta charset="utf-8" />
   <title>Sign Up</title>
   <meta name="author" content="Team 17">
-  <link rel="stylesheet" href="/public/css/styles.css" />
+  <link rel="stylesheet" href="/css/styles.css" />
 </head>
 
-<%= erb :header %>
+<%= erb :header2 %>
 
-<footer>
-    This is a footer.
-</footer>
+<body>
+  <div id="signupPage" class="centerer">
+    <section id="signup" class="centerer">
+        <h2>Sign up for new account</h2>
+        <form method="get">
+          <label>
+            <div class="row centerer">
+              <div class="column">
+                <p>First Name:</p>
+                <input name="first-name" autocomplete="on" />
+              </div>
+              <div class="column">
+                <p>Last Name:</p>
+                <input name="last-name" autocomplete="on" />
+              </div>
+            </div>
+            <div class="row centerer">
+              <div class="column">
+                <p>University Email:</p>
+                <input name="email-address" type="email" autocomplete="on" />
+              </div>
+              <div class="column">
+                <p>DoB:</p>
+                <input name="dob" type="date" />
+              </div>
+            </div>
+            <div class="column">
+              <div class="row centerer">
+                <p>Password:</p>
+              </div>
+              <div class="row centerer">
+                <input name="password" type="password" />
+              </div>
+            
+              <div class="row centerer">
+                <p>Confirm Password:</p>
+              </div>
+              <div class="row centerer">
+                <input name="password-confirm" type="password" />
+              </div>
+              <br>
+              <div class="row centerer">
+                <input type="submit" value="Register">
+              </div>
+            </div>
+          </label>
+        </form>
+        <br>
+        <a href="/login">Log in instead</a>
+    </section>
+</body>
+
+<%= erb :footer %>
 
 </html>

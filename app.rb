@@ -2,6 +2,9 @@
 require "require_all"
 require "sinatra"
 
+# Set up public folder
+set :public_folder, __dir__ + '/public'
+
 # Bootstrapping method to only require files/whole directories if they exist
 def require_if_exist(file_path)
   abs_file_path = File.expand_path(file_path, __dir__)
