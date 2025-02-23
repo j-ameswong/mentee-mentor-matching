@@ -11,9 +11,34 @@
 
 <%= erb :header2 %>
 
-<body id="login">
-  <p>Login Page.</p>
-  <a href="/signup">Sign up</a>
+<body>
+  <div class="signupPage centerer">
+    <section id="login" class="centerer">
+        <h2>Log in</h2>
+        <form method="get">
+          <label>
+            <div class="row centerer">
+              <div class="column">
+                <p>University Email:</p>
+                <input name="email-address" type="email" autocomplete="on" />
+              </div>
+              <div class="column">
+                <p>Password:</p>
+                <input name="password" type="password" />
+              </div>
+            </div>
+            <br>
+            <div class="column">
+              <div class="row centerer">
+                <input type="submit" value="Log in">
+              </div>
+            </div>
+          </label>
+        </form>
+        <br>
+        <a href="/signup">Sign up instead</a>
+    </section>
+  
 </body>
 
 <%= erb :footer %>

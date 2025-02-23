@@ -5,20 +5,17 @@
     align-self: center;
 }
 
-/* html {
-    width: 100%;
-    height: 100%;
-} */
-
 body {
     width: 100vw;
     height: 100vh;
     margin: 0%;
+
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
 
 header {
     display: grid;
-    grid-template-columns: 30vw 20vw 20vw 20vw 10vw;
+    grid-template-columns: 20vw 10vw 20vw 20vw 20vw 10vw;
     grid-template-rows: 10vh;
     background-color: #18a999;
     margin: 0%;
@@ -38,15 +35,21 @@ header {
     margin-bottom: 0.5vh;
 }
 
-#navHome {
+#logo-connect {
     display: inline-block;
     grid-column: 2 / 3;
     grid-row: 1 / 2;
 
+    max-width: 100%;
+    max-height: 9vh;
+    margin-left: 0.5vw;
+    margin-top: 0.5vh;
+    margin-bottom: 0.5vh;
+
     place-self: center;
 }
 
-#navMatches {
+#navHome {
     display: inline-block;
     grid-column: 3 / 4;
     grid-row: 1 / 2;
@@ -54,15 +57,23 @@ header {
     place-self: center;
 }
 
-#navProfile {
+#navMatches {
     display: inline-block;
-    grid-column: 5 / 6;
+    grid-column: 4 / 5;
     grid-row: 1 / 2;
 
     place-self: center;
 }
 
-#signupPage {
+#navProfile {
+    display: inline-block;
+    grid-column: 6 / 7;
+    grid-row: 1 / 2;
+
+    place-self: center;
+}
+
+.signupPage {
     width: 100%;
     height: 80%;
 }
@@ -80,6 +91,20 @@ header {
     height: 60vh;
 }
 
+#login {
+    display: flex;
+    flex-direction: column;
+
+    outline-style: solid;
+    outline-width: thin;
+    outline-color: black;
+    line-height: 8px;
+
+    width: 40vw;
+    height: 50vh;
+    margin-bottom: 10vh;
+}
+
 input {
     width: 90%;
 }
@@ -89,6 +114,9 @@ input {
     flex-direction: row;
     flex-wrap: wrap;
     width: 100%;
+
+    align-items: center;
+    text-align: center;
 }
 
 .column {
@@ -96,6 +124,9 @@ input {
     flex-direction: column;
     flex-basis: 90%;
     flex: 1;
+
+    align-items: center;
+    text-align: center;
 }
 
 header a {
