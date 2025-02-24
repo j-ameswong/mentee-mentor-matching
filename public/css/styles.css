@@ -190,3 +190,45 @@ footer {
     bottom: 0px;
     left: 0px;
 }
+
+.indexPageText {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: flex-start;
+    align-content: center;
+    gap: 1em;
+    
+}
+
+.howToUse {
+    border-radius: 25px;
+    background: #F7F0F0;
+    padding: 10px;
+    width: 35%;
+    height: 30%;
+}
+
+.currentMatches {
+    border-radius: 25px;
+    background: #F7F0F0;
+    padding: 10px;
+    width: 35%;
+    height: 30%;
+}
+
+.nicePicture {
+    border-radius: 25px;
+    background: #F7F0F0;
+    padding: 10px;
+    width: 30%;
+    height: 30%;
+}
+
+.extraText {
+    border-radius: 25px;
+    background: #F7F0F0;
+    padding: 10px;
+    width: 80%;
+    height: 50%; 
+}
