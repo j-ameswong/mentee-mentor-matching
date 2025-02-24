@@ -129,6 +129,39 @@ input {
     text-align: center;
 }
 
+.matchesPage {
+    width: 100%;
+    height: 80%;
+}
+
+#match {
+    display: flex;
+    flex-direction: column;
+
+    outline-style: solid;
+    outline-width: thin;
+    outline-color: black;
+    line-height: 10px;
+
+    min-width: 60vw;
+    height: 75vh;
+}
+
+#matchPicture img {
+    max-width: 150px;
+    max-height: 150px;
+}
+
+.matchesPage ul {
+    display: block;
+    padding-left: 0;
+    list-style-position: inside;
+}
+
+.matchesPage ul li {
+    padding: 10px 0;
+}
+
 header a {
     display: block;
     color: black;
