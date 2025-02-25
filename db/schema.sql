@@ -1,4 +1,4 @@
-CREATE TABLE players (
+CREATE TABLE user (
     id INTEGER PRIMARY KEY,
     first_name TEXT,
     last_name TEXT,
