@@ -55,3 +55,7 @@ get "/logout" do
   session.clear
   erb :logout
 end
+
+get "/suspension" do
+    erb :suspension
+end
