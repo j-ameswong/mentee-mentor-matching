@@ -4,5 +4,6 @@ CREATE TABLE user (
     last_name TEXT,
     university_email TEXT,
     date_of_birth TEXT,
-    password_ TEXT
+    password_ TEXT,
+    acc_type TEXT
 );
