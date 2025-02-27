@@ -3,7 +3,7 @@ require "sequel"
 
 # Start to build the path to the database/log file
 path = "#{__dir__}/db"
-path += "_test" if ENV["APP_ENV"] == "test"
+path += "_test" #if ENV["APP_ENV"] == "test"
 
 # Instantiate a logger for the database
 logger_file_path = "#{path}.log"
@@ -17,3 +17,5 @@ if File.exist?(db_file_path)
 else
   logger.warn("Database file not found (looking for '#{db_file_path}')")
 end
+
+
