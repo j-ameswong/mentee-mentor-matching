@@ -114,3 +114,18 @@ def gen_test_db(path)
                 date_of_birth: row[4], password_: row[5], acc_type: row[6])
   end
 end
+
+def gen_uid(pass)
+  idd = ''
+  unique = false
+  while not unique
+    (0..8).each do |x|
+      idd += password_[counter][x].ord.to_s[-1]
+    end
+    if not id.include? idd
+      unique = true
+    end
+  end
+
+  return idd
+end
