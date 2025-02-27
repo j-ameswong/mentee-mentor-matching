@@ -11,7 +11,7 @@ require "csv"
 require "digest"
 require "sequel"
 
-# data = CSV.read("./Customer_Names.csv")
+data = CSV.read("./Customer_Names.csv")
 
 def gen_new(data)
   id = []
@@ -50,7 +50,7 @@ def gen_new(data)
     end
 
     date_of_birth[counter] = (1998 + rand(9)).to_s + '/' + month + '/' + day
-    password_[counter] = (Digest::SHA256.hexdigest ('salt' + row[0] + row[1] + date_of_birth[counter]))[0..11]
+    password_[counter] = (Digest::SHA256.hexdigest ('salt' + row[0] + row[1] + date_of_birth[counter]))
 
     r = rand()
     if r < 0.3
@@ -61,13 +61,20 @@ def gen_new(data)
 
     idd = ''
     unique = false
+    count = 0
     while not unique
       (0..8).each do |x|
-        idd += password_[counter][x].ord.to_s[-1]
+        idd += (password_[counter][x].ord + count).to_s[-1]
       end
       if not id.include? idd
         unique = true
+      else
+        count += 1
       end
+    end
+
+    if idd.length < 9
+      idd = idd + '0'* (9 - idd.length) 
     end
     id[counter] = idd
 
@@ -91,12 +98,12 @@ def write_to_csv(combined_data)
   end
 end
 
-# write_to_csv(gen_new(data))
+#write_to_csv(gen_new(data))
 
 def gen_test_db(path)
-  DB = Sequel.sqlite(path)
+  db = Sequel.sqlite(path)
 
-  DB.create_table? :user do
+  db.create_table? :users do
     primary_key :id
     String :first_name
     String :last_name
@@ -106,7 +113,7 @@ def gen_test_db(path)
     String :acc_type
   end
 
-  users = DB[:user]
+  users = db[:users]
   data = CSV.read("./mentormentee.csv")
 
   data[1..-1].each do |row|
@@ -115,17 +122,4 @@ def gen_test_db(path)
   end
 end
 
-def gen_uid(pass)
-  idd = ''
-  unique = false
-  while not unique
-    (0..8).each do |x|
-      idd += password_[counter][x].ord.to_s[-1]
-    end
-    if not id.include? idd
-      unique = true
-    end
-  end
-
-  return idd
-end
+gen_test_db('../db/db_test.sqlite3')

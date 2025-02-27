@@ -22,7 +22,7 @@ class User < Sequel::Model
   def self.gen_pass_hash(id, pass = 12345678)
     user = DB[:users].first(id: id)
 
-    password = (Digest::SHA256.hexdigest ('salt' +  + last_name + date_of_birth[counter] + pass))
+    password = (Digest::SHA256.hexdigest ('salt' + user + last_name + date_of_birth[counter] + pass))
   end
 
   def self.gen_uid(pass)
@@ -39,7 +39,13 @@ class User < Sequel::Model
       unique = true if not all_ids.include? idd
       counter += 1
     end
-  
+    
+    if idd[0] == 0
+      idd[0] = 1
+    end
+    #if idd.length < 9
+    #  idd = idd + '0'* (9 - idd.length) 
+    #end
     return idd
   end
 end
