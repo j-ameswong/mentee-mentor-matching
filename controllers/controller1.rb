@@ -59,3 +59,7 @@ end
 get "/suspension" do
     erb :suspension
 end
+
+get "/deleted-account" do
+    erb :accountDeleted
+end
