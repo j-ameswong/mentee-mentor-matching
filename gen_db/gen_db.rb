@@ -9,8 +9,9 @@ id INTEGER PRIMARY KEY,
 =end
 require "csv"
 require "digest"
+require "sequel"
 
-data = CSV.read("./Customer_Names.csv")
+# data = CSV.read("./Customer_Names.csv")
 
 def gen_new(data)
   id = []
@@ -92,23 +93,24 @@ end
 
 # write_to_csv(gen_new(data))
 
-require "sequel"
-DB = Sequel.sqlite("../db/db_test.sqlite3")
+def gen_test_db(path)
+  DB = Sequel.sqlite(path)
 
-DB.create_table? :user do
-  primary_key :id
-  String :first_name
-  String :last_name
-  String :university_email
-  String :date_of_birth
-  String :password_
-  String :acc_type
-end
+  DB.create_table? :user do
+    primary_key :id
+    String :first_name
+    String :last_name
+    String :university_email
+    String :date_of_birth
+    String :password_
+    String :acc_type
+  end
 
-users = DB[:user]
-data = CSV.read("./mentormentee.csv")
+  users = DB[:user]
+  data = CSV.read("./mentormentee.csv")
 
-data[1..-1].each do |row|
-  users.insert(id: row[0], first_name: row[1], last_name: row[2], university_email: row[3], 
-              date_of_birth: row[4], password_: row[5], acc_type: row[6])
+  data[1..-1].each do |row|
+    users.insert(id: row[0], first_name: row[1], last_name: row[2], university_email: row[3], 
+                date_of_birth: row[4], password_: row[5], acc_type: row[6])
+  end
 end
