@@ -1,8 +1,10 @@
 require_relative '../app'
 require_relative '../models/user'
 
-users = User.select(:id).map(:id)
-puts "Found!" if users.inspect.include? 998960510.to_s
+# this file is for testing the database with ruby sequel commands
+
+#users = User.select(:id).map(:id)
+#puts User.gen_pass_hash(12345677, 'password')
 
 
 #puts User.gen_uid('1119406c9491')

@@ -1,0 +1,18 @@
+get "/signup" do
+  redirect "/" if session[:logged_in]
+  @user = User.new
+  erb :signup
+end
+
+post "/signup" do
+  @error = "Please correct the information below"
+  @user = User.new
+
+  if @user.signup(params)
+    @user[:id] = @user.gen_uid(params.fetch("university_email", "").strip)
+    @user.save
+    redirect "/"
+  end
+
+  erb :signup
+end

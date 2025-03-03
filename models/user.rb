@@ -1,43 +1,81 @@
+require 'sequel'
 require_relative '../db/db'
 
 # Specify user table, by default it downcases User and adds an s to the end
 class User < Sequel::Model
-  def self.add_user(options = {})
-    id = options.fetch(:id, 00000000)
-    first_name = options.fetch(:first_name, nil) 
-    last_name = options.fetch(:last_name, nil) 
-    university_email = options.fetch(:university_email, nil)
-    date_of_birth = options.fetch(:date_of_birth, nil)
-    password_ = options.fetch(:password_, nil)
-    acc_type = options.fetch(:acc_type, nil)
-    
-    DB[:users].insert(id: id, first_name: first_name, last_name: last_name, university_email: university_email, date_of_birth: date_of_birth, password_: password_, acc_type: acc_type)
+  def check_id_exists(id)
+    return false if User.first(id: id).nil?
+    true
   end
 
-  def self.check_id_exists(id)
-    return false if DB[:users].first(id: id).nil?
-    return true
+  def signup(params)
+    username = params.fetch("username", "").strip
+    errors.add("username", "cannot be empty") if username.empty?
+
+    errors.add("username", "already taken") unless User.first(university_email: username).nil?
+
+    data = params.fetch("data", "").strip
+    errors.add("data", "cannot be empty") if data.empty?
+
+    password = params.fetch("password", "").strip
+    errors.add("password", "cannot be empty") if password.empty?
+
+    return false unless errors.empty?
+
+    self.username = username
+
+    # Set up AES for encryption.
+    aes = OpenSSL::Cipher.new('AES-128-CBC').encrypt
+
+    # Generate a random IV.
+    self.iv = Sequel.blob(aes.random_iv)
+
+    # Generate a random salt.
+    self.salt = Sequel.blob(OpenSSL::Random.random_bytes(16))
+
+    # Get the key from the password and salt.
+    aes.key = OpenSSL::PKCS5.pbkdf2_hmac_sha1(password, salt, 20_000, 16)
+
+    # Encrypt the data
+    self.data_crypt = Sequel.blob(aes.update(data) + aes.final)
+
+    true
   end
 
-  def self.gen_pass_hash(id, pass = 12345678)
-    user = DB[:users].first(id: id)
+  def login(params)
+    password = params.fetch("password", "").strip
 
-    password = (Digest::SHA256.hexdigest ('salt' + user + last_name + date_of_birth[counter] + pass))
+    # Set up AES for decryption.
+    aes = OpenSSL::Cipher.new('AES-128-CBC').decrypt
+
+    # Set the IV.
+    aes.iv = iv
+
+    # Get the key from the password and salt.
+    aes.key = OpenSSL::PKCS5.pbkdf2_hmac_sha1(password, salt, 20_000, 16)
+
+    # Try to decrypt the data.
+    begin
+      aes.update(data_crypt) + aes.final
+    rescue OpenSSL::Cipher::CipherError
+      nil
+    end
   end
 
-  def self.gen_uid(pass)
-    idd = ''
-    unique = false
-    all_ids = DB[:users][:id]
+  def gen_uid(username)
+    self.idd = '000000000'
+    self.unique = false
+    all_usernames = DB[:university_email].all
 
-    counter = 0
+    self.attempts = 0
     while not unique
       (0..8).each do |x|
-        idd += (pass[x].ord + counter).to_s[-1] 
+        idd[x] = (username[x].ord + attempts).to_s[-1] 
       end
 
-      unique = true if not all_ids.include? idd
-      counter += 1
+      all_ids.each do |each_id|
+        unique = false if each_id == idd
+      end
     end
     
     if idd[0] == 0
@@ -48,4 +86,17 @@ class User < Sequel::Model
     #end
     return idd
   end
+
+=begin
+  def self.gen_pass_hash(id, pass = 12345678)
+    user = DB[:users].where(id: id)
+    last_name = user[:last_name]
+    date_of_birth = user[:date_of_birth]
+
+    password = (Digest::SHA256.hexdigest ('salt' + pass))
+    return password
+  end
+
+
+=end
 end
