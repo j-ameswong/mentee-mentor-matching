@@ -1,8 +1,9 @@
 require_relative '../app'
-require_relative '../models/user'
+require_relative '../models/user.rb'
 
 # this file is for testing the database with ruby sequel commands
-
+@user = User.new()
+puts @user.gen_uid('johnsmith@email.com')
 #users = User.select(:id).map(:id)
 #puts User.gen_pass_hash(12345677, 'password')
 

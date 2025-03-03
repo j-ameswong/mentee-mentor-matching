@@ -104,21 +104,15 @@ def gen_test_db(path)
   db = Sequel.sqlite(path)
 
   db.create_table? :users do
-    primary_key :id
+    Integer primary_key :id
     String :first_name
     String :last_name
     String :university_email
     String :date_of_birth
-    String :password_
+    String :iv
+    String :salt
+    String :data_crypt
     String :acc_type
-  end
-
-  users = db[:users]
-  data = CSV.read("./mentormentee.csv")
-
-  data[1..-1].each do |row|
-    users.insert(id: row[0], first_name: row[1], last_name: row[2], university_email: row[3], 
-                date_of_birth: row[4], password_: row[5], acc_type: row[6])
   end
 end
 
