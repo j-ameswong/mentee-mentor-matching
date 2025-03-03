@@ -10,6 +10,8 @@ id INTEGER PRIMARY KEY,
 require "csv"
 require "digest"
 require "sequel"
+require_relative '../models/user.rb'
+require 'openssl'
 
 data = CSV.read("./Customer_Names.csv")
 
@@ -49,8 +51,7 @@ def gen_new(data)
       day = day.to_s
     end
 
-    date_of_birth[counter] = (1998 + rand(9)).to_s + '/' + month + '/' + day
-    password_[counter] = (Digest::SHA256.hexdigest ('salt' + row[0] + row[1] + date_of_birth[counter]))
+    date_of_birth[counter] = (1998 + rand(9)).to_s + '-' + month + '-' + day
 
     r = rand()
     if r < 0.3
@@ -85,9 +86,48 @@ def gen_new(data)
   return(combined_data)
 end
 
-# gen_new(data).each do |x|
-#   puts x.to_s
-# end
+def gen_profile(data)
+  user = User.new
+  rand_user = (rand() * data.length).to_i
+  
+  first_name = data[rand_user][0]
+  last_name = data[rand_user][1]
+
+  email = (first_name + last_name)[0..6].downcase + '@sheffield.ac.uk'
+
+  id = user.gen_uid(email)
+
+  year = 1995 + rand(10)
+  month = rand(13)
+  if month == 2
+    day = rand(29)
+  elsif [1,3,5,7,8,10,12].include? month
+    day = rand(32)
+  else
+    day = rand(31)
+  end
+
+  date_of_birth = year.to_s + '-' + month.to_s + '-' + day.to_s
+  
+  if rand() < 0.3
+    acc_type = 'mentor'
+  else
+    acc_type = 'mentee'
+  end
+
+  params = {
+  "id" => id,
+  "university_email" => email,
+  "date_of_birth" => date_of_birth,
+  "first_name" => first_name,
+  "last_name" => last_name,
+  "acc_type" => acc_type,
+  "password" => 'password'
+  }
+
+  user.signup(params)
+  user.save
+end
 
 def write_to_csv(combined_data)
   CSV.open("./mentormentee.csv", "wb") do |csv|
@@ -116,4 +156,6 @@ def gen_test_db(path)
   end
 end
 
-gen_test_db('../db/db_test.sqlite3')
+0..100.times do
+  gen_profile(data)
+end

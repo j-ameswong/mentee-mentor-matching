@@ -28,6 +28,8 @@ class User < Sequel::Model(DB)
 
     self.last_name = params.fetch("last_name", "").strip
 
+    self.acc_type = params.fetch("acc_type", "").strip
+
     # Set up AES for encryption.
     aes = OpenSSL::Cipher.new('AES-128-CBC').encrypt
 

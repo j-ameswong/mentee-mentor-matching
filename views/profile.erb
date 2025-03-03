@@ -12,7 +12,33 @@
 <%= erb :header %>
 
 <body>
-  <p>Profiles page.</p>
+  <section id="profile" class="centerer column">
+    <div id="pic" class="row">
+      <figure><img width="200px" src="./images/blankProfilePicture.webp"></figure>
+    </div>
+
+    <% @user = User.first(university_email: session[:username]) %>
+
+    <div class="info row">
+      <p>First Name: <%= @user.first_name %></p>
+    </div>
+
+    <div class="info row">
+      <p>Last Name: <%= @user.last_name %></p>
+    </div>
+
+    <div class="info row">
+      <p>University Email: <%= @user.university_email %></p>
+    </div>
+
+    <div class="info row">
+      <p>Date of Birth: <%= @user.date_of_birth %></p>
+    </div>
+
+    <div class="info row">
+      <p>Role: <%= @user.acc_type %></p>
+    </div>
+  </section>
 </body>
 
 <%= erb :footer %>

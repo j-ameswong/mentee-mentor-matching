@@ -4,12 +4,11 @@ post "/login" do
   user = User.first(university_email: @username)
 
   unless user.nil?
-    data = user.login(params)
+    success_decrypt = user.login(params)
 
-    unless data.nil?
+    unless success_decrypt.nil?
       session[:logged_in] = true
       session[:username] = @username
-      session[:data] = data
       redirect "/"
     end
   end

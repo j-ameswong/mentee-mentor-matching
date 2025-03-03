@@ -237,3 +237,23 @@ footer {
     padding: 3%;
     width: 100%;
 }
+
+#profile .row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+
+    align-items: flex-start;
+    text-align: left;
+}
+
+#profile .column {
+    display: flex;
+    flex-direction: column;
+    flex-basis: 90%;
+    flex: 1;
+
+    align-items: flex-start; 
+    text-align: left; 
+}
