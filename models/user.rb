@@ -22,6 +22,12 @@ class User < Sequel::Model(DB)
 
     self.university_email = username
 
+    self.date_of_birth = params.fetch("date_of_birth", "").strip
+
+    self.first_name = params.fetch("first_name", "").strip
+
+    self.last_name = params.fetch("last_name", "").strip
+
     # Set up AES for encryption.
     aes = OpenSSL::Cipher.new('AES-128-CBC').encrypt
 
