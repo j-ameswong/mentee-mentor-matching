@@ -1,13 +1,9 @@
 require 'sequel'
+require 'digest'
 require_relative '../db/db'
 
 # Specify user table, by default it downcases User and adds an s to the end
 class User < Sequel::Model(DB)
-  def check_id_exists(id)
-    return false if User.first(id: id).nil?
-    true
-  end
-
   def signup(params)
     username = params.fetch("university_email", "").strip
     #errors.add("username", "cannot be empty") 
@@ -69,28 +65,14 @@ class User < Sequel::Model(DB)
   end
 
   def gen_uid(username)
-    idd = '000000000'
-    unique = false
     all_usernames = User.select(:university_email).map(:university_email)
 
-    attempts = 0
-    while !unique
-      unique = true
-      (0..8).each do |x|
-        idd[x] = (username[x].ord + attempts).to_s[-1] 
-      end
-
-      break if all_usernames.nil?
-      all_usernames.each do |each_id| 
-        unique = false if each_id == idd
-      end
+    idd = 100000000 + rand(899999999)
+    while all_usernames.include? idd
+      idd = 100000000 + rand(899999999)
     end
-    
-    idd[0] = '1' if idd[0] = '0'
-    #if idd.length < 9
-    #  idd = idd + '0'* (9 - idd.length) 
-    #end
-    return idd.to_i
+
+    return idd
   end
 
 =begin

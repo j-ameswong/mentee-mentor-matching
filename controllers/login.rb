@@ -13,20 +13,3 @@ post "/login" do
     end
   end
 end
-
-=begin
-post "/login" do
-  @username = params.fetch("email-address", "")
-  @password = params.fetch("password", "")
-  @error = nil
-
-  if @username == "johnsmith@email.com" && @password == "pass"
-    session["logged_in"] = true
-    redirect "/"
-  else
-    @error = "Username/Password combination incorrect"
-  end
-
-  erb :login
-end
-=end
