@@ -63,7 +63,7 @@ class User < Sequel::Model(DB)
   def gen_uid(username)
     idd = '000000000'
     unique = false
-    all_usernames = DB[:users][:university_email]
+    all_usernames = User.select(:university_email).map(:university_email)
 
     attempts = 0
     while !unique

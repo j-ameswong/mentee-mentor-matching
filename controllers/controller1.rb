@@ -1,19 +1,16 @@
 get "/" do
-  redirect "/login" unless session["logged_in"]
+  redirect "/login" unless session[:logged_in]
   erb :index
+end
+
+get "/login" do
+  redirect "/" if session[:logged_in]
+  erb :login
 end
 
 get "/account" do
   redirect "/login" unless session["logged_in"]
   erb :account
-end
-
-get "/login" do
-  erb :login
-end
-
-get "/signup" do
-  erb :signup
 end
 
 get "/matches" do

@@ -1,8 +1,3 @@
-get "/login" do
-  redirect "/" if session[:logged_in]
-  erb :login
-end
-
 post "/login" do
   @error = "Username/Password combination incorrect"
   @username = params.fetch("university_email", "").strip
@@ -13,13 +8,11 @@ post "/login" do
 
     unless data.nil?
       session[:logged_in] = true
-      session[:username] = username
+      session[:username] = @username
       session[:data] = data
       redirect "/"
     end
   end
-
-  erb :login
 end
 
 =begin

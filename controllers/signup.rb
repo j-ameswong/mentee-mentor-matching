@@ -1,6 +1,5 @@
 get "/signup" do
   redirect "/" if session[:logged_in]
-  @user = User.new
   erb :signup
 end
 
