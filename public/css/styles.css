@@ -1,3 +1,9 @@
+html {
+    --purple: #440099;
+    --grey: #2b353e;
+    --lblu: #aae1ed;
+}
+
 .centerer {
     display: flex;
     justify-content: center;
