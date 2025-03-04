@@ -8,7 +8,6 @@ post "/signup" do
   @user = User.new
 
   if @user.signup(params)
-    @user[:id] = @user.gen_uid(params.fetch("university_email", "").strip)
     @user.save
     redirect "/"
   end

@@ -26,6 +26,8 @@ class User < Sequel::Model(DB)
 
     self.acc_type = params.fetch("acc_type", "").strip
 
+    self.id = gen_uid(username)
+
     # Set up AES for encryption.
     aes = OpenSSL::Cipher.new('AES-128-CBC').encrypt
 

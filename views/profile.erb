@@ -14,30 +14,44 @@
 <body>
   <section id="profile" class="centerer column">
     <div id="pic" class="row">
-      <figure><img width="200px" src="./images/blankProfilePicture.webp"></figure>
+      <figure><img width="150" src="./images/blankProfilePicture.webp"></figure>
     </div>
 
     <% @user = User.first(university_email: session[:username]) %>
+    <% @edit = params.fetch("edit", "0") %>
+    
+    <form method="post" action="/profile?edit=<%= @edit == "0" ? "1" : "0" %>">
+      <div class="info row">
+        <p>First Name: <%= @user.first_name if @edit == "0"%></p>
+        <%= '<input type="text" name="first_name" value="' + @user.first_name + '" required>' if @edit == "1"%>
+      </div>
 
-    <div class="info row">
-      <p>First Name: <%= @user.first_name %></p>
-    </div>
+      <div class="info row">
+        <p>Last Name: <%= @user.last_name if @edit == "0" %></p>
+        <%= '<input type="text" name="last_name" value="' + @user.last_name + '" required>' if @edit == "1"%>
+      </div>
 
-    <div class="info row">
-      <p>Last Name: <%= @user.last_name %></p>
-    </div>
+      <div class="info row">
+        <p>University Email: <%= @user.university_email if @edit == "0" %></p>
+        <%= '<input type="text" name="university_email" value="' + @user.university_email + '" required>' if @edit == "1"%>
+      </div>
 
-    <div class="info row">
-      <p>University Email: <%= @user.university_email %></p>
-    </div>
+      <div class="info row">
+        <p>Date of Birth: <%= @user.date_of_birth if @edit == "0" %></p>
+        <%= '<input type="text" name="date_of_birth" value="' + @user.date_of_birth + '" required>' if @edit == "1"%>
+      </div>
 
-    <div class="info row">
-      <p>Date of Birth: <%= @user.date_of_birth %></p>
-    </div>
+      <div class="info row">
+        <p>Role: <%= @user.acc_type if @edit == "0" %></p>
+        <%= '<select name="acc_type" required>' if @edit == "1"%>
+          <%= '<option value="mentee" ' if @edit == "1" %><%= 'selected>' if @user.acc_type == "mentee" %><%= 'Mentee</option>' if @edit == "1"  %>
+          <%= '<option value="mentor" ' if @edit == "1" %><%= 'selected>' if @user.acc_type == "mentor" %><%= 'Mentor</option>' if @edit == "1"  %>
+        </select>
+      </div>
 
-    <div class="info row">
-      <p>Role: <%= @user.acc_type %></p>
-    </div>
+      <%= '<button type="submit">Save</button>' if @edit == "1" %>
+      <%= '<button type="submit">Edit</button>' if @edit == "0" %>
+    </form>
   </section>
 </body>
 

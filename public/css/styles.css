@@ -257,3 +257,7 @@ footer {
     align-items: flex-start; 
     text-align: left; 
 }
+
+#profile .selected {
+    font-weight: bold;
+}
