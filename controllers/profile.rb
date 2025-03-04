@@ -10,6 +10,7 @@ post "/profile" do
     @user.last_name = params.fetch("last_name", @user.last_name).strip
     @user.acc_type = params.fetch("acc_type", @user.acc_type).strip
     @user.profile_pic = params.fetch("profile_pic", @user.profile_pic).nil? ? "" : params.fetch("profile_pic", @user.profile_pic).strip
+    @user.languages = params.fetch("languages", @user.languages).strip
     @user.save
     redirect "/profile?edit=0"
   else

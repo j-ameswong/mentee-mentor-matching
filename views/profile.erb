@@ -54,6 +54,25 @@
       </div>
 
       <div class="info row">
+        <% @languages = @user.languages.split(",") unless @user.languages.nil? %>
+        <p>Languages Spoken: <%= ' (Comma separated, no spaces)' if @edit == "1" %></p>
+      </div>
+        
+      <div class="info row">
+        <ul>
+          <% if @edit == "0" && !@languages.nil?%>
+            <% @languages.each do |language|%>
+              <li><%= language %></li>
+            <% end %>
+          <% end %>
+        </ul>
+
+        <% if @edit == "1" %>
+          <input type="text" name="languages" value="<%= @user.languages %>" required>
+        <% end %>       
+      </div>
+      
+      <div class="info row">
         <p><%= @edit == "0" ? ("Age: " + @user.age(@user.date_of_birth).to_s) : "Date of Birth:" %></p>
         <% if @edit == "1" %>
           <input type="date" name="date_of_birth" value="<%= @user.date_of_birth %>" required>
