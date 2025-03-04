@@ -44,8 +44,8 @@
       <div class="info row">
         <p>Role: <%= @user.acc_type if @edit == "0" %></p>
         <%= '<select name="acc_type" required>' if @edit == "1"%>
-          <%= '<option value="mentee" ' if @edit == "1" %><%= 'selected>' if @user.acc_type == "mentee" %><%= 'Mentee</option>' if @edit == "1"  %>
-          <%= '<option value="mentor" ' if @edit == "1" %><%= 'selected>' if @user.acc_type == "mentor" %><%= 'Mentor</option>' if @edit == "1"  %>
+          <%= '<option value="mentee" ' if @edit == "1" %><%=@user.acc_type == "mentee" ? 'selected>' : '>' %><%= 'Mentee</option>' if @edit == "1"  %>
+          <%= '<option value="mentor" ' if @edit == "1" %><%=@user.acc_type == "mentor" ? 'selected>' : '>' %><%= 'Mentor</option>' if @edit == "1"  %>
         </select>
       </div>
 
