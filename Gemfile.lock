@@ -12,6 +12,7 @@ GEM
     i18n (1.14.7)
       concurrent-ruby (~> 1.0)
     logger (1.6.6)
+    mini_portile2 (2.8.8)
     minitest (5.25.4)
     mustermann (3.0.3)
       ruby2_keywords (~> 0.0.1)
@@ -40,6 +41,8 @@ GEM
       rack-protection (= 4.1.1)
       rack-session (>= 2.0.0, < 3)
       tilt (~> 2.0)
+    sqlite3 (2.6.0)
+      mini_portile2 (~> 2.8.0)
     thread_safe (0.3.6)
     tilt (2.6.0)
     time_difference (0.7.0)
@@ -58,6 +61,7 @@ DEPENDENCIES
   require_all
   sequel
   sinatra
+  sqlite3
   time_difference
 
 BUNDLED WITH

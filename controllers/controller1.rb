@@ -42,6 +42,3 @@ get "/profile" do
   erb :profile
 end
 
-post "/profile" do
-  erb :profile
-end

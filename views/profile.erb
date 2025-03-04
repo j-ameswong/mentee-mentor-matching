@@ -19,7 +19,8 @@
     <form method="post" action="/profile?edit=<%= @edit == "0" ? "1" : "0" %>">    
       <% if @edit == "0" %>
         <figure class="row">
-          <img width="150" src="/profile/get_image" alt="Not Found" onerror="this.src='/images/blankProfilePicture.webp'"/>
+          <%#<img width="150" src="/profile/get_image" alt="Not Found" onerror="this.src='/images/blankProfilePicture.webp'"/>%>
+          <img width="150" src="/profile/get_image" alt="Not Found"/>
         </figure>
       <% else %>
         <input type="file" id="profile_picture" name="profile_pic" accept="image/*">
