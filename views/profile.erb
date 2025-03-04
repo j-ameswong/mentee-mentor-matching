@@ -17,44 +17,64 @@
     <% @edit = params.fetch("edit", "0") %>
     
     <form method="post" action="/profile?edit=<%= @edit == "0" ? "1" : "0" %>">    
-      <figure class="row">
-        <img width="150" src="/profile/get_image" alt="Not Found" onerror="this.src='/images/blankProfilePicture.webp'"/>
-      </figure>
+      <% if @edit == "0" %>
+        <figure class="row">
+          <img width="150" src="/profile/get_image" alt="Not Found" onerror="this.src='/images/blankProfilePicture.webp'"/>
+        </figure>
+      <% else %>
+        <input type="file" id="profile_picture" name="profile_pic" accept="image/*">
+        <label for="profile_picture">Upload Profile Picture</label>
+      <% end %>
 
-      <div class="info row">
-        <p>First Name: <%= @user.first_name if @edit == "0"%></p>
-        <%= '<input type="text" name="first_name" value="' + @user.first_name + '" required>' if @edit == "1"%>
-      </div>
+      <% if @edit == "1" %>
+        <div class="info row">
+          <p>First Name: <%= @user.first_name if @edit == "0" %></p>
+          <% if @edit == "1" %>
+            <input type="text" name="first_name" value="<%= @user.first_name %>" required>
+          <% end %>
+        </div>
 
-      <div class="info row">
-        <p>Last Name: <%= @user.last_name if @edit == "0" %></p>
-        <%= '<input type="text" name="last_name" value="' + @user.last_name + '" required>' if @edit == "1"%>
-      </div>
+        <div class="info row">
+          <p>Last Name: <%= @user.last_name if @edit == "0" %></p>
+          <% if @edit == "1" %>
+            <input type="text" name="last_name" value="<%= @user.last_name %>" required>
+          <% end %>
+        </div>
+      <% else %>
+        <div class="info row">
+          <p>Name: <%= @user.first_name + ' ' + @user.last_name %></p>
+        </div>
+      <% end %>
 
       <div class="info row">
         <p>University Email: <%= @user.university_email if @edit == "0" %></p>
-        <%= '<input type="text" name="university_email" value="' + @user.university_email + '" required>' if @edit == "1"%>
+        <% if @edit == "1" %>
+          <input type="text" name="university_email" value="<%= @user.university_email %>" required>
+        <% end %>
       </div>
 
       <div class="info row">
-        <p><%= @edit == "0" ? ("Age: " + @user.age(@user.date_of_birth).to_s) : "Date of Birth:"%></p>
-        <%= '<input type="date" name="date_of_birth" value="' + @user.date_of_birth + '" required>' if @edit == "1"%>
+        <p><%= @edit == "0" ? ("Age: " + @user.age(@user.date_of_birth).to_s) : "Date of Birth:" %></p>
+        <% if @edit == "1" %>
+          <input type="date" name="date_of_birth" value="<%= @user.date_of_birth %>" required>
+        <% end %>
       </div>
 
       <div class="info row">
         <p>Role: <%= @user.acc_type if @edit == "0" %></p>
-        <%= '<select name="acc_type" required>' if @edit == "1"%>
-          <%= '<option value="mentee" ' if @edit == "1" %>
-            <%= 'selected' if @user.acc_type == "mentee" && @edit == "1"%><%= '>' if @edit == "1" %>
-          <%= 'Mentee</option>' if @edit == "1"  %>
-          <%= '<option value="mentor" ' if @edit == "1" %>
-            <%= 'selected' if @user.acc_type == "mentor" && @edit == "1"%><%= '>' if @edit == "1" %>
-          <%= 'Mentor</option>' if @edit == "1"  %>
-        <%= '</select>' if @edit == "1" %> 
+        <% if @edit == "1" %>
+          <select name="acc_type" required>
+            <option value="mentee" <%= 'selected' if @user.acc_type == "mentee" %>>Mentee</option>
+            <option value="mentor" <%= 'selected' if @user.acc_type == "mentor" %>>Mentor</option>
+          </select>
+        <% end %>
       </div>
 
-      <%= '<button type="submit">Save</button>' if @edit == "1" %>
-      <%= '<button type="submit">Edit</button>' if @edit == "0" %>
+      <% if @edit == "1" %>
+        <button type="submit">Save</button>
+      <% else %>
+        <button type="submit">Edit</button>
+      <% end %>
     </form>
   </section>
 </body>
