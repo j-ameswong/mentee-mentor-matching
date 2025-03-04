@@ -12,4 +12,6 @@ post "/login" do
       redirect "/"
     end
   end
+
+  redirect "/login"
 end

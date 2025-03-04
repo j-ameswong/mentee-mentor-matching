@@ -1,5 +1,6 @@
 require 'sequel'
 require 'digest'
+require 'date'
 require_relative '../db/db'
 
 # Specify user table, by default it downcases User and adds an s to the end
@@ -77,6 +78,13 @@ class User < Sequel::Model(DB)
     return idd
   end
 
+  def age(date_of_birth)
+    dob = DateTime.parse(date_of_birth)
+    now = DateTime.now
+    age = TimeDifference.between(dob, now).in_years.to_i
+    
+    return age
+  end
 =begin
   def self.gen_pass_hash(id, pass = 12345678)
     user = DB[:users].where(id: id)

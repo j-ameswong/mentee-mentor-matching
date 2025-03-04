@@ -12,3 +12,11 @@ get "/profile" do
   @user = User[session[:id]]
   erb :profile
 end
+
+get "/profile/profile_pic" do
+  redirect "/" unless session[:logged_in]
+  @user = User[session[:id]]
+  content_type 'image/png'
+  
+  @user.profile_pic
+end
