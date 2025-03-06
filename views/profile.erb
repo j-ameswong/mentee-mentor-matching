@@ -18,12 +18,12 @@
     <h3>Profile</h3>
     <form method="post" action="/profile?edit=<%= @edit %>" enctype="multipart/form-data">   
       <% if @edit == "0" %>
-        <figure class="row">
-          <img width="150" src="/images/user/<%= @user.profile_pic %>" alt="Not Found" onerror="this.src='/images/blankProfilePicture.webp'"/>
+        <figure class="row profile_pic centerer">
+          <img width="100" height="100" src="/images/user/<%= @user.profile_pic %>" alt="Not Found" onerror="this.src='/images/blankProfilePicture.webp'"/>
         </figure>
       <% else %>
-        <input type="file" id="profile_picture" name="profile_pic" accept="image/*">
-        <label for="profile_picture">Upload Profile Picture</label>
+        <input type="file" id="profile_pic=" name="profile_pic" accept="image/*">
+        <label for="profile_pic">Upload Profile Picture</label>
       <% end %>
 
       <% if @edit == "1" %>

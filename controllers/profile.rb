@@ -48,5 +48,5 @@ get "/profile/get_image" do
   content_type 'image/*'
 
   #puts "We're trying to get the image"
-  @user.profile_pic unless @user.profile_pic.nil?
+  params[:profile_pic][:tempfile].read if params[:profile_pic] && params[:profile_pic][:tempfile]
 end
