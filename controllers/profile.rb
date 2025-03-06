@@ -13,7 +13,7 @@ post "/profile" do
     @user.first_name = params.fetch("first_name").strip unless params.fetch("first_name").nil?
     @user.last_name = params.fetch("last_name").strip unless params.fetch("last_name").nil?
     #@user.acc_type = params.fetch("acc_type", @user.acc_type).strip unless params.fetch("acc_type").nil?
-    @user.year_of_study = params.fetch("year_of_study").strip unless params.fetch("year_of_study").nil?
+    @user.year_of_study = (params.fetch("year_of_study_year").strip + " " + params.fetch("year_of_study_degree"))
     @user.languages = params.fetch("languages").strip unless params.fetch("languages").nil?
     @user.profile_pic = Sequel.blob(params.fetch("profile_pic")[:tempfile].read) unless params.fetch("profile_pic")[:tempfile].nil?
     @user.save
