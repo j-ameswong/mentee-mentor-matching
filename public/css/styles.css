@@ -108,6 +108,13 @@ header {
     height: 60vh;
 }
 
+#tnc {
+    display: inline-flex;
+    width: 40vw;
+    align-items: center;
+    justify-content: center;
+}
+
 #login {
     display: flex;
     flex-direction: column;
