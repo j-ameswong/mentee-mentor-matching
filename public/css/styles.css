@@ -255,7 +255,15 @@ footer {
     width: 100%;
 }
 
-#profile .row {
+.profilePage {
+    width: 90%;
+    height: 90%;
+
+    padding-top: 2%;
+    margin-top: 2%;
+}
+
+.profilePage .row {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -265,7 +273,7 @@ footer {
     text-align: left;
 }
 
-#profile .column {
+.profilePage.column {
     display: flex;
     flex-direction: column;
     flex-basis: 90%;
@@ -275,6 +283,6 @@ footer {
     text-align: left;
 }
 
-#profile .selected {
+.profilePage .selected {
     font-weight: bold;
 }

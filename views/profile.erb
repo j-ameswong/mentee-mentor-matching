@@ -11,12 +11,12 @@
 
 <%= erb :header %>
 
-<body>
-  <section id="profile" class="centerer column">
+<body class="profilePage">
+  <section class="centerer column">
     <% @user = User.first(university_email: session[:username]) %>
     <% @edit = params.fetch("edit", "0") %>
-    
-    <form method="post" action="/profile?edit=<%= @edit == "0" ? "1" : "0" %>">    
+    <h3>Profile</h3>
+    <form method="post" action="/profile?edit=<%= @edit %>" enctype="multipart/form-data">   
       <% if @edit == "0" %>
         <figure class="row">
           <img width="150" src="/profile/get_image" alt="Not Found" onerror="this.src='/images/blankProfilePicture.webp'"/>

@@ -36,9 +36,5 @@ get "/deleted-account" do
     erb :accountDeleted
 end
 
-get "/profile" do
-  redirect "/" unless session[:logged_in]
-  @user = User[session[:id]]
-  erb :profile
-end
+
 

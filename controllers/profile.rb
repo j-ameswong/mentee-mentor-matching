@@ -1,24 +1,21 @@
+require "csv"
+
 post "/profile" do
   redirect "/" unless session[:logged_in]
   @user = User.first(university_email: session[:username])
   puts params
 
-  # The form has :edit set to the opposite of its current state, i.e.
-  # if it is 0, it will be set to 1, and vice versa
-  if params[:edit].to_s == "0"
+  if params[:edit].to_s == "1"
     # The code here is to update the user's profile, if field is blank 
     # then it will remain the same, else it will update the field
-    @user.university_email = params.fetch("university_email", @user.university_email).nil? ? "" : params.fetch("university_email", @user.university_email).strip
-    @user.date_of_birth = params.fetch("date_of_birth", @user.date_of_birth).nil? ? "" : params.fetch("date_of_birth", @user.date_of_birth).strip
-    @user.first_name = params.fetch("first_name", @user.first_name).nil? ? "" : params.fetch("first_name", @user.first_name).strip
-    @user.last_name = params.fetch("last_name", @user.last_name).nil? ? "" : params.fetch("last_name", @user.last_name).strip
-    @user.acc_type = params.fetch("acc_type", @user.acc_type).nil? ? "" : params.fetch("acc_type", @user.acc_type).strip
-    @user.year_of_study = params.fetch("year_of_study", @user.year_of_study).nil? ? "" : params.fetch("year_of_study", @user.year_of_study).strip
-    @user.profile_pic = params.fetch("profile_pic", @user.profile_pic).nil? ? "" : params.fetch("profile_pic", @user.profile_pic).strip
-    @user.languages = params.fetch("languages", @user.languages).nil? ? "" : params.fetch("languages", @user.languages).strip
-    @year_of_study = params.fetch("year_of_study_year") + " " + params.fetch("year_of_study_degree")
-    @user.year_of_study = @year_of_study
-    puts "Year of Study is: " + @year_of_study
+    @user.university_email = params.fetch("university_email").strip unless params.fetch("university_email").nil?
+    @user.date_of_birth = params.fetch("date_of_birth").strip unless params.fetch("date_of_birth").nil?
+    @user.first_name = params.fetch("first_name").strip unless params.fetch("first_name").nil?
+    @user.last_name = params.fetch("last_name").strip unless params.fetch("last_name").nil?
+    #@user.acc_type = params.fetch("acc_type", @user.acc_type).strip unless params.fetch("acc_type").nil?
+    @user.year_of_study = params.fetch("year_of_study").strip unless params.fetch("year_of_study").nil?
+    @user.languages = params.fetch("languages").strip unless params.fetch("languages").nil?
+    @user.profile_pic = Sequel.blob(params.fetch("profile_pic")[:tempfile].read) unless params.fetch("profile_pic")[:tempfile].nil?
     @user.save
     redirect "/profile?edit=0"
   else
@@ -32,6 +29,9 @@ get "/profile" do
   redirect "/" unless session[:logged_in]
   @user = User.first(university_email: session[:username])
 
+  @data = CSV.table("./public/resources/country.csv")
+  @countries = @data[:value]
+
   erb :profile
 end
 
@@ -41,6 +41,5 @@ get "/profile/get_image" do
   content_type 'image/png'
 
   puts "We're trying to get the image"
-  puts @user.profile_pic
-  @user.profile_pic
+  @user.profile_pic unless @user.profile_pic.nil?
 end

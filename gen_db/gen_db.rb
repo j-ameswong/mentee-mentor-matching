@@ -14,6 +14,9 @@ require_relative '../models/user.rb'
 require 'openssl'
 
 data = CSV.read("./Customer_Names.csv")
+data_test = CSV.read("../public/resources/country.csv")
+
+puts data_test.length
 
 def gen_new(data)
   id = []
@@ -149,13 +152,17 @@ def gen_test_db(path)
     String :last_name
     String :university_email
     String :date_of_birth
-    String :iv
-    String :salt
-    String :data_crypt
+    BLOB :iv
+    BLOB :salt
+    BLOB :data_crypt
     String :acc_type
+    BLOB :profile_pic
+    String :languages
+    String :year_of_study
+    String :nationality
   end
 end
 
-0..100.times do
-  gen_profile(data)
-end
+#0..100.times do
+#  gen_profile(data)
+#end
