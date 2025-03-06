@@ -1,6 +1,6 @@
 <%# Saul %>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="profilePage">
 
 <head>
   <meta charset="utf-8" />
@@ -11,10 +11,18 @@
 
 <%= erb :header %>
 
-<body class="profilePage">
+<%# TODO: IMPLEMENT VIEWING PROFILES WITHOUT ALLOWING EDITS AS A MENTOR/MENTEE %>
+<%# TODO: IMPLEMENT ADMINS ALLOWED TO EDIT ALL PROFILES >
+<%# TODO: RESTRICT USER PRIVILEGES IN EDITING THEIR PROFILE DETAILS %>
+<%# TODO: AUTOMATICALLY REDIRECT TO EDIT PROFILE PAGE UPON FIRST SIGN UP %>
+<body>
   <section class="centerer column">
-    <% @user = User.first(university_email: session[:username]) %>
     <% @edit = params.fetch("edit", "0") %>
+    <% @user = User.first(university_email: session[:username]) %>
+    <% @id = params.fetch("id", @user.id) %>
+    <%# @edit = "0" if @id != @user.id %>
+    <% @viewed_user = User.first(id: @id.to_i) if @id.is_a? String %>
+
     <h3>Profile</h3>
     <form method="post" action="/profile?edit=<%= @edit %>" enctype="multipart/form-data">   
       <% if @edit == "0" %>
@@ -83,13 +91,26 @@
           <select name="acc_type" required>
             <option value="Mentee" <%= 'selected' if @user.acc_type == "Mentee" %>>Mentee</option>
             <option value="Mentor" <%= 'selected' if @user.acc_type == "Mentor" %>>Mentor</option>
+            <option value="Admin" <%= 'selected' if @user.acc_type == "Admin" %>>Admin</option>
           </select>
         <% end %>
       </div>
 
       <div class="info row">
+        <p>Nationality: <%= @user.nationality if @edit == "0" %> </p>
+        <% if @edit == "1" %>
+          <select name="nationality" required>
+            <% @countries.each do |country| %>
+              <option value="<%= country %>" <%= 'selected' if @user.nationality == country %>><%= country %></option>
+            <% end %>
+          </select>
+        <% end %>
+      </div>
+
+
+      <div class="info row">
         <% @user.year_of_study.nil? ? @year_of_study = "" : @year_of_study = @user.year_of_study %>
-        <p><%= "Year of Study: " + @year_of_study if @edit == "0" %> </p>
+        <p>Year of Study: <%= @year_of_study if @edit == "0" %> </p>
         <% if @edit == "1"%>
           <select name="year_of_study_year" required>
             <% if !@user.year_of_study.nil? %>

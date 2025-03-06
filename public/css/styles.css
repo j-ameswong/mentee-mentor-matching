@@ -164,7 +164,7 @@ input {
     height: 75vh;
 }
 
-#matchPicture img {
+#matchPicture {
     max-width: 150px;
     max-height: 150px;
 }
@@ -255,15 +255,10 @@ footer {
     width: 100%;
 }
 
-/*
-.profilePage {
-    width: 90%;
-    height: 90%;
-
-    padding-top: 2%;
-    margin-top: 2%;
+.profilePage body {
+    min-height: 90vh;
 }
-*/
+
 .profilePage .row {
     display: flex;
     flex-direction: row;
@@ -271,7 +266,7 @@ footer {
     width: 100%;
 
     align-items: flex-start;
-    text-align: center;
+    text-align: left;
 }
 
 .profilePage .languages {
@@ -292,3 +287,12 @@ footer {
     font-weight: bold;
 }
 
+.profilePage footer {
+    position: relative;
+    bottom: 0;
+}
+
+.profile_pic {
+    text-align: left;
+    justify-content: center;
+}

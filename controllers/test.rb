@@ -9,6 +9,8 @@ require 'time_difference'
 #users = User.select(:id).map(:id)
 #puts User.gen_pass_hash(12345677, 'password')
 
+@user = User.first(university_email: "cawong2@sheffield.ac.uk")
+puts @user.id
 
 #puts User.gen_uid('1119406c9491')
 # check_user_password = User.where(email_address: )
