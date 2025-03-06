@@ -89,6 +89,31 @@
         <% end %>
       </div>
 
+      <div class="info row">
+        <% @user.year_of_study.nil? ? @year_of_study = "" : @year_of_study = @user.year_of_study %>
+        <p><%= "Year of Study: " + @year_of_study if @edit == "0" %> </p>
+        <% if @edit == "1"%>
+          <select name="year_of_study_year" required>
+            <% if !@user.year_of_study.nil? %>
+              <% (1..5).each do |year| %>
+                <option value="Year <%= year %>" <%= 'selected' if @year_of_study[0..5] == "Year #{year}" %>>Year <%= year %></option>
+              <% end %>
+            <% else %>
+              <% (1..5).each do |year| %>
+                <option value="Year <%= year %>">Year <%= year %></option> 
+              <% end %>
+            <% end %>
+          </select>
+          
+          <select name="year_of_study_degree" required>
+            <option value="BSc" <%= 'selected' if @year_of_study.include? "BSc" %>>BSc</option>
+            <option value="MSc" <%= 'selected' if @year_of_study.include? "MSc" %>>MSc</option>
+            <option value="PhD" <%= 'selected' if @year_of_study.include? "PhD" %>>PhD</option>
+          </select>
+
+        <% end %>
+      </div>
+
       <% if @edit == "1" %>
         <button type="submit">Save</button>
       <% else %>
