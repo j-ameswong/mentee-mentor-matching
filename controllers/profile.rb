@@ -12,10 +12,18 @@ post "/profile" do
     @user.date_of_birth = params.fetch("date_of_birth").strip unless params.fetch("date_of_birth").nil?
     @user.first_name = params.fetch("first_name").strip unless params.fetch("first_name").nil?
     @user.last_name = params.fetch("last_name").strip unless params.fetch("last_name").nil?
-    #@user.acc_type = params.fetch("acc_type", @user.acc_type).strip unless params.fetch("acc_type").nil?
+    @user.acc_type = params.fetch("acc_type", @user.acc_type).strip unless params[:acc_type].nil?
     @user.year_of_study = (params.fetch("year_of_study_year").strip + " " + params.fetch("year_of_study_degree"))
     @user.languages = params.fetch("languages").strip unless params.fetch("languages").nil?
-    @user.profile_pic = Sequel.blob(params.fetch("profile_pic")[:tempfile].read) unless params.fetch("profile_pic")[:tempfile].nil?
+    #@user.profile_pic = Sequel.blob(params.fetch("profile_pic")[:tempfile].read) if params[:profile_pic] && params[:profile_pic][:tempfile]
+    if params[:profile_pic] && params[:profile_pic][:tempfile]
+      @imgdata = params[:profile_pic][:tempfile].read 
+      puts "Length of imgdata: #{@imgdata.length}" 
+      File.open("./public/images/user/#{@user.img_hash(@user.university_email)}", "wb") do |f|
+        f.write(@imgdata)
+      end
+      @user.profile_pic = @user.img_hash(@user.university_email)
+    end
     @user.save
     redirect "/profile?edit=0"
   else
@@ -36,10 +44,9 @@ get "/profile" do
 end
 
 get "/profile/get_image" do
-  redirect "/" unless session[:logged_in]
   @user = User.first(university_email: session[:username])
-  content_type 'image/png'
+  content_type 'image/*'
 
-  puts "We're trying to get the image"
+  #puts "We're trying to get the image"
   @user.profile_pic unless @user.profile_pic.nil?
 end

@@ -255,6 +255,7 @@ footer {
     width: 100%;
 }
 
+/*
 .profilePage {
     width: 90%;
     height: 90%;
@@ -262,7 +263,7 @@ footer {
     padding-top: 2%;
     margin-top: 2%;
 }
-
+*/
 .profilePage .row {
     display: flex;
     flex-direction: row;
@@ -270,16 +271,20 @@ footer {
     width: 100%;
 
     align-items: flex-start;
-    text-align: left;
+    text-align: center;
 }
 
-.profilePage.column {
+.profilePage .languages {
+    flex-direction: column;
+}
+
+.profilePage .column {
     display: flex;
     flex-direction: column;
     flex-basis: 90%;
     flex: 1;
 
-    align-items: flex-start;
+    align-items: center;
     text-align: left;
 }
 

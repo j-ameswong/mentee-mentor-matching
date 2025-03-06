@@ -85,6 +85,12 @@ class User < Sequel::Model(DB)
     
     return age
   end
+  
+  def img_hash(username)
+    hash = Digest::SHA256.hexdigest(username)
+    return hash
+  end
+
 =begin
   def self.gen_pass_hash(id, pass = 12345678)
     user = DB[:users].where(id: id)

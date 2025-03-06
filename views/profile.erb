@@ -19,7 +19,7 @@
     <form method="post" action="/profile?edit=<%= @edit %>" enctype="multipart/form-data">   
       <% if @edit == "0" %>
         <figure class="row">
-          <img width="150" src="/profile/get_image" alt="Not Found" onerror="this.src='/images/blankProfilePicture.webp'"/>
+          <img width="150" src="/images/user/<%= @user.profile_pic %>" alt="Not Found" onerror="this.src='/images/blankProfilePicture.webp'"/>
         </figure>
       <% else %>
         <input type="file" id="profile_picture" name="profile_pic" accept="image/*">
@@ -53,12 +53,10 @@
         <% end %>
       </div>
 
-      <div class="info row">
+      <div class="info row languages">
         <% @languages = @user.languages.split(",") unless @user.languages.nil? %>
         <p>Languages Spoken: <%= ' (Comma separated, no spaces)' if @edit == "1" %></p>
-      </div>
         
-      <div class="info row">
         <ul>
           <% if @edit == "0" && !@languages.nil?%>
             <% @languages.each do |language|%>
@@ -80,11 +78,11 @@
       </div>
 
       <div class="info row">
-        <p>Role: <%= @user.acc_type if @user.acc_type != "admin" %></p>
+        <p>Role: <%= @user.acc_type %></p>
         <% if @edit == "1" && @user.acc_type == "admin"%>
           <select name="acc_type" required>
-            <option value="mentee" <%= 'selected' if @user.acc_type == "mentee" %>>Mentee</option>
-            <option value="mentor" <%= 'selected' if @user.acc_type == "mentor" %>>Mentor</option>
+            <option value="Mentee" <%= 'selected' if @user.acc_type == "Mentee" %>>Mentee</option>
+            <option value="Mentor" <%= 'selected' if @user.acc_type == "Mentor" %>>Mentor</option>
           </select>
         <% end %>
       </div>

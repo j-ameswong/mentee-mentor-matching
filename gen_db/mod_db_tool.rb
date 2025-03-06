@@ -1,13 +1,13 @@
 require 'sequel'
 require_relative '../models/user.rb'
 
-DB.alter_table :users do
-  add_column :nationality, String
-end
+#DB.alter_table :users do
+#  set_column_type :profile_pic, String
+#end
 
-#user = User.first(university_email: 'cawong2@sheffield.ac.uk')
+user = User.first(university_email: 'bruhmoment@sheffield.ac.uk')
 
-#user.acc_type = 'admin'
-#user.save
+user.profile_pic = ''
+user.save
 
 #User.where(acc_type: nil).delete
