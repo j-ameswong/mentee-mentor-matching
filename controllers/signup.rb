@@ -6,7 +6,6 @@ end
 post "/signup" do
   @error = "Please correct the information below"
   @user = User.new
-  puts params
 
   if @user.signup(params)
     @user.save
