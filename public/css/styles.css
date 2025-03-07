@@ -110,9 +110,9 @@ header {
 
 #tnc {
     display: inline-flex;
+    align-items: left;
     width: 40vw;
-    align-items: center;
-    justify-content: center;
+    justify-content: left;
 }
 
 #login {
