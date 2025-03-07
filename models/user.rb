@@ -19,6 +19,7 @@ class User < Sequel::Model(DB)
 
     puts errors if !errors.empty?
     return false unless errors.empty?
+    #return false if !validate
 
     self.university_email = username
 
@@ -31,6 +32,8 @@ class User < Sequel::Model(DB)
     self.acc_type = params.fetch("acc_type", "").strip
 
     self.id = gen_uid(username)
+
+    password = params.fetch("password", "").strip
 
     # Set up AES for encryption.
     aes = OpenSSL::Cipher.new('AES-128-CBC').encrypt
@@ -93,6 +96,21 @@ class User < Sequel::Model(DB)
     hash = Digest::SHA256.hexdigest(username)
     return hash
   end
+
+  def validate 
+    super
+    errors.add("username", "fill in your username") if !university_email || university_email.empty?
+    errors.add("first_name", "fill in your first name") if !first_name || first_name.empty?
+    errors.add("last_name", "fill in your last name") if !last_name || last_name.empty?
+    errors.add("date_of_birth", "cannot be empty") if !date_of_birth || date_of_birth.empty?
+  end
+
+  def check_password(pass, confirm_pass)
+    @user.errors.add("password", "fill in your password") if !password || password.empty? 
+    @user.errors.add("password_mismatch", "passwords do not match, please try again") if !@user.check_password(password, confirm_pass)
+  end 
+
+  
 
 =begin
   def self.gen_pass_hash(id, pass = 12345678)

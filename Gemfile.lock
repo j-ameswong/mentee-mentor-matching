@@ -43,6 +43,7 @@ GEM
       tilt (~> 2.0)
     sqlite3 (2.6.0)
       mini_portile2 (~> 2.8.0)
+    sqlite3 (2.6.0-x64-mingw-ucrt)
     thread_safe (0.3.6)
     tilt (2.6.0)
     time_difference (0.7.0)
@@ -53,6 +54,7 @@ GEM
 PLATFORMS
   arm64-darwin-24
   ruby
+  x64-mingw-ucrt
 
 DEPENDENCIES
   openssl
