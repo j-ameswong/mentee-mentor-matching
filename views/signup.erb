@@ -11,14 +11,12 @@
 
 <%= erb :header2 %>
 
-<%# TODO: IMPLEMENT T&A ACCEPTANCE %>
-<%# TODO: IMPLEMENT LESS REQUIRED INFO BEFORE SIGNUP; ALSO FIX NIL FIELDS IN PROFILE VIEW %>
-<body>
-  <div class="signupPage centerer">
+<%# TODO: @luqman IMPLEMENT VALIDATION AND SANITATION, i.e. WITH STRIP AND @error ARRAY %>
+<body class="signupPage">
+  <div class="centerer">
     <section id="signup" class="centerer">
         <h2>Sign up for new account</h2>
         <form action="/signup" method="post">
-          <label>
             <div class="row centerer">
               <div class="column">
                 <p>First Name:</p>
@@ -30,10 +28,10 @@
               </div>
             </div>
             <div class="row centerer">
-              <div class="column">
-                <p>University Email:</p>
-                <input name="university_email" type="email" autocomplete="on" />
-              </div>
+              <p>University Email:</p>
+              <input name="university_email" type="email" autocomplete="on" />
+            </div>
+            <div class="row centerer">
               <div class="column">
                 <p>DoB:</p>
                 <input name="date_of_birth" type="date" />
@@ -64,8 +62,12 @@
               <div class="row centerer">
                 <input type="submit" value="Register">
               </div>
+
+              <div id="tnc" class="row">
+                <input class="column" type="checkbox" name="terms" value="terms_accepted">
+                <label class="column" for="terms">By signing up, you agree to our <a target="_blank" href="/terms">Terms & Conditions</label>
+              </div>
             </div>
-          </label>
         </form>
         <br>
         <a href="/login">Log in instead</a>

@@ -7,12 +7,15 @@ require_relative '../db/db'
 class User < Sequel::Model(DB)
   def signup(params)
     username = params.fetch("university_email", "").strip
-    #errors.add("username", "cannot be empty") 
+    errors.add("username", "cannot be empty") if username.empty?
 
     errors.add("username", "already taken") unless User.first(university_email: username).nil?
 
     password = params.fetch("password", "").strip
     errors.add("password", "cannot be empty") if password.empty?
+
+    terms = params.fetch("terms", "").strip
+    errors.add("terms", "must be accepted") if terms.empty?
 
     puts errors if !errors.empty?
     return false unless errors.empty?

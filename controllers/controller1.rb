@@ -36,5 +36,7 @@ get "/deleted-account" do
     erb :accountDeleted
 end
 
-
+get "/terms" do
+  erb :terms
+end
 
