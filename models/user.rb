@@ -20,6 +20,7 @@ class User < Sequel::Model(DB)
     puts errors if !errors.empty?
     return false unless errors.empty?
     #return false if !validate
+    #return false if !validate
 
     self.university_email = username
 
@@ -32,6 +33,8 @@ class User < Sequel::Model(DB)
     self.acc_type = params.fetch("acc_type", "").strip
 
     self.id = gen_uid(username)
+
+    password = params.fetch("password", "").strip
 
     password = params.fetch("password", "").strip
 
@@ -124,3 +127,4 @@ class User < Sequel::Model(DB)
   end
 =end
 end
+

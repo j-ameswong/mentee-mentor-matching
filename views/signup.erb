@@ -24,7 +24,7 @@
                 <% @user = User.new %>
                 <% if @user.errors.include?("first_name") %>
                   <% @user.errors["first_name"].each do |error| %>
-                    <p><strong><%= error %></strong></p>
+                    <p class="error"><strong> first name </strong></p>
                   <% end %>
                 <% end %>
               </div>
@@ -34,7 +34,7 @@
                 <input name="last_name" autocomplete="on" />
                 <% if @user.errors.include?("last_name") %>
                   <% @user.errors["last_name"].each do |error| %>
-                    <p><strong><%= error %></strong></p>
+                    <p class="error"><strong> Last name </strong></p>
                   <% end %>
                 <% end %>
               </div>
@@ -51,7 +51,7 @@
                 <input name="date_of_birth" type="date" />
                 <% if @user.errors.include?("date_of_birth") %>
                   <% @user.errors["date_of_birth"].each do |error| %>
-                    <p><strong><%= error %></strong></p>
+                    <p class="error"><strong> Date of birth </strong></p>
                   <% end %>
                 <% end %>
               </div>
@@ -74,7 +74,7 @@
                 <input name="password" type="password" />
                 <% if @user.errors.include?("password") %>
                   <% @user.errors["password"].each do |error| %>
-                    <p><strong><%= error %></strong></p>
+                    <p class="error"><strong> Password </strong></p>
                   <% end %>
                 <% end %>
               </div>
@@ -85,14 +85,9 @@
 
               <div class="row centerer">
                 <input name="password-confirm" type="password" />
-                <% if @user.errors.include?("password-confirm") %>
-                  <% @user.errors["password-confirm"].each do |error| %>
-                    <p><strong><%= error %></strong></p>
-                  <% end %>
-                <% end %>
                 <% if @user.errors.include?("password_mismatch") %>
                   <% @user.errors["password_mismatch"].each do |error| %>
-                    <p><strong><%= error %></strong></p>
+                    <p class="error"><strong> Confirm Password </strong></p>
                   <% end %>
                 <% end %>
               </div>
@@ -116,8 +111,7 @@
 <%= erb :footer %>
 <%password = params.fetch("password", "").strip%>
 <%confirm_pass = params.fetch("password-confirm", "").strip%>
-<%# puts @user.validate%>
+<% puts @user.validate%>
 <% puts @user.errors %>
-<%# main issue is that in the terminal, the errors array is not being populated hence the error messages for each text boxis not being displayed since none of the errors are being detected when the array is searched through, where is the error array located? why is it not being populated?>
-<%# puts @user.check_password %>
+
 </html>
