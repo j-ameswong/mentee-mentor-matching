@@ -39,3 +39,9 @@ post "/login" do
 
   redirect "/login"
 end
+
+get "/login" do
+  redirect "/" if session[:logged_in]
+  @user = User.new()
+  erb :login
+end
