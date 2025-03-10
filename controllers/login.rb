@@ -1,7 +1,7 @@
 post "/login" do
   @error = "Username/Password combination incorrect"
   @username = params.fetch("university_email", "").strip
-  user = User.first(university_email: @username)
+  @user = User.first(university_email: @username)
 
   @form_was_submitted = false if params[:university_email] == "" || params[:password] == ""
 

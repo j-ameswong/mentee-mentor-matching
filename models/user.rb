@@ -99,15 +99,16 @@ class User < Sequel::Model(DB)
 
   def validate 
     super
-    errors.add("username", "fill in your username") if !university_email || university_email.empty?
+    errors.add("university_email", "fill in your email address") if !university_email || university_email.empty?
     errors.add("first_name", "fill in your first name") if !first_name || first_name.empty?
     errors.add("last_name", "fill in your last name") if !last_name || last_name.empty?
     errors.add("date_of_birth", "cannot be empty") if !date_of_birth || date_of_birth.empty?
   end
 
   def check_password(pass, confirm_pass)
-    @user.errors.add("password", "fill in your password") if !password || password.empty? 
-    @user.errors.add("password_mismatch", "passwords do not match, please try again") if !@user.check_password(password, confirm_pass)
+    errors.add("password", "fill in your password") if !password || password.empty? 
+    errors.add("confirm_password", "confirm your password") if !password-confirm || password-confirm.empty? 
+    errors.add("password_mismatch", "passwords do not match, please try again") if !@user.check_password(password, confirm_pass)
   end 
 
   
