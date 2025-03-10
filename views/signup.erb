@@ -21,21 +21,41 @@
               <div class="column">
                 <p>First Name:</p>
                 <input name="first_name" autocomplete="on" />
+                <% if !@user.nil? && @user.errors.include?("first_name") %>
+                  <% @user.errors["first_name"].each do |error| %>
+                  <% puts "Attemptign to pprint first name error"%>
+                    <p class="error"><%= error %></p>
+                  <% end %>
+                <% end %>
               </div>
+          
               <div class="column">
                 <p>Last Name:</p>
                 <input name="last_name" autocomplete="on" />
+                <% if !@user.nil? && @user.errors.include?("last_name") %>
+                  <% @user.errors["last_name"].each do |error| %>
+                    <p class="error"><%= error %></p>
+                  <% end %>
+                <% end %>
               </div>
             </div>
+
             <div class="row centerer">
-              <p>University Email:</p>
-              <input name="university_email" type="email" autocomplete="on" />
-            </div>
-            <div class="row centerer">
+              <div class="column">
+                <p>University Email:</p>
+                <input name="university_email" type="email" autocomplete="on" />
+              </div>
+
               <div class="column">
                 <p>DoB:</p>
                 <input name="date_of_birth" type="date" />
+                <% if !@user.nil? && @user.errors.include?("date_of_birth") %>
+                  <% @user.errors["date_of_birth"].each do |error| %>
+                    <p class="error"><%= error %></p>
+                  <% end %>
+                <% end %>
               </div>
+
               <div class="column">
                 <p>Role:</p>
                 <select name="acc_type">
@@ -44,20 +64,34 @@
                 </select>
               </div>
             </div>
+
             <div class="column">
               <div class="row centerer">
                 <p>Password:</p>
               </div>
+
               <div class="row centerer">
                 <input name="password" type="password" />
+                <% if !@user.nil? && @user.errors.include?("password") %>
+                  <% @user.errors["password"].each do |error| %>
+                    <p class="error"><%= error %></p>
+                  <% end %>
+                <% end %>
               </div>
             
               <div class="row centerer">
                 <p>Confirm Password:</p>
               </div>
+
               <div class="row centerer">
                 <input name="password-confirm" type="password" />
+                <% if !@user.nil? && @user.errors.include?("password_mismatch") %>
+                  <% @user.errors["password_mismatch"].each do |error| %>
+                    <p class="error"><%= error %></p>
+                  <% end %>
+                <% end %>
               </div>
+
               <br>
               <div class="row centerer">
                 <input type="submit" value="Register">
@@ -75,5 +109,7 @@
 </body>
 
 <%= erb :footer %>
+<%password = params.fetch("password", "").strip%>
+<%confirm_pass = params.fetch("password-confirm", "").strip%>
 
 </html>
