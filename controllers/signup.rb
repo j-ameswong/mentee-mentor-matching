@@ -7,6 +7,9 @@ post "/signup" do
   @error = "Please correct the information below"
   @user = User.new
 
+  @user.validate
+  puts @user.errors
+
   if @user.signup(params)
     @user.save
     redirect "/"

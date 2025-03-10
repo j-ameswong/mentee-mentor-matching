@@ -14,6 +14,9 @@
 <body>
   <div class="signupPage centerer">
     <section id="login" class="centerer">
+      <% if @form_was_submitted  %> 
+      <h1>GREAT SUCCESS</h1>
+      <% end %>
         <h2>Log in</h2>
         <form method="post">
           <label>
@@ -21,10 +24,20 @@
               <div class="column">
                 <p>University Email:</p>
                 <input name="university_email" type="email" autocomplete="on" />
+              <% if @user.errors.include?("password") %>
+                  <% @user.errors["password"].each do |error| %>
+                    <p><strong><%= error %></strong></p>
+                  <% end %>
+                <% end %>
               </div>
               <div class="column">
                 <p>Password:</p>
                 <input name="password" type="password" />
+                <% if @user.errors.include?("password") %>
+                  <% @user.errors["password"].each do |error| %>
+                    <p><strong><%= error %></strong></p>
+                  <% end %>
+                <% end %>
               </div>
             </div>
             <br>
