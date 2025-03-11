@@ -2,10 +2,13 @@
     <img id="logo" src="/images/Sheffield_Logo.png">
     <a id="logo-link" href="/">
         <img id="logo-connect" src="/images/UniConnectLogo.png">
-    <a>
+    </a>
 
     <a id="navHome" href="/">Home</a>
     <a id="navMatches" href="/matches">Matches</a>
     <a id="navProfile" href="/profile">Profile</a>
+    <% if session[:user].acc_type.downcase == "admin" %>
+        <a id="navApprovals" href="/approvals">Approvals</a>
+    <% end %>
 <%# TODO: add dropdown for profile options %>
 </header>
