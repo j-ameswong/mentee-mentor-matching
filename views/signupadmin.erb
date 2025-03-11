@@ -1,0 +1,36 @@
+<%# Saul %>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Sign Up</title>
+  <meta name="author" content="Team 17">
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+
+<%= erb :header2 %>
+
+<body class="signupPage">
+  <section id="signup" class="centerer">
+      <h2>Sign up for new admin account</h2>
+      <form action="/signupadmin" method="post">
+        <div class="row">
+          <p>University Email:</p>
+          <input name="university_email" type="email" placeholder="University Email" autocomplete="on" />
+          <% if !@user.nil? && @user.errors.include?("email") %>
+            <%= @user.errors["email"][0] %>
+          <% end %>
+        </div>
+          <div class="row centerer">
+            <input type="submit" value="Register">
+          </div>
+      </form>
+      <br>
+      <a href="/login">Log in instead</a>
+  </section>
+</body>
+
+<%= erb :footer %>
+
+</html>

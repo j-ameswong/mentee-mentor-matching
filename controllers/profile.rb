@@ -2,7 +2,11 @@ require "csv"
 
 post "/profile" do
   redirect "/" unless session[:logged_in]
-  @user = User.first(university_email: session[:username])
+  #TODO: refactoring instead of using edit param, just make view via /profile/edit
+  # also note: i'm an idiot frfr
+
+  # TODO 2: make viewing other people's profile possible for future matching features
+  @user = session[:user]
   puts params
 
   if params[:edit] == "1" #&& params[:id] == @user.id
@@ -15,17 +19,19 @@ post "/profile" do
     @user.first_name = params.fetch("first_name").strip unless params[:first_name].nil?
     @user.last_name = params.fetch("last_name").strip unless params[:last_name].nil?
     @user.acc_type = params.fetch("acc_type", @user.acc_type).strip unless params[:acc_type].nil?
-    
-    if !params["year_of_study_year"].nil? && !params["year_of_study_degree"].nil?
-      @user.year_of_study = (params.fetch("year_of_study_year") + " " + params.fetch("year_of_study_degree"))
-    end
-
+    @user.year_of_study = params["year_of_study"].strip unless params[:year_of_study].nil?
     @user.languages = params.fetch("languages").strip unless params[:languages].nil?
-    #@user.profile_pic = Sequel.blob(params.fetch("profile_pic")[:tempfile].read) if params[:profile_pic] && params[:profile_pic][:tempfile]
+    # Alternative method, storing directly in DB with BLOB type data
+    # @user.profile_pic = Sequel.blob(params.fetch("profile_pic")[:tempfile].read) if params[:profile_pic] && params[:profile_pic][:tempfile]
     @user.nationality = params.fetch("nationality") unless params[:nationality].nil?
+<<<<<<< HEAD
     
     #Restrict the size of the profile pic to 5Mb
     #Add errror message is size exceeds 5Mb
+=======
+
+    # Check if tempfile exists
+>>>>>>> 23c0cd39470fba7092e641a0415828532fedb24c
     if params[:profile_pic] && params[:profile_pic][:tempfile]
       @imgdata = params[:profile_pic][:tempfile].read 
       puts "Length of imgdata: #{@imgdata.length}" 
@@ -46,7 +52,10 @@ end
 
 get "/profile" do
   redirect "/" unless session[:logged_in]
-  @user = User.first(university_email: session[:username])
+
+  @user = session[:user]
+  @user.first_time_login = "false" if @user.first_time_login == "true"
+  @user.save
 
   @data = CSV.table("./public/resources/country.csv")
   @countries = @data[:value]
@@ -55,7 +64,7 @@ get "/profile" do
 end
 
 get "/profile/get_image" do
-  @user = User.first(university_email: session[:username])
+  @user = session[:user]
   content_type 'image/*'
 
   #puts "We're trying to get the image"
