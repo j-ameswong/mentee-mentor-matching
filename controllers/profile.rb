@@ -8,6 +8,8 @@ post "/profile" do
   if params[:edit] == "1" #&& params[:id] == @user.id
     # The code here is to update the user's profile, if field is blank 
     # then it will remain the same, else it will update the field
+
+    # TODO: create profile pic variable
     @user.university_email = params.fetch("university_email").strip unless params[:university_email].nil?
     @user.date_of_birth = params.fetch("date_of_birth").strip unless params[:date_of_birth].nil?
     @user.first_name = params.fetch("first_name").strip unless params[:first_name].nil?
@@ -22,6 +24,8 @@ post "/profile" do
     #@user.profile_pic = Sequel.blob(params.fetch("profile_pic")[:tempfile].read) if params[:profile_pic] && params[:profile_pic][:tempfile]
     @user.nationality = params.fetch("nationality") unless params[:nationality].nil?
     
+    #Restrict the size of the profile pic to 5Mb
+    #Add errror message is size exceeds 5Mb
     if params[:profile_pic] && params[:profile_pic][:tempfile]
       @imgdata = params[:profile_pic][:tempfile].read 
       puts "Length of imgdata: #{@imgdata.length}" 
