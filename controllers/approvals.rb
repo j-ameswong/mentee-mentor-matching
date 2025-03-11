@@ -56,8 +56,6 @@ post "/approvals" do
     puts "User #{@user.id} has been approved"
   end
 
-  # TODO: investigate if @variables carry over if redirect instead of erb within the function,
-  # i.e. @user.errors
   @unapproved = User.where(Sequel.|({approved: nil}, {approved: "false"})).all
   erb :approvals
 end

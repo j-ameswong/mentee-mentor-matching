@@ -17,16 +17,13 @@ post "/profile" do
     @user.first_name = params.fetch("first_name").strip unless params[:first_name].nil?
     @user.last_name = params.fetch("last_name").strip unless params[:last_name].nil?
     @user.acc_type = params.fetch("acc_type", @user.acc_type).strip unless params[:acc_type].nil?
-    
-    if !params["year_of_study_year"].nil? && !params["year_of_study_degree"].nil?
-      @user.year_of_study = (params.fetch("year_of_study_year") + " " + params.fetch("year_of_study_degree"))
-    end
-
+    @user.year_of_study = params["year_of_study"].strip unless params[:year_of_study].nil?
     @user.languages = params.fetch("languages").strip unless params[:languages].nil?
     # Alternative method, storing directly in DB with BLOB type data
     # @user.profile_pic = Sequel.blob(params.fetch("profile_pic")[:tempfile].read) if params[:profile_pic] && params[:profile_pic][:tempfile]
     @user.nationality = params.fetch("nationality") unless params[:nationality].nil?
-    
+
+    # Check if tempfile exists
     if params[:profile_pic] && params[:profile_pic][:tempfile]
       @imgdata = params[:profile_pic][:tempfile].read 
       puts "Length of imgdata: #{@imgdata.length}" 
