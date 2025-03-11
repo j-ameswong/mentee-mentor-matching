@@ -11,7 +11,7 @@
 
 <%= erb :header2 %>
 
-<%# TODO: @luqman IMPLEMENT VALIDATION AND SANITATION, i.e. WITH STRIP AND @error ARRAY %>
+<%# TODO 2: Consistent password requirements with account/changepassword page %>
 <body class="signupPage">
   <div class="centerer">
     <section id="signup" class="centerer">
@@ -20,7 +20,7 @@
             <div class="row centerer">
               <div class="column">
                 <p>First Name:</p>
-                <input name="first_name" autocomplete="on" />
+                <input name="first_name" autocomplete="on" required/>
                 <% if !@user.nil? && @user.errors.include?("first_name") %>
                   <% @user.errors["first_name"].each do |error| %>
                   <% puts "Attemptign to pprint first name error"%>
@@ -31,7 +31,7 @@
           
               <div class="column">
                 <p>Last Name:</p>
-                <input name="last_name" autocomplete="on" />
+                <input name="last_name" autocomplete="on" required/>
                 <% if !@user.nil? && @user.errors.include?("last_name") %>
                   <% @user.errors["last_name"].each do |error| %>
                     <p class="error"><%= error %></p>
@@ -43,12 +43,12 @@
             <div class="row centerer">
               <div class="column">
                 <p>University Email:</p>
-                <input name="university_email" type="email" autocomplete="on" />
+                <input name="university_email" type="email" autocomplete="on" required/>
               </div>
 
               <div class="column">
                 <p>DoB:</p>
-                <input name="date_of_birth" type="date" />
+                <input name="date_of_birth" type="date" required/>
                 <% if !@user.nil? && @user.errors.include?("date_of_birth") %>
                   <% @user.errors["date_of_birth"].each do |error| %>
                     <p class="error"><%= error %></p>
@@ -58,9 +58,9 @@
 
               <div class="column">
                 <p>Role:</p>
-                <select name="acc_type">
-                  <option value="Mentee">Mentee</option>
-                  <option value="Mentor">Mentor</option>
+                <select name="acc_type" required>
+                  <option value="mentee">Mentee</option>
+                  <option value="mentor">Mentor</option>
                 </select>
               </div>
             </div>
@@ -84,7 +84,7 @@
               </div>
 
               <div class="row centerer">
-                <input name="password-confirm" type="password" />
+                <input name="confirm_password" type="password" />
                 <% if !@user.nil? && @user.errors.include?("password_mismatch") %>
                   <% @user.errors["password_mismatch"].each do |error| %>
                     <p class="error"><%= error %></p>
@@ -99,17 +99,16 @@
 
               <div id="tnc" class="row">
                 <input class="column" type="checkbox" name="terms" value="terms_accepted">
-                <label class="column" for="terms">By signing up, you agree to our <a target="_blank" href="/terms">Terms & Conditions</label>
+                <label class="column" for="terms">By signing up, you agree to our <a target="_blank" href="/terms">Terms & Conditions</a></label>
               </div>
             </div>
         </form>
         <br>
         <a href="/login">Log in instead</a>
     </section>
+  </div>
 </body>
 
 <%= erb :footer %>
-<%password = params.fetch("password", "").strip%>
-<%confirm_pass = params.fetch("password-confirm", "").strip%>
 
 </html>

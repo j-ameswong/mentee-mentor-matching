@@ -13,12 +13,13 @@
 
 <%# TODO: IMPLEMENT VIEWING PROFILES WITHOUT ALLOWING EDITS AS A MENTOR/MENTEE %>
 <%# TODO: IMPLEMENT ADMINS ALLOWED TO EDIT ALL PROFILES >
-<%# TODO: RESTRICT USER PRIVILEGES IN EDITING THEIR PROFILE DETAILS %>
-<%# TODO: AUTOMATICALLY REDIRECT TO EDIT PROFILE PAGE UPON FIRST SIGN UP %>
+<%# TODO: RESTRICT USER PRIVILEGES IN EDITING THEIR PROFILE DETAILS %
+<%# TODO: handle nil values for certain fields in user profile %>
+
 <body>
   <section class="centerer column">
     <% @edit = params.fetch("edit", "0") %>
-    <% @user = User.first(university_email: session[:username]) %>
+    <% @user = session[:user] %>
     <% @id = params.fetch("id", @user.id) %>
     <%# @edit = "0" if @id != @user.id %>
     <% @viewed_user = User.first(id: @id.to_i) if @id.is_a? String %>
@@ -89,9 +90,9 @@
         <p>Role: <%= @user.acc_type %></p>
         <% if @edit == "1" && @user.acc_type == "admin"%>
           <select name="acc_type" required>
-            <option value="Mentee" <%= 'selected' if @user.acc_type == "Mentee" %>>Mentee</option>
-            <option value="Mentor" <%= 'selected' if @user.acc_type == "Mentor" %>>Mentor</option>
-            <option value="Admin" <%= 'selected' if @user.acc_type == "Admin" %>>Admin</option>
+            <option value="mentee" <%= 'selected' if @user.acc_type == "mentee" %>>Mentee</option>
+            <option value="mentor" <%= 'selected' if @user.acc_type == "mentor" %>>Mentor</option>
+            <option value="admin" <%= 'selected' if @user.acc_type == "admin" %>>Admin</option>
           </select>
         <% end %>
       </div>

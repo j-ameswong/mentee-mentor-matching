@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Approvals</title>
+  <meta name="author" content="Team 17">
+  <link rel="stylesheet" href="/css/styles.css"/>
+</head>
+
+<%= erb :header %>
+
+<body>
+  <% @unapproved.each do |user| %>
+  <p><%= user.university_email %>:
+    <% if user.acc_type != "admin" %>
+      <a href="<%= "/approvals/approve?to_approve=#{user.id}"%>">Approve</a>
+      <a href="<%= "/approvals/deny?to_deny=#{user.id}"%>">Deny</a>
+    <% elsif user.acc_type == "admin" %>
+      <div width="10rem" class="row">
+        <form method="post" action="/approvals">
+          <input type="hidden" name="id" value="<%= user.id %>">
+          <input type="text" name="temp_password">
+          <label for="temp_password">Temporary Password</label>
+          <select name="approved">
+            <option value="approve">Approve</option>
+            <option value="deny">Deny</option>
+          </select>
+          <input type="submit" value="Submit">
+        </form>
+      </div>
+    <% end %>
+  <% end %>
+</form>
+</body>
+
+</html>
+

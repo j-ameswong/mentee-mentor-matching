@@ -3,11 +3,6 @@ get "/" do
   erb :index
 end
 
-get "/account" do
-  redirect "/login" unless session[:logged_in]
-  erb :account
-end
-
 get "/matches" do
   redirect "/login" unless session[:logged_in]
   erb :matches
