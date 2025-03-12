@@ -4,13 +4,18 @@ get "/signup" do
 end
 
 post "/signup" do
-  @error = "Please correct the information below"
   @user = User.new
+  puts params
 
+  # @user.signup returns true if signup successful,
+  # else load page and display errors
   if @user.signup(params)
     @user.save
     redirect "/"
+  else
+    @error = "Please correct the information below"
+    erb :signup
   end
-
-  erb :signup
 end
+
+
