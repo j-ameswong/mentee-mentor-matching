@@ -22,7 +22,7 @@ post "/account/changepassword" do
   if @user.login({ "password" => params[:old_password] })
     @user.hash_pass(params[:new_password])
     @user.save
-    puts "Password changed for #{@user.email}"
+    puts "Password changed for #{@user.university_email}"
   end
 
   erb :changepassword
