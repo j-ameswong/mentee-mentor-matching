@@ -7,22 +7,21 @@ end
 
 # redirects should only happen if successful login, to preserve @user instance and its errors
 post "/login" do
-  email = params.fetch("university_email", "").strip
-  user = User.first(university_email: email)
-  if user.nil?
-    @user = User.new
-  else
-    @user = user
-  end
+  # typed field, could be username or email
+  field = params.fetch("field", "").strip.downcase
+  user = User.find_user(field)
+  # basically, if no user found create a user instance to access User.errors,
+  user.nil? ? @user = User.new : @user = user
 
-  if email.empty?
-    @user.errors.add "email", "An email is required"
+  if field.empty?
+    @user.errors.add "field", "Can't be blank"
   elsif user.nil?
-    @user.errors.add "email", "Email was incorrect or does not exist"
+    @user.errors.add "field", "User or email not found or incorrect"
   elsif @user.login({"password"=>params.fetch("password", "")})
     # password errors are added when @user.login is called
     session[:logged_in] = true
     session[:user] = @user
+
     # if first time logging in, prompt to edit profile if mentee, or change password if admin else go home page
     if @user.first_time_login == "true"
       if @user.acc_type == "admin"
@@ -33,9 +32,7 @@ post "/login" do
     else
       redirect("/")
     end
-  else
-    erb :login
   end
 
-  erb :login unless @user.errors.empty?
+  erb :login
 end
