@@ -104,11 +104,13 @@
 
       <div class="info row">
         <p>Nationality: <%= @user.nationality if @edit == "0" %> </p>
-        <% if @edit == "1" %>
-          <select name="nationality" required>
-            <% @countries.each do |country| %>
-              <option value="<%= country %>" <%= 'selected' if @user.nationality == country %>><%= country %></option>
-            <% end %>
+        <% if @edit == "1" # required for nexts line REMEMBER TO ADD BACK%>
+          <select name="nationality"> 
+            <% if !@countries.nil?%>
+              <% @countries.each do |country| %>
+                <option value="<%= country %>" <%= 'selected' if @user.nationality == country %>><%= country %></option>
+              <% end %>
+            <% end%>
           </select>
         <% end %>
       </div>
