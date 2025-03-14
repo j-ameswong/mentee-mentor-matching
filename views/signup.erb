@@ -9,103 +9,108 @@
   <link rel="stylesheet" href="/css/styles.css" />
 </head>
 
-<%= erb :header2 %>
+<%= erb :loginHeader %>
 
 <%# TODO 2: Consistent password requirements with account/changepassword page %>
-<body class="signupPage">
-  <div class="centerer">
-    <section id="signup" class="centerer">
-        <h2>Sign up for new account</h2>
-        <form action="/signup" method="post">
-            <div class="row centerer">
-              <div class="column">
-                <p>First Name:</p>
-                <input name="first_name" autocomplete="on" required/>
-                <% if !@user.nil? && @user.errors.include?("first_name") %>
-                  <% @user.errors["first_name"].each do |error| %>
-                  <% puts "Attemptign to pprint first name error"%>
-                    <p class="error"><%= error %></p>
-                  <% end %>
-                <% end %>
-              </div>
-          
-              <div class="column">
-                <p>Last Name:</p>
-                <input name="last_name" autocomplete="on" required/>
-                <% if !@user.nil? && @user.errors.include?("last_name") %>
-                  <% @user.errors["last_name"].each do |error| %>
-                    <p class="error"><%= error %></p>
-                  <% end %>
-                <% end %>
-              </div>
-            </div>
-
-            <div class="row centerer">
-              <div class="column">
-                <p>University Email:</p>
-                <input name="university_email" type="email" autocomplete="on" required/>
-              </div>
-
-              <div class="column">
-                <p>DoB:</p>
-                <input name="date_of_birth" type="date" required/>
-                <% if !@user.nil? && @user.errors.include?("date_of_birth") %>
-                  <% @user.errors["date_of_birth"].each do |error| %>
-                    <p class="error"><%= error %></p>
-                  <% end %>
-                <% end %>
-              </div>
-
-              <div class="column">
-                <p>Role:</p>
-                <select name="acc_type" required>
-                  <option value="mentee">Mentee</option>
-                  <option value="mentor">Mentor</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="column">
+<body>
+  <div class="content centerer">
+    <div class="signupPage centerer">
+      <section id="signup" class="centerer">
+          <h2>Sign up for new account</h2>
+          <form action="/signup" method="post">
               <div class="row centerer">
-                <p>Password:</p>
-              </div>
-
-              <div class="row centerer">
-                <input name="password" type="password" />
-                <% if !@user.nil? && @user.errors.include?("password") %>
-                  <% @user.errors["password"].each do |error| %>
-                    <p class="error"><%= error %></p>
+                <div class="column">
+                  <p>First Name:</p>
+                  <input name="first_name" autocomplete="on" required/>
+                  <% if !@user.nil? && @user.errors.include?("first_name") %>
+                    <% @user.errors["first_name"].each do |error| %>
+                    <% puts "Attemptign to pprint first name error"%>
+                      <p class="error"><%= error %></p>
+                    <% end %>
                   <% end %>
-                <% end %>
-              </div>
+                </div>
             
-              <div class="row centerer">
-                <p>Confirm Password:</p>
-              </div>
-
-              <div class="row centerer">
-                <input name="confirm_password" type="password" />
-                <% if !@user.nil? && @user.errors.include?("password_mismatch") %>
-                  <% @user.errors["password_mismatch"].each do |error| %>
-                    <p class="error"><%= error %></p>
+                <div class="column">
+                  <p>Last Name:</p>
+                  <input name="last_name" autocomplete="on" required/>
+                  <% if !@user.nil? && @user.errors.include?("last_name") %>
+                    <% @user.errors["last_name"].each do |error| %>
+                      <p class="error"><%= error %></p>
+                    <% end %>
                   <% end %>
-                <% end %>
+                </div>
               </div>
 
-              <br>
               <div class="row centerer">
-                <input type="submit" value="Register">
+                <div class="column">
+                  <p>University Email:</p>
+                  <input name="university_email" type="email" autocomplete="on" required/>
+                </div>
+
+                <div class="column">
+                  <p>DoB:</p>
+                  <input name="date_of_birth" type="date" required/>
+                  <% if !@user.nil? && @user.errors.include?("date_of_birth") %>
+                    <% @user.errors["date_of_birth"].each do |error| %>
+                      <p class="error"><%= error %></p>
+                    <% end %>
+                  <% end %>
+                </div>
+
+                <div class="column">
+                  <p>Role:</p>
+                  <select name="acc_type" required>
+                    <option value="mentee">Mentee</option>
+                    <option value="mentor">Mentor</option>
+                  </select>
+                </div>
               </div>
 
-              <div id="tnc" class="row">
-                <input class="column" type="checkbox" name="terms" value="terms_accepted">
-                <label class="column" for="terms">By signing up, you agree to our <a target="_blank" href="/terms">Terms & Conditions</a></label>
+              <div class="column">
+                <div class="row centerer">
+                  <p>Password:</p>
+                </div>
+
+                <div class="row centerer">
+                  <input name="password" type="password" />
+                  <% if !@user.nil? && @user.errors.include?("password") %>
+                    <% @user.errors["password"].each do |error| %>
+                      <p class="error"><%= error %></p>
+                    <% end %>
+                  <% end %>
+                </div>
+              
+                <div class="row centerer">
+                  <p>Confirm Password:</p>
+                </div>
+
+                <div class="row centerer">
+                  <input name="confirm_password" type="password" />
+                  <% if !@user.nil? && @user.errors.include?("password_mismatch") %>
+                    <% @user.errors["password_mismatch"].each do |error| %>
+                      <p class="error"><%= error %></p>
+                    <% end %>
+                  <% end %>
+                </div>
+
+                <div id="tnc" class="row centerer">
+                  <input id="tnc-check" type="checkbox" name="terms" value="terms_accepted">
+                  <label for="terms">
+                    By signing up, you agree to our 
+                    <a target="_blank" href="/terms">Terms & Conditions</a>
+                  </label>
+                </div>
+
+                <br>
+                <div class="row centerer">
+                  <input type="submit" value="Register">
+                </div>
               </div>
-            </div>
-        </form>
-        <br>
-        <a href="/login">Log in instead</a>
-    </section>
+          </form>
+          <br>
+          <a id="login-link" href="/login">Log in instead</a>
+      </section>
+    </div>
   </div>
 </body>
 
