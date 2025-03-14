@@ -12,6 +12,8 @@ post "/profile" do
   if params[:edit] == "1" #&& params[:id] == @user.id
     # The code here is to update the user's profile, if field is blank 
     # then it will remain the same, else it will update the field
+
+    @user.profile_pic = params.fetch("profile_pic") unless params[:profile_pic].nil?
     @user.university_email = params.fetch("university_email").strip unless params[:university_email].nil?
     @user.date_of_birth = params.fetch("date_of_birth").strip unless params[:date_of_birth].nil?
     @user.first_name = params.fetch("first_name").strip unless params[:first_name].nil?
@@ -22,25 +24,36 @@ post "/profile" do
     # Alternative method, storing directly in DB with BLOB type data
     # @user.profile_pic = Sequel.blob(params.fetch("profile_pic")[:tempfile].read) if params[:profile_pic] && params[:profile_pic][:tempfile]
     @user.nationality = params.fetch("nationality") unless params[:nationality].nil?
-
+    
+    
     # Check if tempfile exists
     if params[:profile_pic] && params[:profile_pic][:tempfile]
       @imgdata = params[:profile_pic][:tempfile].read 
-      puts "Length of imgdata: #{@imgdata.length}" 
-      File.open("./public/images/user/#{@user.img_hash(@user.university_email)}", "wb") do |f|
-        f.write(@imgdata)
+      file_size = @imgdata.length / (1024*1024)
+      puts file_size + " MB"
+      if file_size > 1 # if exceeds 1 mb
+        puts "File size is too big cuzzehh"
+        @user.errors.add("image", "File size can not exceed 5Mb")
+      else
+        File.open("./public/images/user/#{@user.img_hash(@user.university_email)}", "wb") do |f|
+          f.write(@imgdata)
+          @user.profile_pic = @user.img_hash(@user.university_email)
+        end
       end
-      @user.profile_pic = @user.img_hash(@user.university_email)
     end
-    @user.save
-    redirect "/profile?edit=0"
-  elsif params[:edit] == "0" #&& params[:id] == @user.id
-    redirect "/profile?edit=1"
+
+    if @user.errors.empty?
+      @user.save
+      redirect "/profile?edit=0"
+    else
+      erb :profile
+    end
+
+  # Post when user clicks edit
   else
-    redirect "/profile"
+    redirect "/profile?edit=1"
   end
-  erb :profile
-end
+end 
 
 get "/profile" do
   redirect "/" unless session[:logged_in]

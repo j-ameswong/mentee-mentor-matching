@@ -2,6 +2,7 @@
 require "require_all"
 require "sinatra"
 
+
 # Set up public folder
 set :public_folder, __dir__ + '/public'
 
