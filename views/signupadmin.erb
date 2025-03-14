@@ -8,13 +8,16 @@
   <link rel="stylesheet" href="/css/styles.css" />
 </head>
 
-<%= erb :header2 %>
+<%= erb :loginHeader %>
 
-<body class="signupPage">
-  <section id="signup" class="centerer">
+<body>
+  <div class="content signupPage centerer">
+    <section id="signup-admin" class="centerer">
+
       <h2>Sign up for new admin account</h2>
+
       <form action="/signup/admin" method="post">
-        <div class="row">
+        <div class="row centerer">
           <p>University Email:</p>
           <input name="university_email" type="email" placeholder="University Email" autocomplete="on" />
           <% if !@user.nil? && @user.errors.include?("email") %>
@@ -23,15 +26,16 @@
             <% end %>
           <% end %>
         </div>
-          <div class="row centerer">
-            <input type="submit" value="Register">
-          </div>
+        <br>
+        <div class="row centerer">
+          <input type="submit" value="Register">
+        </div>
       </form>
       <br>
-      <a href="/login">Log in instead</a>
-  </section>
+      <a id="login-link" href="/login">Log in instead</a>
+    </section>
+  </div>
 </body>
 
-<%= erb :footer %>
 
 </html>
