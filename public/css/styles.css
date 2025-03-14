@@ -111,7 +111,21 @@ h2 {
     border-radius: 25px;
 
     width: 50vw;
-    height: 70vh;
+    height: 80vh;
+}
+
+#signup-admin {
+    display: flex;
+    flex-direction: column;
+
+    line-height: 8px;
+
+    background-color: var(--lblu);
+    color: var(--grey);
+    border-radius: 25px;
+
+    width: 50vw;
+    height: 50vh;
 }
 
 #tnc {
