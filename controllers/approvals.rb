@@ -51,7 +51,6 @@ post "/approvals" do
   else
     @user.hash_pass(temp_pass)
     @user.approved = "true"
-    @user.first_time_login = "true"
     @user.save
     puts "User #{@user.id} has been approved"
   end

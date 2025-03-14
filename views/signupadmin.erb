@@ -1,4 +1,3 @@
-<%# Saul %>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -17,12 +16,14 @@
 
       <h2>Sign up for new admin account</h2>
 
-      <form action="/signupadmin" method="post">
+      <form action="/signup/admin" method="post">
         <div class="row centerer">
           <p>University Email:</p>
           <input name="university_email" type="email" placeholder="University Email" autocomplete="on" />
           <% if !@user.nil? && @user.errors.include?("email") %>
-            <%= @user.errors["email"][0] %>
+            <% @user.errors["email"].each do |error| %>
+              <p class="error"><%= error %></p>
+            <% end %>
           <% end %>
         </div>
         <br>

@@ -22,11 +22,10 @@
         <div class="row centerer">
 
           <div class="column">
-            <p>University Email:</p>
-
-            <input name="university_email" type="email" autocomplete="on" />
-            <% if !@user.nil? && !@user.errors["email"].nil? %>
-              <% @user.errors["email"].each do |error| %>
+            <p>Username/University Email:</p>
+            <input name="field" type="text" autocomplete="on" />
+            <% if !@user.nil? && @user.errors.include?("field") %>
+              <% @user.errors["field"].each do |error| %>
                 <p><%= error %></p>
               <% end %>
             <% end %>
@@ -36,7 +35,7 @@
             <p>Password:</p>
 
             <input name="password" type="password" />
-            <% if !@user.nil? && !@user.errors["password"].nil? %>
+            <% if !@user.nil? && @user.errors.include?("password") %>
               <% @user.errors["password"].each do |error| %>
                 <p><%= error %></p>
               <% end %>
@@ -50,7 +49,6 @@
             <input type="submit" value="Log in">
           </div>
         </div>
-
         <% if !@user.nil? && !@user.errors["approval"].nil? %>
           <% @user.errors["approval"].each do |error| %>
             <p><%= error %></p>
