@@ -121,5 +121,6 @@ class User < Sequel::Model(DB)
     errors.add("confirm_password", "Please confirm your password") if confirm_pass.nil? || confirm_pass.empty?
     errors.add("password_mismatch", "Passwords do not match, please try again") if password != confirm_pass
   end
+
 end
 

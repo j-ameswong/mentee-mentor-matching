@@ -13,7 +13,7 @@ post "/profile" do
     # The code here is to update the user's profile, if field is blank 
     # then it will remain the same, else it will update the field
 
-    # TODO: create profile pic variable
+    @user.profile_pic = params.fetch("profile_pic").strip unless params[:profile_pic].nil?
     @user.university_email = params.fetch("university_email").strip unless params[:university_email].nil?
     @user.date_of_birth = params.fetch("date_of_birth").strip unless params[:date_of_birth].nil?
     @user.first_name = params.fetch("first_name").strip unless params[:first_name].nil?
@@ -24,16 +24,18 @@ post "/profile" do
     # Alternative method, storing directly in DB with BLOB type data
     # @user.profile_pic = Sequel.blob(params.fetch("profile_pic")[:tempfile].read) if params[:profile_pic] && params[:profile_pic][:tempfile]
     @user.nationality = params.fetch("nationality") unless params[:nationality].nil?
-<<<<<<< HEAD
     
-    #Restrict the size of the profile pic to 5Mb
-    #Add errror message is size exceeds 5Mb
-=======
-
-    # Check if tempfile exists
->>>>>>> 23c0cd39470fba7092e641a0415828532fedb24c
+    
+    # Check if tempfile exists>>>>>>> 23c0cd39470fba7092e641a0415828532fedb24c
     if params[:profile_pic] && params[:profile_pic][:tempfile]
       @imgdata = params[:profile_pic][:tempfile].read 
+      file_size = @imgdata.length 
+      if file_size > 5*1024*1024
+        puts "File size is too big cuzzehh"
+        @error = "File size can not exceed 5Mb"
+        erb :profile
+        return
+      end
       puts "Length of imgdata: #{@imgdata.length}" 
       File.open("./public/images/user/#{@user.img_hash(@user.university_email)}", "wb") do |f|
         f.write(@imgdata)
@@ -48,7 +50,7 @@ post "/profile" do
     redirect "/profile"
   end
   erb :profile
-end
+end 
 
 get "/profile" do
   redirect "/" unless session[:logged_in]
