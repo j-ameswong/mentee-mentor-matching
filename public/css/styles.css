@@ -109,6 +109,8 @@ p {
 
     padding: 8px;
     text-align: center;
+    margin: 2%;
+    max-width: 50vw;
 }
 
 #home {
@@ -375,4 +377,8 @@ footer {
 .profile_pic {
     text-align: left;
     justify-content: center;
+}
+
+#statements {
+    flex-direction: column;
 }
