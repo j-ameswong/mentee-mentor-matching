@@ -8,7 +8,8 @@
   <link rel="stylesheet" href="/css/styles.css"/>
 </head>
 
-<%= erb :header %>
+<% @title = "Approvals" %>
+<%= erb :"common/header" %>
 
 <body>
   <% @unapproved.each do |user| %>

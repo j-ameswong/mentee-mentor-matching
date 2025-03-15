@@ -1,0 +1,32 @@
+<%# for when not logged in (without any options) %>
+<% @user = session[:user]%>
+<% @accountType = @user.acc_type %>
+
+<% if @accountType == "admin" %>
+    <% @option2 = "New Accounts for Approval" %>
+    <% @link2 = "/approvals" %>
+    <% @option3 = "Manage Accounts" %>
+    <% @link3 = "/" %>
+    <% @option4 = "Flagged Accounts" %>
+    <% @link4 = "/" %>
+<% elsif @accountType == "mentee" %>
+    <% @option2 = "Matching" %>
+    <% @link2 = "/matches" %>
+    <% @option3 = "" %>
+    <% @link3 = "/" %>
+    <% @option4 = "" %>
+    <% @link4 = "/" %>
+<% else %>
+    <% @option2 = "Matching" %>
+    <% @link2 = "/matches" %>
+    <% @option3 = "Mentees" %>
+    <% @link3 = "/" %>
+    <% @option4 = "" %>
+    <% @link4 = "/" %>
+<% end %>
+
+<%= erb :"common/title" %>
+
+<%= erb :"common/sidebar" %>
+
+<%= erb :"common/logo" %>

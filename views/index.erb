@@ -3,12 +3,13 @@
 
 <head>
   <meta charset="utf-8" />
-  <title>Home</title>
+  <title><%= @title %></title>
   <meta name="author" content="Team 17">
   <link rel="stylesheet" href="/css/styles.css"/>
 </head>
 
-<%= erb :header %>
+<% @title = "Home" %>
+<%= erb :"common/header" %>
 
 <body>
     <h2>Welcome to UniConnect</h2>
