@@ -22,7 +22,7 @@
         <div class="row centerer">
 
           <div class="column">
-            <p>Username/University Email:</p>
+            <label id="tnc" for="field">Username/University Email Address:</label>
             <input name="field" type="text" autocomplete="on" />
             <% if !@user.nil? && @user.errors.include?("field") %>
               <% @user.errors["field"].each do |error| %>
