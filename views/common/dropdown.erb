@@ -1,0 +1,16 @@
+<% if params[:profile_pic].nil? then %>
+    <% @pfp = "/images/blankProfilePicture.webp" %>
+<% else %>
+    <% @user.profile_pic = params.fetch("profile_pic") unless %>
+    <% @pfp = @user.profile_pic %>
+<% end %>
+<div class="dropdown">
+
+    <img id="profile-menu" src=<%= @pfp %>>
+
+    <div class="dropdown-content centerer">
+        <a class="dropdown-link centerer" href="/profile">Profile</a>
+        <a class="dropdown-link centerer" href="/support">Help & Support</a>
+        <a class="dropdown-link centerer" href="/statements">Accessibility & Copyright</a>
+    </div>
+</div>
