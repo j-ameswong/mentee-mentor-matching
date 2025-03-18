@@ -1,28 +1,39 @@
 <%# for when not logged in (without any options) %>
 <% @user = session[:user]%>
-<% @accountType = @user.acc_type %>
+<%if !(@user.nil?) %>
+    <% @accountType = @user.acc_type %>
 
-<% if @accountType == "admin" %>
-    <% @option2 = "New Accounts for Approval" %>
-    <% @link2 = "/approvals" %>
-    <% @option3 = "Manage Accounts" %>
-    <% @link3 = "/" %>
-    <% @option4 = "Flagged Accounts" %>
-    <% @link4 = "/" %>
-<% elsif @accountType == "mentee" %>
-    <% @option2 = "Matching" %>
-    <% @link2 = "/matches" %>
-    <% @option3 = "" %>
-    <% @link3 = "/" %>
-    <% @option4 = "" %>
-    <% @link4 = "/" %>
+
+    <% if @accountType == "admin" %>
+        <% @option2 = "New Accounts for Approval" %>
+        <% @link2 = "/approvals" %>
+        <% @option3 = "Manage Accounts" %>
+        <% @link3 = "/" %>
+        <% @option4 = "Flagged Accounts" %>
+        <% @link4 = "/" %>
+    <% elsif @accountType == "mentee" %>
+        <% @option2 = "Matching" %>
+        <% @link2 = "/matches" %>
+        <% @option3 = "" %>
+        <% @link3 = "/" %>
+        <% @option4 = "" %>
+        <% @link4 = "/" %>
+    <% else %>
+        <% @option2 = "Matching" %>
+        <% @link2 = "/matches" %>
+        <% @option3 = "Mentees" %>
+        <% @link3 = "/" %>
+        <% @option4 = "" %>
+        <% @link4 = "/" %>
+    <% end %>
+
 <% else %>
-    <% @option2 = "Matching" %>
-    <% @link2 = "/matches" %>
-    <% @option3 = "Mentees" %>
-    <% @link3 = "/" %>
-    <% @option4 = "" %>
-    <% @link4 = "/" %>
+        <% @option2 = "Log In" %>
+        <% @link2 = "/login" %>
+        <% @option3 = "Sign Up" %>
+        <% @link3 = "/signup" %>
+        <% @option4 = "" %>
+        <% @link4 = "" %>
 <% end %>
 
 <%= erb :"common/title" %>
@@ -30,5 +41,6 @@
 <%= erb :"common/sidebar" %>
 
 <%= erb :"common/logo" %>
-
-<%= erb :"common/dropdown" %>
+<%if !(@user.nil?)%>
+    <%= erb :"common/dropdown" %>
+<%end%>

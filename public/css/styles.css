@@ -289,7 +289,7 @@ input {
     align-items: center;
     text-align: center;
 }
-
+/*
 .matchesPage {
     width: 100%;
     height: 80%;
@@ -311,7 +311,7 @@ input {
 #matchPicture {
     max-width: 150px;
     max-height: 150px;
-}
+} 
 
 .matchesPage ul {
     display: block;
@@ -322,7 +322,7 @@ input {
 .matchesPage ul li {
     padding: 10px 0;
 }
-
+*/
 header a {
     display: block;
     color: black;
