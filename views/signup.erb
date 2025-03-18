@@ -64,10 +64,13 @@
                   <input name="university_email" type="email" autocomplete="on" required/>
                 </div>
 
+
                 <div class="column">
                   <p>DoB:</p>
-                  <input name="date_of_birth" type="date" required/>
-                  <% if !@user.nil? && @user.errors.include?("date_of_birth") %>
+                  <input name="date_of_birth" type="date"
+                         value="<%= @user.date_of_birth if !@user.nil? %>" required/>
+
+                  <% if !@user.nil? && !@user.errors.nil? && @user.errors.include?("date_of_birth") %>
                     <% @user.errors["date_of_birth"].each do |error| %>
                       <p class="error"><%= error %></p>
                     <% end %>
@@ -77,11 +80,27 @@
                 <div class="column">
                   <p>Role:</p>
                   <select name="acc_type" required>
-                    <option value="mentee">Mentee</option>
-                    <option value="mentor">Mentor</option>
+                    <option value="mentee" <%="selected" if !@user.nil? && @user.acc_type == "mentee" %>>Mentee</option>
+                    <option value="mentor" <%="selected" if !@user.nil? && @user.acc_type == "mentor" %>>Mentor</option>
+                  </select>
+
+                  <% if !@user.nil? && !@user.errors.nil? && @user.errors.include?("role") %>
+                    <% @user.errors["role"].each do |error| %>
+                      <p class="error"><%= error %></p>
+                    <% end %>
+                  <% end %>
+                </div>
+
+                <div class="column">
+                  <p>Year of study:</p>
+                  <select name="year_of_study" required>
+                    <% (1..4).each do |y| %>
+                      <option value='<%= y %>' <%="selected" if !@user.nil? && @user.year_of_study == "Year #{y}" %>>Year <%= y %></option>>
+                    <% end %>
                   </select>
                 </div>
               </div>
+
 
               <div class="column">
                 <div class="row centerer">
