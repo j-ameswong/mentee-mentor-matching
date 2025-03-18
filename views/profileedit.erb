@@ -17,108 +17,68 @@
 
 <body>
 <section class="centerer column">
-  <% @edit = params.fetch("edit", "0") %>
-  <% @user = session[:user] %>
-  <% @id = params.fetch("id", @user.id) %>
-  <%# @edit = "0" if @id != @user.id %>
-  <% @viewed_user = User.first(id: @id.to_i) if @id.is_a? String %>
-
+  <%# For the below, only admins can edit someone's year of study or account type %>
   <h3>Profile</h3>
-  <form method="post" action="/profile?edit=<%= @edit %>" enctype="multipart/form-data">
-    <% if @edit == "0" %>
-      <figure class="row profile_pic centerer">
-        <img width="100" height="100" src="/images/user/<%= @user.profile_pic %>" alt="Not Found" onerror="this.src='/images/blankProfilePicture.webp'"/>
-      </figure>
-    <% else %>
+  <form method="post" action="/profile/edit" enctype="multipart/form-data">
       <input type="file" id="profile_pic=" name="profile_pic" accept="image/*">
       <label for="profile_pic">Upload Profile Picture</label>
-    <% end %>
 
-    <% if @edit == "1" %>
       <div class="info row">
-        <p>First Name: <%= @user.first_name if @edit == "0" %></p>
-        <% if @edit == "1" %>
-          <input type="text" name="first_name" value="<%= @user.first_name %>" required>
-        <% end %>
+        <label for="first_name">First Name:</label>
+        <input type="text" id="first_name" name="first_name" value="<%= @user.first_name %>" required>
       </div>
 
       <div class="info row">
-        <p>Last Name: <%= @user.last_name if @edit == "0" %></p>
-        <% if @edit == "1" %>
-          <input type="text" name="last_name" value="<%= @user.last_name %>" required>
-        <% end %>
+        <label for="last_name">Last Name:</label>
+        <input type="text" id="last_name" name="last_name" value="<%= @user.last_name %>" required>
       </div>
-    <% else %>
-      <div class="info row">
-        <p>Name: <%= @user.first_name + ' ' + @user.last_name %></p>
-      </div>
-    <% end %>
 
     <div class="info row">
-      <p>University Email: <%= @user.university_email if @edit == "0" %></p>
-      <% if @edit == "1" %>
-        <input type="text" name="university_email" value="<%= @user.university_email %>" required>
-      <% end %>
+      <label for="university_email">University Email:</label>
+      <input type="text" id="university_email" name="university_email" value="<%= @user.university_email %>" required>
     </div>
 
     <div class="info row languages">
       <% @languages = @user.languages.split(",") unless @user.languages.nil? %>
-      <p>Languages Spoken: <%= ' (Comma separated, no spaces)' if @edit == "1" %></p>
-
-      <ul>
-        <% if @edit == "0" && !@languages.nil?%>
-          <% @languages.each do |language|%>
-            <li><%= language %></li>
-          <% end %>
-        <% end %>
-      </ul>
-
-      <% if @edit == "1" %>
-        <input type="text" name="languages" value="<%= @user.languages %>" required>
-      <% end %>
+      <label for="languages">Languages Spoken: (Comma separated, no spaces)</label>
+      <input type="text" id="languages" name="languages" value="<%= @user.languages %>" required>
     </div>
 
     <div class="info row">
-      <p><%= @edit == "0" ? ("Age: " + @user.age(@user.date_of_birth).to_s) : "Date of Birth:" %></p>
-      <% if @edit == "1" %>
-        <input type="date" name="date_of_birth" value="<%= @user.date_of_birth %>" required>
-      <% end %>
+      <input type="date" name="date_of_birth" value="<%= @user.date_of_birth %>" required>
     </div>
 
     <div class="info row">
-      <p>Role: <%= @user.acc_type %></p>
-      <% if @edit == "1" && @user.acc_type == "admin"%>
-        <select name="acc_type" required>
+      <label for="acc_type">Role:</label>
+      <% if @user.acc_type == "admin"%>
+        <select id="acc_type" name="acc_type" required>
           <option value="mentee" <%= 'selected' if @user.acc_type == "mentee" %>>Mentee</option>
           <option value="mentor" <%= 'selected' if @user.acc_type == "mentor" %>>Mentor</option>
           <option value="admin" <%= 'selected' if @user.acc_type == "admin" %>>Admin</option>
         </select>
+      <% else %>
+        <%= @user.acc_type %>
       <% end %>
     </div>
 
     <div class="info row">
-      <p>Nationality: <%= @user.nationality if @edit == "0" %> </p>
-      <% if @edit == "1" %>
-        <select name="nationality" required>
-          <% @countries.each do |country| %>
-            <option value="<%= country %>" <%= 'selected' if @user.nationality == country %>><%= country %></option>
-          <% end %>
-        </select>
+    <label for="nationality">Nationality:</label>
+    <select id="nationality" name="nationality" required>
+      <% @countries.each do |country| %>
+        <option value="<%= country %>" <%= 'selected' if @user.nationality == country %>><%= country %></option>
       <% end %>
+    </select>
     </div>
 
-
     <div class="info row">
-      <% # set year of study to empty if @user doesn't have it, else instantiate it %>
-      <% @user.year_of_study.nil? ? @year_of_study = "" : @year_of_study = @user.year_of_study %>
-      <p>Year of Study: <%= @year_of_study if @edit == "0" || @user.acc_type != "admin" %> </p>
-      <% # Only admins can edit a user's profile page %>
-      <% if @edit == "1" && @user.acc_type == "admin" %>
-        <select name="year_of_study" required>
+      <label for="year_of_study">Year of Study:</label>
+
+      <% if @user.acc_type == "admin"%>
+        <select id="year_of_study" name="year_of_study" required>
           <% # If user already has a year of study, preselect it %>
           <% if !@user.year_of_study.nil? %>
             <% (1..5).each do |year| %>
-              <option value="Year <%= year %>" <%= 'selected' if @year_of_study[0..5] == "Year #{year}" %>>Year <%= year %></option>
+              <option value="Year <%= year %>" <%= 'selected' if @year_of_study == "Year #{year}" %>>Year <%= year %></option>
             <% end %>
           <% else %>
             <% (1..5).each do |year| %>
@@ -126,14 +86,12 @@
             <% end %>
           <% end %>
         </select>
+      <% else %>
+        <%= @user.year_of_study %>
       <% end %>
     </div>
 
-    <% if @edit == "1" %>
-      <button type="submit">Save</button>
-    <% else %>
-      <button type="submit">Edit</button>
-    <% end %>
+    <button type="submit">Save</button>
   </form>
 </section>
 </body>
