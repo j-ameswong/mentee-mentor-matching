@@ -40,10 +40,15 @@ post "/profile/edit" do
   end
 end
 
+post "/profile" do
+  redirect "/" unless session[:logged_in]
+  redirect "/profile/edit"
+end
+
 get "/profile" do
   redirect "/" unless session[:logged_in]
 
-  @user = params[:id] unless params[:id].nil?
+  @user = User.first(params[:id]) unless params[:id].nil?
   @user = session[:user] if @user.nil?
 
   @data = CSV.table("./public/resources/country.csv")
