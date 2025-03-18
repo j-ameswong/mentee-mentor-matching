@@ -44,10 +44,8 @@ end
 
 get "/profile" do
   redirect "/" unless session[:logged_in]
-
-  @user = session[:user]
-  @user.first_time_login = "false" if @user.first_time_login == "true"
-  @user.save
+  @user = params[:id] unless params[:id].nil?
+  @user = User.new if @user.nil?
 
   @data = CSV.table("./public/resources/country.csv")
   @countries = @data[:value]
@@ -59,6 +57,18 @@ get "/profile/get_image" do
   @user = session[:user]
   content_type 'image/*'
 
-  #puts "We're trying to get the image"
   params[:profile_pic][:tempfile].read if params[:profile_pic] && params[:profile_pic][:tempfile]
+end
+
+get "/profile/edit" do
+  @user = session[:user]
+  @user.first_time_login = "false" if @user.first_time_login == "true"
+  @user.save
+
+  @data = CSV.table("./public/resources/country.csv")
+  @countries = @data[:value]
+
+  params[:edit] = 1
+
+  erb :profileedit
 end
