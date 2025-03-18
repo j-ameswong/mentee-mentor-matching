@@ -2,10 +2,7 @@ require "csv"
 
 post "/profile/edit" do
   redirect "/" unless session[:logged_in]
-  #TODO: refactoring instead of using edit param, just make view via /profile/edit
-  # also note: i'm an idiot frfr
 
-  # TODO 2: make viewing other people's profile possible for future matching features
   @user = session[:user]
   puts params
 
@@ -18,8 +15,6 @@ post "/profile/edit" do
   @user.acc_type = params.fetch("acc_type", @user.acc_type).strip unless params[:acc_type].nil?
   @user.year_of_study = params["year_of_study"].strip unless params[:year_of_study].nil?
   @user.languages = params.fetch("languages").strip unless params[:languages].nil?
-  # Alternative method, storing directly in DB with BLOB type data
-  # @user.profile_pic = Sequel.blob(params.fetch("profile_pic")[:tempfile].read) if params[:profile_pic] && params[:profile_pic][:tempfile]
   @user.nationality = params.fetch("nationality") unless params[:nationality].nil?
 
   # Check if tempfile exists

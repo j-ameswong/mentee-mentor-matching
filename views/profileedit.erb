@@ -10,11 +10,6 @@
 
 <%= erb :header %>
 
-<%# TODO: IMPLEMENT VIEWING PROFILES WITHOUT ALLOWING EDITS AS A MENTOR/MENTEE %>
-<%# TODO: IMPLEMENT ADMINS ALLOWED TO EDIT ALL PROFILES >
-<%# TODO: RESTRICT USER PRIVILEGES IN EDITING THEIR PROFILE DETAILS %
-<%# TODO: handle nil values for certain fields in user profile %>
-
 <body>
 <section class="centerer column">
   <%# For the below, only admins can edit someone's year of study or account type %>
@@ -45,7 +40,8 @@
     </div>
 
     <div class="info row">
-      <input type="date" name="date_of_birth" value="<%= @user.date_of_birth %>" required>
+      <label for="date_of_birth"></label>
+      <input type="date" id="date_of_birth" name="date_of_birth" value="<%= @user.date_of_birth %>" required>
     </div>
 
     <div class="info row">
