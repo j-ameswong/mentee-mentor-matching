@@ -1,7 +1,7 @@
 <% if params[:profile_pic].nil? then %>
     <% @pfp = "/images/blankProfilePicture.webp" %>
 <% else %>
-    <% @user.profile_pic = params.fetch("profile_pic") unless %>
+    <% @user.profile_pic = params.fetch("profile_pic") %>
     <% @pfp = @user.profile_pic %>
 <% end %>
 <div class="dropdown">
