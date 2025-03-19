@@ -16,6 +16,7 @@ post "/profile/edit" do
   @user.year_of_study = params["year_of_study"].strip unless params[:year_of_study].nil?
   @user.languages = params.fetch("languages").strip unless params[:languages].nil?
   @user.nationality = params.fetch("nationality") unless params[:nationality].nil?
+  @user.description = params.fetch("description").strip unless params[:description].nil?
 
   # Check if tempfile exists
   if params[:profile_pic] && params[:profile_pic][:tempfile]

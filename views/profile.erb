@@ -16,7 +16,7 @@
 
 <body>
   <section class="centerer column">
-    <h3>Profile</h3>
+    <h3><%= @viewed_user.username %>'s Profile</h3>
     <form method="post" enctype="multipart/form-data">
       <figure class="row profile_pic centerer">
         <%# If profile pic has not been set by user, use default profile picture %>
@@ -35,6 +35,7 @@
       <div class="info row languages">
         <% @languages = @viewed_user.languages.split(",") unless @viewed_user.languages.nil? %>
 
+        <p>Languages Spoken: </p>
         <ul>
           <% unless @languages.nil?%>
             <% @languages.each do |language|%>
@@ -49,7 +50,7 @@
       </div>
 
       <div class="info row">
-        <p>Role: <%= @viewed_user.acc_type %></p>
+        <p>Role: <%= @viewed_user.acc_type[0].upcase + @viewed_user.acc_type[1..-1] %></p>
       </div>
 
       <div class="info row">
@@ -61,7 +62,12 @@
       </div>
 
       <div class="info row">
-        <p>Background Summary: <%= @viewed_user.description %></p>
+        <div class="row">
+          <p>Background Summary:</p>
+        </div>
+        <div class="row">
+          <p><%= @viewed_user.description %></p>
+        </div>
       </div>
 
       <% if @viewed_user.acc_type == "admin" || @viewed_user.id == session[:user].id %>

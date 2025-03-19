@@ -15,8 +15,14 @@
   <%# For the below, only admins can edit someone's year of study or account type %>
   <h3>Profile</h3>
   <form method="post" action="/profile/edit" enctype="multipart/form-data">
-      <input type="file" id="profile_pic=" name="profile_pic" accept="image/*">
-      <label for="profile_pic">Upload Profile Picture</label>
+      <div class="row">
+        <div class="row">
+          <input type="file" id="profile_pic=" name="profile_pic" accept="image/*">
+        </div>
+        <div class="row">
+          <label style="font-size: small" for="profile_pic">Upload Profile Picture</label>
+        </div>
+      </div>
 
       <div class="info row">
         <label for="first_name">First Name:</label>
@@ -53,17 +59,17 @@
           <option value="admin" <%= 'selected' if @user.acc_type == "admin" %>>Admin</option>
         </select>
       <% else %>
-        <%= @user.acc_type %>
+        <%= @user.acc_type[0].upcase + @user.acc_type[1..-1] %>
       <% end %>
     </div>
 
     <div class="info row">
-    <label for="nationality">Nationality:</label>
-    <select id="nationality" name="nationality" required>
-      <% @countries.each do |country| %>
-        <option value="<%= country %>" <%= 'selected' if @user.nationality == country %>><%= country %></option>
-      <% end %>
-    </select>
+      <label for="nationality">Nationality:</label>
+      <select id="nationality" name="nationality" required>
+        <% @countries.each do |country| %>
+          <option value="<%= country %>" <%= 'selected' if @user.nationality == country %>><%= country %></option>
+        <% end %>
+      </select>
     </div>
 
     <div class="info row">
@@ -87,8 +93,13 @@
       <% end %>
     </div>
 
-    <div class="info row">
-      <input type="text" id="description" name="description" value="<%= @user.description %>">
+    <div id="description_div" class="info row">
+      <div class="row">
+        <label for="description">Describe yourself:</label>
+      </div>
+      <div class="row">
+        <textarea id="description" name="description" rows="10" cols="50"><%= @user.description %></textarea>
+      </div>
     </div>
 
     <button type="submit">Save</button>
