@@ -43,8 +43,8 @@ end
 get "/profile" do
   redirect "/" unless session[:logged_in]
 
-  @user = User.first(params[:id]) unless params[:id].nil?
-  @user = session[:user] if @user.nil?
+  @viewed_user = User.first(id: params[:id].to_i) unless params[:id].nil?
+  @viewed_user = session[:user] if @viewed_user.nil?
 
   @data = CSV.table("./public/resources/country.csv")
   @countries = @data[:value]
