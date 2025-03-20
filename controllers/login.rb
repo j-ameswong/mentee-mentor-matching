@@ -27,7 +27,7 @@ post "/login" do
       if @user.acc_type == "admin"
         redirect("/account/changepassword")
       elsif @user.acc_type == "mentee" || @user.acc_type == "mentor"
-        redirect("/profile")
+        redirect("/profile/edit")
       end
     else
       redirect("/")
