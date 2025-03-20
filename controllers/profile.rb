@@ -2,35 +2,35 @@ require "csv"
 
 post "/profile/edit" do
   redirect "/" unless session[:logged_in]
-
-  @user = session[:user]
   puts params
+  @edited_user = User.first(id: params[:id].to_i)
+  redirect "/profile" if @edited_user.nil?
 
   # The code here is to update the user's profile, if field is blank
   # then it will remain the same, else it will update the field
-  @user.university_email = params.fetch("university_email").strip unless params[:university_email].nil?
-  @user.date_of_birth = params.fetch("date_of_birth").strip unless params[:date_of_birth].nil?
-  @user.first_name = params.fetch("first_name").strip unless params[:first_name].nil?
-  @user.last_name = params.fetch("last_name").strip unless params[:last_name].nil?
-  @user.acc_type = params.fetch("acc_type", @user.acc_type).strip unless params[:acc_type].nil?
-  @user.year_of_study = params["year_of_study"].strip unless params[:year_of_study].nil?
-  @user.languages = params.fetch("languages").strip unless params[:languages].nil?
-  @user.nationality = params.fetch("nationality") unless params[:nationality].nil?
-  @user.description = params.fetch("description").strip unless params[:description].nil?
+  @edited_user.university_email = params.fetch("university_email").strip unless params[:university_email].nil?
+  @edited_user.date_of_birth = params.fetch("date_of_birth").strip unless params[:date_of_birth].nil?
+  @edited_user.first_name = params.fetch("first_name").strip unless params[:first_name].nil?
+  @edited_user.last_name = params.fetch("last_name").strip unless params[:last_name].nil?
+  @edited_user.acc_type = params.fetch("acc_type", @edited_user.acc_type).strip unless params[:acc_type].nil?
+  @edited_user.year_of_study = params["year_of_study"].strip unless params[:year_of_study].nil?
+  @edited_user.languages = params.fetch("languages").strip unless params[:languages].nil?
+  @edited_user.nationality = params.fetch("nationality") unless params[:nationality].nil?
+  @edited_user.description = params.fetch("description").strip unless params[:description].nil?
 
   # Check if tempfile exists
   if params[:profile_pic] && params[:profile_pic][:tempfile]
     @imgdata = params[:profile_pic][:tempfile].read
     puts "Length of imgdata: #{@imgdata.length}"
-    File.open("./public/images/user/#{@user.img_hash(@user.university_email)}", "wb") do |f|
+    File.open("./public/images/user/#{@edited_user.img_hash(@edited_user.university_email)}", "wb") do |f|
       f.write(@imgdata)
     end
-    @user.profile_pic = @user.img_hash(@user.university_email)
+    @edited_user.profile_pic = @edited_user.img_hash(@edited_user.university_email)
   end
 
-  if @user.errors.empty?
-    @user.save
-    redirect "/profile"
+  if @edited_user.errors.empty?
+    @edited_user.save
+    redirect "/profile?id=#{@edited_user.id}"
   else
     erb :profileedit
   end
@@ -63,14 +63,11 @@ end
 get "/profile/edit" do
   redirect "/" unless session[:logged_in]
 
-  puts params[:id]
-  if params["id"].nil?
+  if params[:id].nil?
     @edited_user = session[:user]
-    puts "is nil"
   else
-    @edited_user = User.first(id: params["id"].to_i)
+    @edited_user = User.first(id: params[:id].to_i)
     puts @edited_user.inspect
-    puts "is not nil"
   end
 
   redirect "/profile" if @edited_user.nil?

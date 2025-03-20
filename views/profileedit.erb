@@ -15,7 +15,7 @@
 <section class="centerer column">
   <%# For the below, only admins can edit someone's year of study or account type %>
   <h3>Profile</h3>
-  <form method="post" action="/profile/edit" enctype="multipart/form-data">
+  <form method="post" action="/profile/edit?id=<%= params[:id] %>" enctype="multipart/form-data">
       <div class="row">
         <div class="row">
           <input type="file" id="profile_pic=" name="profile_pic" accept="image/*">
