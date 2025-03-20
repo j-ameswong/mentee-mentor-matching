@@ -1,66 +1,51 @@
 require "csv"
 
+post "/profile/edit" do
+  redirect "/" unless session[:logged_in]
+  puts params
+  @edited_user = User.first(id: params[:id].to_i)
+  redirect "/profile" if @edited_user.nil?
+
+  # The code here is to update the user's profile, if field is blank
+  # then it will remain the same, else it will update the field
+  @edited_user.university_email = params.fetch("university_email").strip unless params[:university_email].nil?
+  @edited_user.date_of_birth = params.fetch("date_of_birth").strip unless params[:date_of_birth].nil?
+  @edited_user.first_name = params.fetch("first_name").strip unless params[:first_name].nil?
+  @edited_user.last_name = params.fetch("last_name").strip unless params[:last_name].nil?
+  @edited_user.acc_type = params.fetch("acc_type", @edited_user.acc_type).strip unless params[:acc_type].nil?
+  @edited_user.year_of_study = params["year_of_study"].strip unless params[:year_of_study].nil?
+  @edited_user.languages = params.fetch("languages").strip unless params[:languages].nil?
+  @edited_user.nationality = params.fetch("nationality") unless params[:nationality].nil?
+  @edited_user.description = params.fetch("description").strip unless params[:description].nil?
+
+  # Check if tempfile exists
+  if params[:profile_pic] && params[:profile_pic][:tempfile]
+    @imgdata = params[:profile_pic][:tempfile].read
+    puts "Length of imgdata: #{@imgdata.length}"
+    File.open("./public/images/user/#{@edited_user.img_hash(@edited_user.university_email)}", "wb") do |f|
+      f.write(@imgdata)
+    end
+    @edited_user.profile_pic = @edited_user.img_hash(@edited_user.university_email)
+  end
+
+  if @edited_user.errors.empty?
+    @edited_user.save
+    redirect "/profile?id=#{@edited_user.id}"
+  else
+    erb :profileedit
+  end
+end
+
 post "/profile" do
   redirect "/" unless session[:logged_in]
-  #TODO: refactoring instead of using edit param, just make view via /profile/edit
-  # also note: i'm an idiot frfr
-
-  # TODO 2: make viewing other people's profile possible for future matching features
-  @user = session[:user]
-  puts params
-
-  if params[:edit] == "1" #&& params[:id] == @user.id
-    # The code here is to update the user's profile, if field is blank 
-    # then it will remain the same, else it will update the field
-
-    @user.profile_pic = params.fetch("profile_pic") unless params[:profile_pic].nil?
-    @user.university_email = params.fetch("university_email").strip unless params[:university_email].nil?
-    @user.date_of_birth = params.fetch("date_of_birth").strip unless params[:date_of_birth].nil?
-    @user.first_name = params.fetch("first_name").strip unless params[:first_name].nil?
-    @user.last_name = params.fetch("last_name").strip unless params[:last_name].nil?
-    @user.acc_type = params.fetch("acc_type", @user.acc_type).strip unless params[:acc_type].nil?
-    @user.year_of_study = params["year_of_study"].strip unless params[:year_of_study].nil?
-    @user.languages = params.fetch("languages").strip unless params[:languages].nil?
-    # Alternative method, storing directly in DB with BLOB type data
-    # @user.profile_pic = Sequel.blob(params.fetch("profile_pic")[:tempfile].read) if params[:profile_pic] && params[:profile_pic][:tempfile]
-    @user.nationality = params.fetch("nationality") unless params[:nationality].nil?
-    
-    
-    # Check if tempfile exists
-    if params[:profile_pic] && params[:profile_pic][:tempfile]
-      @imgdata = params[:profile_pic][:tempfile].read 
-      file_size = @imgdata.length / (1024*1024)
-      puts file_size + " MB"
-      if file_size > 1 # if exceeds 1 mb
-        puts "File size is too big cuzzehh"
-        @user.errors.add("image", "File size can not exceed 5Mb")
-      else
-        File.open("./public/images/user/#{@user.img_hash(@user.university_email)}", "wb") do |f|
-          f.write(@imgdata)
-          @user.profile_pic = @user.img_hash(@user.university_email)
-        end
-      end
-    end
-
-    if @user.errors.empty?
-      @user.save
-      redirect "/profile?edit=0"
-    else
-      erb :profile
-    end
-
-  # Post when user clicks edit
-  else
-    redirect "/profile?edit=1"
-  end
-end 
+  redirect "/profile/edit?id=#{params[:id]}"
+end
 
 get "/profile" do
   redirect "/" unless session[:logged_in]
 
-  @user = session[:user]
-  @user.first_time_login = "false" if @user.first_time_login == "true"
-  @user.save
+  @viewed_user = User.first(id: params[:id].to_i) unless params[:id].nil?
+  @viewed_user = session[:user] if @viewed_user.nil?
 
   @data = CSV.table("./public/resources/country.csv")
   @countries = @data[:value]
@@ -72,6 +57,26 @@ get "/profile/get_image" do
   @user = session[:user]
   content_type 'image/*'
 
-  #puts "We're trying to get the image"
   params[:profile_pic][:tempfile].read if params[:profile_pic] && params[:profile_pic][:tempfile]
+end
+
+get "/profile/edit" do
+  redirect "/" unless session[:logged_in]
+
+  if params[:id].nil?
+    @edited_user = session[:user]
+  else
+    @edited_user = User.first(id: params[:id].to_i)
+    puts @edited_user.inspect
+  end
+
+  redirect "/profile" if @edited_user.nil?
+
+  @edited_user.first_time_login = "false" if @edited_user.first_time_login == "true"
+  @edited_user.save
+
+  @data = CSV.table("./public/resources/country.csv")
+  @countries = @data[:value]
+
+  erb :profileedit
 end
