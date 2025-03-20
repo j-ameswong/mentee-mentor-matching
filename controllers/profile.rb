@@ -38,7 +38,7 @@ end
 
 post "/profile" do
   redirect "/" unless session[:logged_in]
-  redirect "/profile/edit"
+  redirect "/profile/edit?id=#{params[:id]}"
 end
 
 get "/profile" do
@@ -63,14 +63,23 @@ end
 get "/profile/edit" do
   redirect "/" unless session[:logged_in]
 
-  @user = session[:user]
-  @user.first_time_login = "false" if @user.first_time_login == "true"
-  @user.save
+  puts params[:id]
+  if params["id"].nil?
+    @edited_user = session[:user]
+    puts "is nil"
+  else
+    @edited_user = User.first(id: params["id"].to_i)
+    puts @edited_user.inspect
+    puts "is not nil"
+  end
+
+  redirect "/profile" if @edited_user.nil?
+
+  @edited_user.first_time_login = "false" if @edited_user.first_time_login == "true"
+  @edited_user.save
 
   @data = CSV.table("./public/resources/country.csv")
   @countries = @data[:value]
-
-  @edit = "1"
 
   erb :profileedit
 end

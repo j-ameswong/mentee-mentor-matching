@@ -270,14 +270,6 @@ input {
     width: 90%;
 }
 
-#description_div {
-    width: 100%;
-    min-height: 5vh;
-}
-
-#description_div textarea {
-    height: 200px;
-}
 
 .info {
     padding: 5px 0;
@@ -442,6 +434,15 @@ footer {
 
 .profilePage .selected {
     font-weight: bold;
+}
+
+#description_div {
+    width: 100%;
+    min-height: 5vh;
+}
+
+#description_div textarea {
+    height: 200px;
 }
 
 .profilePage footer {

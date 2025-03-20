@@ -8,7 +8,8 @@
   <link rel="stylesheet" href="/css/styles.css" />
 </head>
 
-<%= erb :header %>
+<% @title = "Profile" %>
+<%= erb :"common/header" %>
 
 <body>
 <section class="centerer column">
@@ -26,40 +27,40 @@
 
       <div class="info row">
         <label for="first_name">First Name:</label>
-        <input type="text" id="first_name" name="first_name" value="<%= @user.first_name %>" required>
+        <input type="text" id="first_name" name="first_name" value="<%= @edited_user.first_name %>" required>
       </div>
 
       <div class="info row">
         <label for="last_name">Last Name:</label>
-        <input type="text" id="last_name" name="last_name" value="<%= @user.last_name %>" required>
+        <input type="text" id="last_name" name="last_name" value="<%= @edited_user.last_name %>" required>
       </div>
 
     <div class="info row">
       <label for="university_email">University Email:</label>
-      <input type="text" id="university_email" name="university_email" value="<%= @user.university_email %>" required>
+      <input type="text" id="university_email" name="university_email" value="<%= @edited_user.university_email %>" required>
     </div>
 
     <div class="info row languages">
-      <% @languages = @user.languages.split(",") unless @user.languages.nil? %>
+      <% @languages = @edited_user.languages.split(",") unless @edited_user.languages.nil? %>
       <label for="languages">Languages Spoken: (Comma separated, no spaces)</label>
-      <input type="text" id="languages" name="languages" value="<%= @user.languages %>" required>
+      <input type="text" id="languages" name="languages" value="<%= @edited_user.languages %>" required>
     </div>
 
     <div class="info row">
       <label for="date_of_birth"></label>
-      <input type="date" id="date_of_birth" name="date_of_birth" value="<%= @user.date_of_birth %>" required>
+      <input type="date" id="date_of_birth" name="date_of_birth" value="<%= @edited_user.date_of_birth %>" required>
     </div>
 
     <div class="info row">
       <label for="acc_type">Role:</label>
-      <% if @user.acc_type == "admin"%>
+      <% if session[:user].acc_type == "admin"%>
         <select id="acc_type" name="acc_type" required>
-          <option value="mentee" <%= 'selected' if @user.acc_type == "mentee" %>>Mentee</option>
-          <option value="mentor" <%= 'selected' if @user.acc_type == "mentor" %>>Mentor</option>
-          <option value="admin" <%= 'selected' if @user.acc_type == "admin" %>>Admin</option>
+          <option value="mentee" <%= 'selected' if @edited_user.acc_type == "mentee" %>>Mentee</option>
+          <option value="mentor" <%= 'selected' if @edited_user.acc_type == "mentor" %>>Mentor</option>
+          <option value="admin" <%= 'selected' if @edited_user.acc_type == "admin" %>>Admin</option>
         </select>
       <% else %>
-        <%= @user.acc_type[0].upcase + @user.acc_type[1..-1] %>
+        <%= @edited_user.acc_type[0].upcase + @edited_user.acc_type[1..-1] %>
       <% end %>
     </div>
 
@@ -67,7 +68,7 @@
       <label for="nationality">Nationality:</label>
       <select id="nationality" name="nationality" required>
         <% @countries.each do |country| %>
-          <option value="<%= country %>" <%= 'selected' if @user.nationality == country %>><%= country %></option>
+          <option value="<%= country %>" <%= 'selected' if @edited_user.nationality == country %>><%= country %></option>
         <% end %>
       </select>
     </div>
@@ -75,10 +76,10 @@
     <div class="info row">
       <label for="year_of_study">Year of Study:</label>
 
-      <% if @user.acc_type == "admin"%>
+      <% if session[:user].acc_type == "admin"%>
         <select id="year_of_study" name="year_of_study" required>
           <% # If user already has a year of study, preselect it %>
-          <% if !@user.year_of_study.nil? %>
+          <% if !@edited_user.year_of_study.nil? %>
             <% (1..5).each do |year| %>
               <option value="Year <%= year %>" <%= 'selected' if @year_of_study == "Year #{year}" %>>Year <%= year %></option>
             <% end %>
@@ -89,7 +90,7 @@
           <% end %>
         </select>
       <% else %>
-        <%= @user.year_of_study %>
+        <%= @edited_user.year_of_study %>
       <% end %>
     </div>
 
@@ -98,7 +99,7 @@
         <label for="description">Describe yourself:</label>
       </div>
       <div class="row">
-        <textarea id="description" name="description" rows="10" cols="50"><%= @user.description %></textarea>
+        <textarea id="description" name="description" rows="10" cols="50"><%= @edited_user.description %></textarea>
       </div>
     </div>
 
@@ -106,7 +107,5 @@
   </form>
 </section>
 </body>
-
-<%= erb :footer %>
 
 </html>
