@@ -30,3 +30,6 @@ get "/terms" do
   erb :terms
 end
 
+get "/statements" do
+  erb :statements
+end

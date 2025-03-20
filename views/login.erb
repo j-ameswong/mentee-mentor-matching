@@ -9,25 +9,32 @@
   <link rel="stylesheet" href="/css/styles.css" />
 </head>
 
-<%= erb :header2 %>
+<% @title = "Log In" %>
+<%= erb :"common/loginHeader"%>
 
 <body>
-  <div class="signupPage centerer">
+  <div class="content centerer">
     <section id="login" class="centerer">
+
       <h2>Log in</h2>
+
       <form method="post">
+
         <div class="row centerer">
+
           <div class="column">
-            <p>Username/University Email:</p>
+            <label id="tnc" for="field">Username/University Email Address:</label>
             <input name="field" type="text" autocomplete="on" />
             <% if !@user.nil? && @user.errors.include?("field") %>
               <% @user.errors["field"].each do |error| %>
                 <p><%= error %></p>
               <% end %>
             <% end %>
+
           </div>
           <div class="column">
             <p>Password:</p>
+
             <input name="password" type="password" />
             <% if !@user.nil? && @user.errors.include?("password") %>
               <% @user.errors["password"].each do |error| %>
@@ -39,10 +46,11 @@
         <br>
         <div class="column">
           <div class="row centerer">
+
             <input type="submit" value="Log in">
           </div>
         </div>
-        <% if !@user.nil? && @user.errors.include?("approval") %>
+        <% if !@user.nil? && !@user.errors["approval"].nil? %>
           <% @user.errors["approval"].each do |error| %>
             <p><%= error %></p>
           <% end %>
@@ -52,8 +60,8 @@
       <a href="/signup">Sign up instead</a>
     </section>
   </div>
+
 </body>
 
-<%= erb :footer %>
 
 </html>

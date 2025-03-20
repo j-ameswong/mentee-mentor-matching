@@ -10,7 +10,8 @@
   <link rel="stylesheet" href="/css/styles.css"/>
 </head>
 
-<%= erb :header %>
+<% @title = "Suspension" %>
+<%= erb :"common/header" %>
 
 <body>
     <div id="messageContainer">
@@ -20,4 +21,3 @@
     </div>
 </body>
 
-<%= erb :footer %>

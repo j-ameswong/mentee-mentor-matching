@@ -9,7 +9,8 @@
   <link rel="stylesheet" href="/css/styles.css" />
 </head>
 
-<%= erb :header %>
+<% @title = "Profile" %>
+<%= erb :"common/header" %>
 
 <%# TODO: IMPLEMENT VIEWING PROFILES WITHOUT ALLOWING EDITS AS A MENTOR/MENTEE %>
 <%# TODO: IMPLEMENT ADMINS ALLOWED TO EDIT ALL PROFILES %>
@@ -79,6 +80,5 @@
   </section>
 </body>
 
-<%= erb :footer %>
 
 </html>

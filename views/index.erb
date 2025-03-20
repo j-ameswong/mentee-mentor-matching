@@ -3,46 +3,30 @@
 
 <head>
   <meta charset="utf-8" />
-  <title>Home</title>
+  <% @title = "Home" %>
+  <title><%= @title %></title>
   <meta name="author" content="Team 17">
   <link rel="stylesheet" href="/css/styles.css"/>
 </head>
 
-<%= erb :header %>
-
 <body>
-    <h2>Welcome to UniConnect</h2>
-    <div class="indexPageText">
-        <div class="howToUse">
-            Lets get started on how to use UniConnect.
-            Lets get started on how to use UniConnect.
-            Lets get started on how to use UniConnect.
-            Lets get started on how to use UniConnect.
-            Lets get started on how to use UniConnect.
-        </div>
-        <div class="nicePictue">
-            <img src="public/images/brain.png" alt="Nice picture">
-        </div>
-        <div class="currentMatches"> 
-            So how does matching actually work? 
-            So how does matching actually work? 
-            So how does matching actually work? 
-            So how does matching actually work? 
-            So how does matching actually work? 
-        </div>
-    </div>
-    <div class="indexPageText">
-        <div class="extraText">
-            What extra text should be placed here? What extra text should be placed here?
-            What extra text should be placed here? What extra text should be placed here?
-            What extra text should be placed here? What extra text should be placed here?
-            What extra text should be placed here? What extra text should be placed here?
-            What extra text should be placed here? What extra text should be placed here?
-        </div>
-    </div>
+    <%= erb :"common/header" %>
+    
+    <% if @accountType == "admin" %>
+        <%# TODO: add content for @whatIs and @howTo for admins' home page %>
+        <% @whatIs = ""%>
+        <% @howTo = ""%>
+    <% elsif @accountType == "mentee" %>
+        <% @whatIs = "UniConnect is a web application which can be used to match with mentors whose profiles you like the look of."%>
+        <% @howTo = "UniConnect is designed as a useful tool to help find the perfect mentor for your university experience. To get started, all you need to do is go to the 'Matching' page (linked to the left of this text) to view all currently available mentors. You can then view their profiles, and if you like them, you can apply to them. If they accept your application, you will gain access to each other's contact information (university email address) so that you can begin to get in touch."%>
+    <% else %>
+        <% @whatIs = "UniConnect is a web application which can be used to match with mentees whose profiles you like the look of."%>
+        <% @howTo = "UniConnect is designed as a useful tool to help find mentees for you to share your university experience with, and hopefully help with theirs. To get started, all you need to do is go to the 'Matching' page (linked to the left of this text) to view all mentees who have applied to you. You can then view their profiles, and if you like them, you can accept their applications. If you do, you will gain access to each other's contact information (university email address) so that you can begin to get in touch."%>
+    <% end %>
+
+    <%= erb :homeContent %>
 </body>
 
-<%= erb :footer %>
 
 </html>
 
