@@ -78,5 +78,25 @@ Sequel.migration do
       index [:mentor_id, :mentee_id]
       index :status
     end
+
+    create_table(:expertises) do
+      primary_key :id
+      foreign_key :user_id, :users
+      String :skill
+      DateTime :created_at
+      DateTime :updated_at
+
+      index :skill
+    end
+
+    create_table(:languages) do
+      primary_key :id
+      foreign_key :user_id, :users
+      String :language
+      DateTime :created_at
+      DateTime :updated_at
+
+      index :user_id
+    end
   end
 end
