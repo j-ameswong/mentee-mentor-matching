@@ -3,6 +3,7 @@ require 'digest'
 require 'date'
 require 'time_difference'
 require_relative '../db/db'
+require_relative '../models'
 
 class User < Sequel::Model
   plugin :timestamps, update_on_create: true
@@ -14,6 +15,9 @@ class User < Sequel::Model
 
   one_to_many :mentor_matches, class: :Match, key: :mentor_id
   one_to_many :mentee_matches, class: :Match, key: :mentee_id
+
+  one_to_many :user_languages
+  one_to_many :user_expertises
 
   ROLES = %w[admin mentor mentee]
 

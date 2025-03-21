@@ -6,9 +6,6 @@ Sequel.migration do
       primary_key :id
       String :username
       String :email
-      String :first_name
-      String :last_name
-      Date :date_of_birth
       String :role # mentor, mentee, admin
       DateTime :created_at
       DateTime :updated_at
@@ -31,6 +28,10 @@ Sequel.migration do
     create_table(:profiles) do
       primary_key :id
       foreign_key :user_id, :users
+      String :first_name
+      String :last_name
+      String :nationality
+      Date :date_of_birth
       String :profile_picture
       Text :bio_brief
       Text :bio_detailed
@@ -43,11 +44,10 @@ Sequel.migration do
     create_table(:mentor_profiles) do
       primary_key :id
       foreign_key :user_id, :users
-      String :expertise # An idea is to select from a list for possible expertises, ask me @frontend, I don't know how to describe...
       Integer :year_of_study
       Integer :num_matches # Cannot exceed max_matches
       Integer :max_matches # This should only be set by mentor
-      String :badges
+      Text :badges
       DateTime :created_at
       DateTime :updated_at
 
@@ -57,7 +57,7 @@ Sequel.migration do
     create_table(:mentee_profiles) do
       primary_key :id
       foreign_key :user_id, :users
-      String :availability # true or false
+      Boolean :availability # true or false
       DateTime :created_at
       DateTime :updated_at
 
@@ -79,7 +79,7 @@ Sequel.migration do
       index :status
     end
 
-    create_table(:expertises) do
+    create_table(:user_expertises) do
       primary_key :id
       foreign_key :user_id, :users
       String :skill
@@ -89,7 +89,7 @@ Sequel.migration do
       index :skill
     end
 
-    create_table(:languages) do
+    create_table(:user_languages) do
       primary_key :id
       foreign_key :user_id, :users
       String :language

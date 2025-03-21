@@ -1,3 +1,10 @@
+require 'sequel'
+require 'digest'
+require 'date'
+require 'time_difference'
+require_relative '../db/db'
+require_relative '../models'
+
 class Profile < Sequel::Model
   plugin :timestamps, update_on_create: true
 
@@ -13,11 +20,12 @@ class MentorProfile < Sequel::Model
   plugin :timestamps, update_on_create: true
 
   many_to_one :user
+  one_to_many :expertises, class: :UserExpertise, key: :user_id
 
   def validate
     super
     errors.add(:user_id, 'cannot be empty') if user_id.nil?
-    errors.add(:user_id, 'must belong to a mentor') unless user && user.mentor?
+    errors.add(:user_id, 'must belong to a mentor') unless user&.mentor?
   end
 
   def available

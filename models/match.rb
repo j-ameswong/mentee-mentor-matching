@@ -1,9 +1,15 @@
+require 'sequel'
+require 'digest'
+require 'date'
+require 'time_difference'
+require_relative '../db/db'
+require_relative '../models'
+
 class Match < Sequel::Model
   plugin :timestamps, update_on_create: true
 
-  many_to_one :mentor, class: :User
-  many_to_one :mentee, class: :User
-  many_to_one :admin, class: :User
+  many_to_one :mentor_id, class: :User
+  many_to_one :mentee_id, class: :User
 
   STATUSES = %w[pending active completed cancelled]
 
