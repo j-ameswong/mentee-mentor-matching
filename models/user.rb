@@ -4,164 +4,186 @@ require 'date'
 require 'time_difference'
 require_relative '../db/db'
 
-# Specify user table, by default it downcases User and adds an s to the end
-class User < Sequel::Model(DB)
-  def signup(params)
-    self.university_email = params.fetch("university_email", "").strip
+class User < Sequel::Model
+  plugin :timestamps, update_on_create: true
 
-    self.date_of_birth = params.fetch("date_of_birth", "")
+  one_to_one :authentication
+  one_to_one :profile
+  one_to_one :mentor_profile
+  one_to_one :mentee_profile
 
-    self.first_name = params.fetch("first_name", "").strip
-    self.first_name[0] = first_name[0].upcase if first_name.length > 0
+  one_to_many :mentor_matches, class: :Match, key: :mentor_id
+  one_to_many :mentee_matches, class: :Match, key: :mentee_id
 
-    self.last_name = params.fetch("last_name", "").strip
-    self.last_name[0] = last_name[0].upcase if last_name.length > 0
+  ROLES = %w[admin mentor mentee]
 
-    self.acc_type = params.fetch("acc_type", "")
-
-    # gen_uid produces a random id
-    self.id = gen_uid
-
-    self.year_of_study = params.fetch("year_of_study")
-
-    self.username = params.fetch("username", "").strip.downcase
-
-    terms = params.fetch("terms", "").strip
-
-    password = params.fetch("password", "").strip
-    confirm_password = params.fetch("confirm_password", "").strip
-
-    self.approved = "false"
-    self.first_time_login = "true"
-
-    if university_email.empty?
-      errors.add("email", "Fill in your email address")
-    else
-      errors.add("email", "Email already taken") unless User.first(university_email: university_email).nil?
-      errors.add("email", "Please use your university email") unless university_email.include?("@sheffield.ac.uk")
-    end
-
-    errors.add("first_name", "Fill in your first name") if first_name.empty?
-    errors.add("last_name", "Fill in your last name") if last_name.empty?
-    errors.add("date_of_birth", "Cannot be empty") if date_of_birth.empty?
-
-    errors.add("username", "Username cannot be empty") if username.empty?
-    errors.add("username", "Username already exists") unless User.first(username: username).nil?
-
-    errors.add("terms", "Terms must be accepted") if terms.nil? || terms.empty? || terms != "terms_accepted"
-
-    errors.add("role", "First years cannot be mentors") if year_of_study == "1" && acc_type == "mentor"
-    errors.add("role", "Only first years can be mentees") if year_of_study != "1" && acc_type == "mentee"
-
-    self.check_password(password, confirm_password)
-
-    # Set up AES for encryption.
-    aes = OpenSSL::Cipher.new('AES-128-CBC').encrypt
-    # Generate a random IV.
-    self.iv = Sequel.blob(aes.random_iv)
-    # Generate a random salt.
-    self.salt = Sequel.blob(OpenSSL::Random.random_bytes(16))
-    # Get the key from the password and salt.
-    aes.key = OpenSSL::PKCS5.pbkdf2_hmac_sha1(password, salt, 20_000, 16)
-    # Encrypt the data
-    self.data_crypt = Sequel.blob(aes.update(username) + aes.final)
-
-    if iv.nil? || iv.empty? || salt.nil? || salt.empty? || data_crypt.nil? || data_crypt.empty?
-      errors.add("encryption", "Encryption error")
-    end
-
-    if self.errors.nil?
-      puts "Critical error! User.errors is nil"
-    end
-    return false unless self.errors.empty?
-
-    true
+  def validate
+    super
+    # errors.add(:email, 'cannot be empty') if email.nil? || email.empty?
+    # errors.add(:role, 'must be valid') unless ROLES.include?(role)
   end
 
-  def login(params)
-    password = params.fetch("password", "").strip
-    # temp solution to fix admin attempting to sign in before approval
-    if self.iv.nil? || self.salt.nil? || self.data_crypt.nil?
-      errors.add("password", "Password has not been set by admin, please contact admin")
-    else
-      # Set up AES for decryption.
-      aes = OpenSSL::Cipher.new('AES-128-CBC').decrypt
-
-      # Set the IV.
-      aes.iv = self.iv
-
-      # Get the key from the password and salt.
-      aes.key = OpenSSL::PKCS5.pbkdf2_hmac_sha1(password, self.salt, 20_000, 16)
-
-      # Try to decrypt the data.
-      begin
-        aes.update(self.data_crypt) + aes.final
-      rescue OpenSSL::Cipher::CipherError
-        errors.add("password", "Password was incorrect")
-      end
-    end
-
-    errors.add("approval", "Approval has not been granted by admin yet, please try again later") if self.approved != "true"
-    return false unless errors.empty?
-    true
+  def full_name
+    "#{first_name} #{last_name}"
   end
 
-  def gen_uid
-    # generate and return unique id
-    idd = 100000000 + rand(899999999)
-    while User.first(id: idd) != nil
-      idd = 100000000 + rand(899999999)
-    end
-
-    idd
+  def admin?
+    role == 'admin'
   end
 
-  def age(date_of_birth)
-    dob = DateTime.parse(date_of_birth)
-    now = DateTime.now
-    # return age
-    TimeDifference.between(dob, now).in_years.to_i
-  end
-  
-  def img_hash(username)
-    Digest::SHA256.hexdigest(username)
+  def mentor?
+    role == 'mentor'
   end
 
-  # function useful for hashing and storing temporary password for admin
-  def hash_pass(password)
-    # Set up AES for encryption.
-    aes = OpenSSL::Cipher.new('AES-128-CBC').encrypt
-
-    # Generate a random IV.
-    self.iv = Sequel.blob(aes.random_iv)
-
-    # Generate a random salt.
-    self.salt = Sequel.blob(OpenSSL::Random.random_bytes(16))
-
-    # Get the key from the password and salt.
-    aes.key = OpenSSL::PKCS5.pbkdf2_hmac_sha1(password, salt, 20_000, 16)
-
-    # Encrypt the data
-    self.data_crypt = Sequel.blob(aes.update(self.username) + aes.final)
-  end
-
-  def check_password(password, confirm_pass)
-    if password.empty?
-      errors.add("password", "Please fill in your password")
-    else
-      errors.add("password", "Password must be at least 8 characters") if password.length < 8
-    end
-
-    errors.add("confirm_password", "Please confirm your password") if confirm_pass.nil? || confirm_pass.empty?
-    errors.add("password_mismatch", "Passwords do not match, please try again") if password != confirm_pass
-  end
-
-  def self.find_user(field)
-    if field.include? "sheffield.ac.uk"
-      User.first(university_email: field)
-    else
-      User.first(username: field)
-    end
+  def mentee?
+    role == 'mentee'
   end
 end
 
+# models/authentication.rb
+class Authentication < Sequel::Model
+  plugin :timestamps, update_on_create: true
+
+  many_to_one :user
+
+  def validate
+    super
+    errors.add(:user_id, 'cannot be empty') if user_id.nil?
+    errors.add(:salt, 'cannot be empty') if salt.nil? || salt.empty?
+    errors.add(:iv, 'cannot be empty') if iv.nil? || iv.empty?
+    errors.add(:data_crypt, 'cannot be empty') if data_crypt.nil? || data_crypt.empty?
+  end
+end
+
+# models/profile.rb
+class Profile < Sequel::Model
+  plugin :timestamps, update_on_create: true
+
+  many_to_one :user
+
+  def validate
+    super
+    errors.add(:user_id, 'cannot be empty') if user_id.nil?
+  end
+
+  # Serialize and deserialize JSON fields
+  def skills
+    JSON.parse(super) rescue []
+  end
+
+  def skills=(value)
+    super(value.is_a?(String) ? value : value.to_json)
+  end
+
+  def interests
+    JSON.parse(super) rescue []
+  end
+
+  def interests=(value)
+    super(value.is_a?(String) ? value : value.to_json)
+  end
+end
+
+# models/mentor_profile.rb
+class MentorProfile < Sequel::Model
+  plugin :timestamps, update_on_create: true
+
+  many_to_one :user
+
+  def validate
+    super
+    errors.add(:user_id, 'cannot be empty') if user_id.nil?
+    errors.add(:user_id, 'must belong to a mentor') unless user && user.mentor?
+  end
+
+  def availability
+    JSON.parse(super) rescue {}
+  end
+
+  def availability=(value)
+    super(value.is_a?(String) ? value : value.to_json)
+  end
+end
+
+# models/mentee_profile.rb
+class MenteeProfile < Sequel::Model
+  plugin :timestamps, update_on_create: true
+
+  many_to_one :user
+
+  def validate
+    super
+    errors.add(:user_id, 'cannot be empty') if user_id.nil?
+    errors.add(:user_id, 'must belong to a mentee') unless user && user.mentee?
+  end
+
+  def availability
+    JSON.parse(super) rescue {}
+  end
+
+  def availability=(value)
+    super(value.is_a?(String) ? value : value.to_json)
+  end
+
+  def goals
+    JSON.parse(super) rescue []
+  end
+
+  def goals=(value)
+    super(value.is_a?(String) ? value : value.to_json)
+  end
+end
+
+# models/match.rb
+class Match < Sequel::Model
+  plugin :timestamps, update_on_create: true
+
+  many_to_one :mentor, class: :User
+  many_to_one :mentee, class: :User
+  many_to_one :admin, class: :User
+
+  STATUSES = %w[pending active completed cancelled]
+
+  def validate
+    super
+    # errors.add(:mentor_id, 'cannot be empty') if mentor_id.nil?
+    # errors.add(:mentee_id, 'cannot be empty') if mentee_id.nil?
+    # errors.add(:status, 'must be valid') unless STATUSES.include?(status)
+    # errors.add(:mentor_id, 'must belong to a mentor') unless mentor && mentor.mentor?
+    # errors.add(:mentee_id, 'must belong to a mentee') unless mentee && mentee.mentee?
+  end
+
+  def active?
+    status == 'active'
+  end
+
+  def pending?
+    status == 'pending'
+  end
+
+  def completed?
+    status == 'completed'
+  end
+
+  def cancelled?
+    status == 'cancelled'
+  end
+
+  def activate
+    self.status = 'active'
+    self.start_date = Date.today
+    save
+  end
+
+  def complete
+    self.status = 'completed'
+    self.end_date = Date.today
+    save
+  end
+
+  def cancel
+    self.status = 'cancelled'
+    self.end_date = Date.today
+    save
+  end
+end

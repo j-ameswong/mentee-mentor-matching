@@ -1,4 +1,3 @@
-# db/migrations/001_create_initial_schema.rb
 require_relative '../database'
 
 Sequel.migration do
@@ -10,7 +9,7 @@ Sequel.migration do
       String :first_name
       String :last_name
       Date :date_of_birth
-      String :role
+      String :role # mentor, mentee, admin
       DateTime :created_at
       DateTime :updated_at
 
@@ -32,10 +31,9 @@ Sequel.migration do
     create_table(:profiles) do
       primary_key :id
       foreign_key :user_id, :users
-      Text :bio
-      Text :skills
-      Text :interests
-      String :profile_picture_url
+      String :profile_picture
+      Text :bio_brief
+      Text :bio_detailed
       DateTime :created_at
       DateTime :updated_at
 
@@ -45,9 +43,11 @@ Sequel.migration do
     create_table(:mentor_profiles) do
       primary_key :id
       foreign_key :user_id, :users
-      String :expertise
+      String :expertise # An idea is to select from a list for possible expertises, ask me @frontend, I don't know how to describe...
       Integer :year_of_study
-      Integer :match_slots_remaining
+      Integer :num_matches # Cannot exceed max_matches
+      Integer :max_matches # This should only be set by mentor
+      String :badges
       DateTime :created_at
       DateTime :updated_at
 
@@ -57,9 +57,7 @@ Sequel.migration do
     create_table(:mentee_profiles) do
       primary_key :id
       foreign_key :user_id, :users
-      Text :goals
-      Text :background_summary
-      Text :availability
+      String :availability # true or false
       DateTime :created_at
       DateTime :updated_at
 
@@ -68,10 +66,10 @@ Sequel.migration do
 
     create_table(:matches) do
       primary_key :id
-      foreign_key :mentor_id, :users, null: false
-      foreign_key :mentee_id, :users, null: false
-      String :status
-      foreign_key :admin_id, :users
+      foreign_key :mentor_id, :users
+      foreign_key :mentee_id, :users
+      String :status # pending, matched, completed or cancelled
+      Text :application_message
       Date :start_date
       Date :end_date
       DateTime :created_at
