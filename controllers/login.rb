@@ -1,5 +1,3 @@
-require_relative '../models/user'
-
 get "/login" do
   redirect "/" if session[:logged_in]
   erb :login
@@ -9,14 +7,10 @@ end
 post "/login" do
   # typed field, could be username or email
   field = params.fetch("field", "").strip.downcase
-  user = User.find_user(field)
-  # basically, if no user found create a user instance to access User.errors,
-  user.nil? ? @user = User.new : @user = user
+  @user = User.find_user(field)
 
   if field.empty?
     @user.errors.add "field", "Can't be blank"
-  elsif user.nil?
-    @user.errors.add "field", "User or email not found or incorrect"
   elsif @user.login({"password"=>params.fetch("password", "")})
     # password errors are added when @user.login is called
     session[:logged_in] = true

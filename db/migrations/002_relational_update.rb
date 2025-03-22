@@ -21,6 +21,8 @@ Sequel.migration do
       BLOB :iv
       BLOB :salt
       BLOB :data_crypt
+      Boolean :approved
+      Boolean :first_time_login
       DateTime :created_at
       DateTime :updated_at
 

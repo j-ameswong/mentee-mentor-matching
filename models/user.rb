@@ -18,12 +18,12 @@ class User < Sequel::Model
   one_to_many :user_languages
   one_to_many :user_expertises
 
-  ROLES = %w[admin mentor mentee]
+  ROLES = %w[admin mentor mentee] # fancy way to do a comma separated list
 
   def validate
     super
-    # errors.add(:email, 'cannot be empty') if email.nil? || email.empty?
-    # errors.add(:role, 'must be valid') unless ROLES.include?(role)
+    errors.add(:email, 'cannot be empty') if email.nil? || email.empty?
+    errors.add(:role, 'must be valid') unless ROLES.include?(role)
   end
 
   def full_name
@@ -40,6 +40,15 @@ class User < Sequel::Model
 
   def mentee?
     self.role == 'mentee'
+  end
+
+  def find_user(field)
+    # either lookup users table by email or username
+    Validation.str_email_address(field) ? user = self.first(email: field) : user = self.first(username: field)
+
+    # basically, if no user found create a user instance
+    self.errors.add(:field, "Can't be blank") if user.nil?
+    user.nil? ? self.new : user
   end
 end
 

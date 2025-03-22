@@ -1,5 +1,6 @@
 require 'sequel'
 
+# expand_path gets the absolute file path, for better management of relative file paths
 migrations_dir = File.expand_path('../migrations', __dir__)
 database_dir = File.expand_path('../', __dir__)
 
