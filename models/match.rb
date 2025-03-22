@@ -3,7 +3,6 @@ require 'digest'
 require 'date'
 require 'time_difference'
 require_relative '../db/db'
-require_relative '../models'
 
 class Match < Sequel::Model
   plugin :timestamps, update_on_create: true

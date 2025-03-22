@@ -3,9 +3,8 @@ require 'digest'
 require 'date'
 require 'time_difference'
 require_relative '../db/db'
-require_relative '../models'
 
-class Authentication < Sequel::Model
+class Authentication < Sequel::Model(:authentication)
   plugin :timestamps, update_on_create: true
 
   many_to_one :user

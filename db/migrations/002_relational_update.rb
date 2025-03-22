@@ -34,6 +34,7 @@ Sequel.migration do
       String :last_name
       String :nationality
       Date :date_of_birth
+      String :gender
       String :profile_picture
       Text :bio_brief
       Text :bio_detailed

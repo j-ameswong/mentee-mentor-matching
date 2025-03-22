@@ -3,9 +3,9 @@ require 'digest'
 require 'date'
 require 'time_difference'
 require_relative '../db/db'
-
+old_db = Sequel.connect("sqlite://#{__dir__}/../db/db_test_backup.sqlite3")
 # Specify user table, by default it downcases User and adds an s to the end
-class User < Sequel::Model(DB)
+class OldUser < Sequel::Model(old_db[:users])
   def signup(params)
     self.university_email = params.fetch("university_email", "").strip
 
