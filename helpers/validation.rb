@@ -1,9 +1,15 @@
 # Provide various functions for validating data
 module Validation
-  def str_email_address?(str)
+  def valid_email_address?(str)
     return false if str.nil?
 
     str.match?(/\A\S+@\S+\Z/)
+  end
+
+  def valid_input?(str)
+    return false if str.nil?
+
+    string.match?(/\A[A-Za-z]+\z/)
   end
 
   def str_digits?(str)
