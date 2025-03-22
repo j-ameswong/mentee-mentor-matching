@@ -1,7 +1,9 @@
-require_relative '../database'
+# New schema. Relational mapping. Not perfect, but functional.
 
 Sequel.migration do
   change do
+    drop_table(:users)
+
     create_table(:users) do
       primary_key :id
       String :username
@@ -85,7 +87,7 @@ Sequel.migration do
       String :skill
       DateTime :created_at
       DateTime :updated_at
-
+      
       index :skill
     end
 
