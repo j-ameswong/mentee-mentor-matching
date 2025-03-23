@@ -9,8 +9,8 @@ class Profile < Sequel::Model
 
   many_to_one :user
 
-  def profile_change(params)
-    # self.user_id = user_id
+  def change(params)
+    self.user_id = params[:id] if params.key?(:id)
     self.date_of_birth = params[:date_of_birth] if params.key?(:date_of_birth)
     self.first_name = params.fetch(:first_name, "").strip.capitalize if params.key?(:first_name)
     self.last_name = params.fetch(:last_name, "").strip.capitalize if params.key?(:last_name)
