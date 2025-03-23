@@ -109,11 +109,7 @@ class User < Sequel::Model
       # mentor_profiles table, MentorProfile class
       if self.mentor?
         mentor = MentorProfile.new
-        mentor.user_id = self.id
-        mentor.year_of_study = params[:year_of_study]
-        mentor.num_matches = 0
-        # @mentor.max_matches <== set in initial edit profile page
-
+        mentor.update!(params)
         unless mentor.valid?
           puts "Error when writing to mentor_profiles!"
           self.errors.merge!(mentor.errors)

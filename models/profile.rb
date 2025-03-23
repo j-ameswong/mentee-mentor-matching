@@ -53,7 +53,7 @@ class MentorProfile < Sequel::Model
     errors.add(:year_of_study, "first years cannot be mentors") if year_of_study < 2
     errors.add(:num_matches, "cannot exceed max_matches set") if num_matches > max_matches
     errors.add(:max_matches, "cannot exceed maximum allowed") if max_matches > 3
-    errors.add(:user_id, "must belong to a mentor") unless @role == mentor?
+    errors.add(:user_id, "must belong to a mentor") unless @role.nil? || @role == mentor?
   end
 
   def available
@@ -73,20 +73,17 @@ class MenteeProfile < Sequel::Model
   def update!(params)
     params.key?(:role) ? @role = params[:role] : @role = "mentee"
     self.user_id = params[:user_id] if params.key?(:user_id)
-    self.year_of_study = params[:year_of_study] if params.key?(:year_of_study)
-    self.num_matches = 0 if self.num_matches.nil?
-    self.num_matches = params[:num_matches] if params.key?(:num_matches)
-    self.max_matches = 0 if self.max_matches.nil?
-    self.max_matches = params[:max_matches] if params.key?(:max_matches)
+    params.key?(:availability) ? params[:availability] : self.availability = true
   end
 
   def validate
     super
     errors.add(:user_id, "cannot be empty") if user_id.nil?
-    errors.add(:user_id, "must belong to a mentee") unless user&.mentee?
+    errors.add(:user_id, "must belong to a mentee") unless @role == "mentee"
+    errors.add(:availability, "status must exist") if availablility.nil?
   end
 
   def available?
-    availability == "true" ? true : false
+    availability
   end
 end
