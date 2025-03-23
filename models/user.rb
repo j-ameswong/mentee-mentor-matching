@@ -28,8 +28,9 @@ class User < Sequel::Model
 
   def validate
     super
-    errors.add(:email, 'cannot be empty') if email.nil? || email.empty?
-    errors.add(:role, 'must be valid') unless ROLES.include?(role)
+    errors.add(:email, "cannot be empty") if email.nil? || email.empty?
+    errors.add(:role, "must be valid") unless ROLES.include?(role)
+    errors.add(:terms, "must be accepted") if @terms.nil? || @terms.empty?
   end
 
   def full_name
@@ -66,6 +67,28 @@ class User < Sequel::Model
     id
   end
 
+  def delete_from_all
+    UserLanguage.where(user_id: self.id).delete
+    UserExpertise.where(user_id: self.id).delete
+
+    # Matches.where(mentor_id: self.id).delete
+    # Matches.where(mentee_id: self.id).delete
+
+    mentee_profile = MenteeProfile.first(user_id: self.id)
+    mentee_profile.delete if mentee_profile
+
+    mentor_profile = MentorProfile.first(user_id: self.id)
+    mentor_profile.delete if mentor_profile
+
+    profile = Profile.first(user_id: self.id)
+    profile.delete if profile
+
+    authentication = Authentication.first(user_id: self.id)
+    authentication.delete if authentication
+
+    self.delete
+  end
+
   def signup(params)
     self.id = self.gen_uid
     self.username = params.fetch(:username, "").strip.downcase
@@ -96,14 +119,14 @@ class User < Sequel::Model
         mentor.year_of_study = params[:year_of_study]
         mentor.num_matches = 0
         # @mentor.max_matches <== set in initial edit profile page
-        begin
-          mentor.save
-        rescue Sequel::ValidationError
+
+        unless mentor.valid?
           puts "Error when writing to mentor_profiles: " + mentor.errors.full_messages
           self.errors.merge(mentor.errors)
         end
 
-        UserExpertise.create(user_id: self.id)
+        expertise = UserExpertise.new
+        expertise.user_id = self.id
       end
 
       if self.mentee?
@@ -129,14 +152,24 @@ class User < Sequel::Model
     auth.approved = false # be default false, after admin approval, true
     auth.first_time_login = true
 
-    begin
-      auth.save
-    rescue Sequel::ValidationError
+    unless auth.valid?
       puts "Error when writing to authentication: " + auth.errors.full_messages
       self.errors.merge(auth.errors)
     end
 
     @terms = params.fetch("terms", "").strip
+
+    if self.valid? && (self.errors.nil? || self.errors.empty?)
+      profile.save if profile
+      lang.save if lang
+      mentor.save if mentor
+      expertise.save if expertise
+      mentee.save if mentee
+      auth.save if auth
+      self.save
+    else
+      puts "Errors found!"
+    end
 
 =begin
     if university_email.empty?
