@@ -1,8 +1,3 @@
-require 'sequel'
-require 'digest'
-require 'date'
-require 'openssl'
-# require 'time_difference'
 require_relative '../db/db'
 Dir["#{__dir__}/*.rb"].each do |file|
   require file
@@ -38,15 +33,15 @@ class User < Sequel::Model
   end
 
   def admin?
-    self.role == 'admin'
+    self.role == "admin"
   end
 
   def mentor?
-    self.role == 'mentor'
+    self.role == "mentor"
   end
 
   def mentee?
-    self.role == 'mentee'
+    self.role == "mentee"
   end
 
   def find_user(field)
@@ -67,7 +62,7 @@ class User < Sequel::Model
     id
   end
 
-  def delete_from_all
+  def self.delete_from_all
     UserLanguage.where(user_id: self.id).delete
     UserExpertise.where(user_id: self.id).delete
 
@@ -86,12 +81,14 @@ class User < Sequel::Model
     authentication = Authentication.first(user_id: self.id)
     authentication.delete if authentication
 
-    self.delete
+    User.first(id: id).first.delete if User.first(id: id).first
   end
 
   # Signup method, admins bypass most of it, only needing to be in users and auth table
   def signup(params)
+    # users table
     self.id = self.gen_uid
+    params = params.merge(:id => self.id)
     self.username = params.fetch(:username, "").strip.downcase
     self.email = params.fetch(:email, "").strip.downcase
     self.role = params[:role]
@@ -99,13 +96,13 @@ class User < Sequel::Model
     # profiles table, Profile class, admins dont need profile
     unless self.admin?
       profile = Profile.new
-      profile.change(params.merge(:id => self.id))
+      profile.update!(params)
       unless profile.valid?
         puts "Error when writing to profiles!"
         self.errors.merge!(profile.errors)
       end
 
-      # languages spoken by each user, initialize first then populate in edit profile page
+      # user_languages table, initialize first then populate in edit profile page
       lang = UserLanguage.new
       lang.user_id = self.id
 
@@ -122,6 +119,7 @@ class User < Sequel::Model
           self.errors.merge!(mentor.errors)
         end
 
+        # user_expertises table, for mentors
         expertise = UserExpertise.new
         expertise.user_id = self.id
       end
@@ -134,36 +132,23 @@ class User < Sequel::Model
       end
 
       @terms = params.fetch("terms", "").strip
-    end
 
-    # Below will be run for all roles including admin
-    auth = Authentication.new
-    auth.user_id = self.id
-
-    pass = params.fetch(:password, "").strip
-    confirm_password = params.fetch(:confirm_password, "").strip
-
-    aes = OpenSSL::Cipher.new('AES-128-CBC').encrypt
-    auth.iv = Sequel.blob(aes.random_iv)
-    auth.salt = Sequel.blob(OpenSSL::Random.random_bytes(16))
-    aes.key = OpenSSL::PKCS5.pbkdf2_hmac_sha1(pass, auth.salt, 20_000, 16)
-    auth.data_crypt = Sequel.blob(aes.update(username) + aes.final)
-
-    auth.approved = false # be default false, after admin approval, true
-    auth.first_time_login = true
-
-    unless auth.valid?
-      puts "Error when writing to authentication!"
-      self.errors.merge!(auth.errors)
+      auth = Authentication.new
+      auth.update!(params)
+      unless auth.valid?
+        puts "Error when writing to authentication!"
+        self.errors.merge!(auth.errors)
+      end
     end
 
     if self.valid? && (self.errors.nil? || self.errors.empty?)
+      puts "Attempting to save new user with UID: #{self.id}"
       profile.save if profile
       lang.save if lang
       mentor.save if mentor
       expertise.save if expertise
       mentee.save if mentee
-      #auth.save if auth
+      auth.save if auth
       self.save
     else
       puts "Errors found!"

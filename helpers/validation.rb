@@ -1,5 +1,9 @@
 # Provide various functions for validating data
 module Validation
+  def match(str1, str2)
+    return false unless str1 && str2
+    str1 == str2
+  end
   def valid_email_address?(str)
     return false if str.nil?
 

@@ -1,5 +1,5 @@
 require "logger"
-require "sequel"
+require_relative File.expand_path("../helpers/local_helpers", __dir__)
 
 # Start to build the path to the database/log file
 path = "#{__dir__}/db"
