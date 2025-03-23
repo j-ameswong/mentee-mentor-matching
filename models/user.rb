@@ -113,6 +113,7 @@ class User < Sequel::Model
       unless profile.valid?
         puts "Error when writing to profiles!"
         self.errors.merge!(profile.errors)
+        #puts self.errors.full_messages
       end
 
       # mentor_profiles table, MentorProfile class
@@ -122,6 +123,7 @@ class User < Sequel::Model
         unless mentor.valid?
           puts "Error when writing to mentor_profiles!"
           self.errors.merge!(mentor.errors)
+          #puts self.errors.full_messages
         end
       end
 
@@ -140,6 +142,9 @@ class User < Sequel::Model
       end
     end
 
+    # Looks like the memory is referencing the actual hash, and it's rewritten when checking with .valid?
+    # Below is to save the values up to a certain point and then reappending them
+    all_other_errors = self.errors.clone
     if self.valid? && (self.errors.nil? || self.errors.empty?)
       puts "Attempting to save new user with UID: #{self.id}"
       self.save
@@ -151,7 +156,7 @@ class User < Sequel::Model
       auth.save if auth
     else
       puts "Errors found!"
-      puts self.errors.full_messages
+      puts self.errors.merge!(all_other_errors).full_messages
     end
 
 =begin

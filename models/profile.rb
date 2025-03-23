@@ -77,7 +77,7 @@ class MentorProfile < Sequel::Model
     errors.add(:year_of_study, "first years cannot be mentors") if year_of_study.to_i < 2
     errors.add(:num_matches, "cannot exceed max_matches set") if num_matches > max_matches
     errors.add(:max_matches, "cannot exceed maximum allowed") if max_matches > 3
-    errors.add(:user_id, "must belong to a mentor") unless @role.nil? || @role == mentor?
+    errors.add(:user_id, "must belong to a mentor") unless @role.nil? || @role == "mentor"
   end
 
   def available

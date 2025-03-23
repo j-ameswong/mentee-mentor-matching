@@ -7,7 +7,7 @@ if choice == "1"
   @user = User.new
 
   params = {:username => "contessa", :email => "contessa@sheffield.ac.uk", :password => "contessa1", :confirm_password => "contessa1",
-            :role => "mentee", :date_of_birth => (Date.today - 365*20), :first_name => "@@@adad.11Arch", :last_name => "Linux"}
+            :role => "mentor", :date_of_birth => (Date.today - 365*20), :first_name => "@@@adad.11Arch", :last_name => "Linux"}
 
   @user.signup(params)
 elsif choice == "2"
