@@ -1,5 +1,6 @@
-require 'openssl'
-require 'sequel'
-require 'digest'
-require 'date'
-require 'time_difference'
+require "openssl"
+require "sequel"
+require "digest"
+require "date"
+require "time_difference"
+require_relative "./validation"

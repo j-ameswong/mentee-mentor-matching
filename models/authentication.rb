@@ -10,7 +10,9 @@ class Authentication < Sequel::Model(:authentication)
     params.key?(:role) ? @role = params[:role] : @role = self.user.role
 
     # Admin does not have a password on sign up
-    unless @role == "admin"
+    # ok, so basically, later at signup/admin, need to make sure params[:role] is admin,
+    # then when approving by admin, do not have params role
+    unless params[:role] == "admin"
       @password = params.fetch(:password, "").strip
       @confirm_password = params.fetch(:confirm_password, "").strip
 
@@ -19,7 +21,7 @@ class Authentication < Sequel::Model(:authentication)
         self.iv = Sequel.blob(aes.random_iv)
         self.salt = Sequel.blob(OpenSSL::Random.random_bytes(16))
         aes.key = OpenSSL::PKCS5.pbkdf2_hmac_sha1(@password, self.salt, 20_000, 16)
-        self.data_crypt = Sequel.blob(aes.update(self.user_id) + aes.final)
+        self.data_crypt = Sequel.blob(aes.update(self.user_id.to_s) + aes.final)
       end
     end
 
@@ -27,20 +29,22 @@ class Authentication < Sequel::Model(:authentication)
     self.approved = false # be default false, after admin approval, true
     self.first_time_login = true
   end
+
   def validate
     super
+
     errors.add(:user_id, "cannot be empty") if user_id.nil?
     errors.add(:approved, "status not found") if approved.nil?
     errors.add(:first_time_login, "status not found") if first_time_login.nil?
 
-    unless self.user.admin?
+    unless @role == "admin"
       errors.add(:iv, "cannot be empty") if iv.nil?
       errors.add(:salt, "cannot be empty") if salt.nil?
       errors.add(:data_crypt, "cannot be empty") if data_crypt.nil?
       errors.add(:password, "cannot be blank") if @password.nil? || @password.empty?
       errors.add(:password, "must be more than 8 characters") if @password.length < 9
-      errors.add(:confirm_password, "cannot be blank") if
-      errors.add(:confirm_password, "must match password") unless Validation.match(@password, @confirm_password)
+      errors.add(:confirm_password, "cannot be blank") if @confirm_password.nil? || @confirm_password.empty?
+      errors.add(:confirm_password, "must match password") unless @password == @confirm_password
     end
   end
 end

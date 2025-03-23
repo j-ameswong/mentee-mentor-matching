@@ -22,10 +22,23 @@ class User < Sequel::Model
   ROLES = %w[admin mentor mentee] # fancy way to do a comma separated list
 
   def validate
+    validator = Validation.new
     super
-    errors.add(:email, "cannot be empty") if email.nil? || email.empty?
+
     errors.add(:role, "must be valid") unless ROLES.include?(role)
-    # errors.add(:terms, "must be accepted") if @terms.nil? || @terms.empty?
+    if email.nil? || email.empty?
+      errors.add("email", "must be filled in")
+    else
+      errors.add("email", "already taken") unless User.first(email: email).nil?
+      errors.add("email", "is in invalid format") unless validator.valid_email_address?(email)
+      errors.add("email", "must be your university email") unless validator.valid_university_email?(email)
+    end
+
+    errors.add("username", "cannot be empty") if username.empty?
+    errors.add("username", "must be valid") unless validator.valid_input?(username)
+    errors.add("username", "already exists") unless User.first(username: username).nil?
+
+    errors.add(:terms, "must be accepted") if @terms.nil? || @terms.empty?
   end
 
   def full_name
@@ -62,12 +75,12 @@ class User < Sequel::Model
     id
   end
 
-  def self.delete_from_all
+  def delete_from_all
     UserLanguage.where(user_id: self.id).delete
     UserExpertise.where(user_id: self.id).delete
 
-    # Matches.where(mentor_id: self.id).delete
-    # Matches.where(mentee_id: self.id).delete
+    Matches.where(mentor_id: self.id).delete
+    Matches.where(mentee_id: self.id).delete
 
     mentee_profile = MenteeProfile.first(user_id: self.id)
     mentee_profile.delete if mentee_profile
@@ -81,14 +94,14 @@ class User < Sequel::Model
     authentication = Authentication.first(user_id: self.id)
     authentication.delete if authentication
 
-    User.first(id: id).first.delete if User.first(id: id).first
+    self.delete
   end
 
   # Signup method, admins bypass most of it, only needing to be in users and auth table
   def signup(params)
     # users table
     self.id = self.gen_uid
-    params = params.merge(:id => self.id)
+    params = params.merge(:user_id => self.id)
     self.username = params.fetch(:username, "").strip.downcase
     self.email = params.fetch(:email, "").strip.downcase
     self.role = params[:role]
@@ -102,10 +115,6 @@ class User < Sequel::Model
         self.errors.merge!(profile.errors)
       end
 
-      # user_languages table, initialize first then populate in edit profile page
-      lang = UserLanguage.new
-      lang.user_id = self.id
-
       # mentor_profiles table, MentorProfile class
       if self.mentor?
         mentor = MentorProfile.new
@@ -114,17 +123,11 @@ class User < Sequel::Model
           puts "Error when writing to mentor_profiles!"
           self.errors.merge!(mentor.errors)
         end
-
-        # user_expertises table, for mentors
-        expertise = UserExpertise.new
-        expertise.user_id = self.id
       end
 
       if self.mentee?
         mentee = MenteeProfile.new
-        mentee.user_id = self.id
-        mentee.availability = true
-        mentee.save
+        mentee.update!(params)
       end
 
       @terms = params.fetch("terms", "").strip
@@ -139,48 +142,26 @@ class User < Sequel::Model
 
     if self.valid? && (self.errors.nil? || self.errors.empty?)
       puts "Attempting to save new user with UID: #{self.id}"
+      self.save
       profile.save if profile
       lang.save if lang
       mentor.save if mentor
       expertise.save if expertise
       mentee.save if mentee
       auth.save if auth
-      self.save
     else
       puts "Errors found!"
       puts self.errors.full_messages
     end
 
 =begin
-    if university_email.empty?
-      errors.add("email", "Fill in your email address")
-    else
-      errors.add("email", "Email already taken") unless User.first(university_email: university_email).nil?
-      errors.add("email", "Please use your university email") unless university_email.include?("@sheffield.ac.uk")
-    end
 
     errors.add("first_name", "Fill in your first name") if first_name.empty?
     errors.add("last_name", "Fill in your last name") if last_name.empty?
     errors.add("date_of_birth", "Cannot be empty") if date_of_birth.empty?
 
-    errors.add("username", "Username cannot be empty") if username.empty?
-    errors.add("username", "Username already exists") unless User.first(username: username).nil?
-
-    errors.add("terms", "Terms must be accepted") if terms.nil? || terms.empty? || terms != "terms_accepted"
-
     errors.add("role", "First years cannot be mentors") if year_of_study == "1" && acc_type == "mentor"
     errors.add("role", "Only first years can be mentees") if year_of_study != "1" && acc_type == "mentee"
-
-    self.check_password(password, confirm_password)
-
-
-    if self.errors.nil?
-      puts "Critical error! User.errors is nil"
-    end
-    return false unless self.errors.empty?
-
-    true
- end
 =end
   end
 end
