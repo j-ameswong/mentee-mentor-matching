@@ -1,12 +1,14 @@
 require 'sequel'
 require 'digest'
-# require 'date'
+require 'date'
+require 'openssl'
 # require 'time_difference'
 require_relative '../db/db'
 Dir["#{__dir__}/*.rb"].each do |file|
   require file
 end
 
+# TODO: create_user command, rescue ValidationError by doing nothing instead of reloading view
 class User < Sequel::Model
   plugin :timestamps, update_on_create: true
 
@@ -27,7 +29,6 @@ class User < Sequel::Model
   def validate
     super
     errors.add(:email, 'cannot be empty') if email.nil? || email.empty?
-    errors.add(:role, 'cannot be empty') if role.nil? || role.empty?
     errors.add(:role, 'must be valid') unless ROLES.include?(role)
   end
 
@@ -56,37 +57,88 @@ class User < Sequel::Model
     user.nil? ? self.new : user
   end
 
+  def gen_uid
+    # generate until return unique 9 digit id
+    id = 100000000 + rand(899999999)
+    while User.first(id: id) != nil
+      id = 100000000 + rand(899999999)
+    end
+    id
+  end
+
   def signup(params)
-    self.username = params.fetch(:username, "").strip
-    self.email = params.fetch(:email, "").strip
-    self.role = params.fetch(:role)
+    self.id = self.gen_uid
+    self.username = params.fetch(:username, "").strip.downcase
+    self.email = params.fetch(:email, "").strip.downcase
+    self.role = params[:role]
 
-    Profile.create(user_id: self.id)
-    self.profile.date_of_birth = params.fetch(:date_of_birth, "")
+    # profiles table, Profile class, admins dont need profile
+    unless self.admin?
+      profile = Profile.new
+      profile.user_id = self.id
+      profile.date_of_birth = params[:date_of_birth]
+      profile.first_name = params.fetch(:first_name, "").strip.capitalize
+      profile.last_name = params.fetch(:last_name, "").strip.capitalize
+      # maybe rescue in profile, add profile errors to user errors, then display like that??
+      unless profile.valid?
+        puts "Error when writing to profiles: " + profile.errors.full_messages
+        self.errors.merge(profile.errors)
+      end
 
-    self.first_name = params.fetch("first_name", "").strip
-    self.first_name[0] = first_name[0].upcase if first_name.length > 0
+      # languages spoken by each user, initialize first then populate in edit profile page
+      lang = UserLanguage.new
+      lang.user_id = self.id
 
-    self.last_name = params.fetch("last_name", "").strip
-    self.last_name[0] = last_name[0].upcase if last_name.length > 0
+      # mentor_profiles table, MentorProfile class
+      if self.mentor?
+        mentor = MentorProfile.new
+        mentor.user_id = self.id
+        mentor.year_of_study = params[:year_of_study]
+        mentor.num_matches = 0
+        # @mentor.max_matches <== set in initial edit profile page
+        begin
+          mentor.save
+        rescue Sequel::ValidationError
+          puts "Error when writing to mentor_profiles: " + mentor.errors.full_messages
+          self.errors.merge(mentor.errors)
+        end
 
-    self.acc_type = params.fetch("acc_type", "")
+        UserExpertise.create(user_id: self.id)
+      end
 
-    # gen_uid produces a random id
-    self.id = gen_uid
+      if self.mentee?
+        mentee = MenteeProfile.new
+        mentee.user_id = self.id
+        mentee.availability = true
+        mentee.save
+      end
+    end
 
-    self.year_of_study = params.fetch("year_of_study")
+    auth = Authentication.new
+    auth.user_id = self.id
 
-    self.username = params.fetch("username", "").strip.downcase
+    pass = params.fetch(:password, "").strip
+    confirm_password = params.fetch(:confirm_password, "").strip
 
-    terms = params.fetch("terms", "").strip
+    aes = OpenSSL::Cipher.new('AES-128-CBC').encrypt
+    auth.iv = Sequel.blob(aes.random_iv)
+    auth.salt = Sequel.blob(OpenSSL::Random.random_bytes(16))
+    aes.key = OpenSSL::PKCS5.pbkdf2_hmac_sha1(pass, auth.salt, 20_000, 16)
+    auth.data_crypt = Sequel.blob(aes.update(username) + aes.final)
 
-    password = params.fetch("password", "").strip
-    confirm_password = params.fetch("confirm_password", "").strip
+    auth.approved = false # be default false, after admin approval, true
+    auth.first_time_login = true
 
-    self.approved = "false"
-    self.first_time_login = "true"
+    begin
+      auth.save
+    rescue Sequel::ValidationError
+      puts "Error when writing to authentication: " + auth.errors.full_messages
+      self.errors.merge(auth.errors)
+    end
 
+    @terms = params.fetch("terms", "").strip
+
+=begin
     if university_email.empty?
       errors.add("email", "Fill in your email address")
     else
@@ -108,20 +160,6 @@ class User < Sequel::Model
 
     self.check_password(password, confirm_password)
 
-    # Set up AES for encryption.
-    aes = OpenSSL::Cipher.new('AES-128-CBC').encrypt
-    # Generate a random IV.
-    self.iv = Sequel.blob(aes.random_iv)
-    # Generate a random salt.
-    self.salt = Sequel.blob(OpenSSL::Random.random_bytes(16))
-    # Get the key from the password and salt.
-    aes.key = OpenSSL::PKCS5.pbkdf2_hmac_sha1(password, salt, 20_000, 16)
-    # Encrypt the data
-    self.data_crypt = Sequel.blob(aes.update(username) + aes.final)
-
-    if iv.nil? || iv.empty? || salt.nil? || salt.empty? || data_crypt.nil? || data_crypt.empty?
-      errors.add("encryption", "Encryption error")
-    end
 
     if self.errors.nil?
       puts "Critical error! User.errors is nil"
@@ -129,6 +167,8 @@ class User < Sequel::Model
     return false unless self.errors.empty?
 
     true
+ end
+=end
   end
 end
 

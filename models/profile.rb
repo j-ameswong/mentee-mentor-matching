@@ -9,6 +9,22 @@ class Profile < Sequel::Model
 
   many_to_one :user
 
+  def profile_change(params)
+    # self.user_id = user_id
+    self.date_of_birth = params[:date_of_birth] if params.key?(:date_of_birth)
+    self.first_name = params.fetch(:first_name, "").strip.capitalize if params.key?(:first_name)
+    self.last_name = params.fetch(:last_name, "").strip.capitalize if params.key?(:last_name)
+    self.nationality = params[:nationality] if params.key?(:nationality)
+    self.gender = params[:gender] if params.key?(:gender)
+    self.profile_picture = params[:profile_picture] if params.key?(:profile_picture)
+    self.bio_brief = params[:bio_brief] if params.key?(:bio_brief)
+    self.bio_detailed = params[:bio_detailed] if params.key?(:bio_detailed)
+  end
+
+  def return_hash(value)
+    Digest::SHA256.hexdigest(value)
+  end
+
   def validate
     super
     errors.add(:user_id, 'cannot be empty') if user_id.nil?

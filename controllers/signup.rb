@@ -9,11 +9,10 @@ post "/signup" do
 
   # @user.signup returns true if signup successful,
   # else load page and display errors
-  if @user.signup(params)
-    @user.save
+  begin
+    @user.signup(params)
     redirect "/"
-  else
-    @error = "Please correct the information below"
+  rescue
     erb :signup
   end
 end

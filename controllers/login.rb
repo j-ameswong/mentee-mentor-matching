@@ -10,7 +10,7 @@ post "/login" do
   @user = User.find_user(field)
 
   if field.empty?
-    @user.errors.add "field", "Can't be blank"
+    @user.errors.add("field", "Can't be blank")
   elsif @user.login({"password"=>params.fetch("password", "")})
     # password errors are added when @user.login is called
     session[:logged_in] = true

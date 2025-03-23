@@ -1,5 +1,6 @@
 require_relative "validation"
 # Add more "require" statements for your helpers here
+require 'openssl'
 
 # Register helpers with Sinatra
 helpers do
