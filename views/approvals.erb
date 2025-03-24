@@ -23,8 +23,11 @@
       <div style="width: 10rem" class="row">
         <form method="post" action="/approvals">
           <input type="hidden" name="id" value="<%= auth.user.id %>">
-          <input type="text" name="temp_password">
-          <label for="temp_password">Temporary Password</label>
+          <input id="password" type="text" name="password">
+          <label for="password">Temporary Password</label>
+
+          <input id="confirm_password" type="text" name="confirm_password">
+          <label for="confirm_password">Confirm Temporary Password</label>
 
           <select name="approved">
             <option value="approve">Approve</option>

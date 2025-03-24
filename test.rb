@@ -17,6 +17,6 @@ elsif choice == "2"
   User.delete_from_all(id)
 end
 
-User.where(username: "contessa").each do |user|
+User.where(username: "admin2").each do |user|
   user.delete_from_all
 end

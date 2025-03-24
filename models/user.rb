@@ -101,7 +101,7 @@ class User < Sequel::Model
     self.delete
   end
 
-  # Signup method, admins bypass most of it, only needing to be in users table initially
+  # Signup method, admins bypass most of it, only needing to be in users and auth table initially
   def signup(params)
     # users table
     self.id = self.gen_uid
@@ -135,13 +135,13 @@ class User < Sequel::Model
         mentee = MenteeProfile.new
         mentee.update!(params)
       end
+    end
 
-      auth = Authentication.new
-      auth.update!(params)
-      unless auth.valid?
-        puts "Error when writing to authentication!"
-        self.errors.merge!(auth.errors)
-      end
+    auth = Authentication.new
+    auth.update!(params)
+    unless auth.valid?
+      puts "Error when writing to authentication!"
+      self.errors.merge!(auth.errors)
     end
 
     @terms = params.fetch(:terms, "").strip

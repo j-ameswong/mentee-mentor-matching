@@ -35,24 +35,20 @@ get "/approvals/deny" do
 end
 
 post "/approvals" do
-  redirect "/" unless session[:logged_in] && session[:user].role.downcase == "admin"
+  redirect "/" unless session[:logged_in] && session[:user].admin?
 
-  temp_pass = params.fetch("temp_password", "").strip
-  @user = User.first(id: params.fetch("id", ""))
-  approval = params.fetch("approved", "")
+  @user = User.first(id: params[:id])
 
   if @user.nil?
     redirect "/approvals"
-  elsif approval != "approve"
-    @user.delete
+  elsif params[:approved] == "deny"
+    @user.delete_from_all
     puts "Say goodbye to prospective admin #{@user.id}, he will not be missed"
-  elsif temp_pass.empty?
-    @user.errors.add "temp_password", "is empty"
   else
-    @user.hash_pass(temp_pass)
+    @user.authentication.update!(params)
     @user.approved = "true"
     @user.save
-    puts "User #{@user.id} has been approved"
+    puts "Admin #{@user.id} has been approved"
   end
 
   @unapproved = User.where(Sequel.|({approved: nil}, {approved: "false"})).all
