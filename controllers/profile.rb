@@ -8,11 +8,11 @@ post "/profile/edit" do
 
   # The code here is to update the user's profile, if field is blank
   # then it will remain the same, else it will update the field
-  @edited_user.university_email = params.fetch("university_email").strip unless params[:university_email].nil?
+  @edited_user.email = params.fetch("email").strip unless params[:email].nil?
   @edited_user.date_of_birth = params.fetch("date_of_birth").strip unless params[:date_of_birth].nil?
   @edited_user.first_name = params.fetch("first_name").strip unless params[:first_name].nil?
   @edited_user.last_name = params.fetch("last_name").strip unless params[:last_name].nil?
-  @edited_user.acc_type = params.fetch("acc_type", @edited_user.acc_type).strip unless params[:acc_type].nil?
+  @edited_user.role = params.fetch("role", @edited_user.role).strip unless params[:role].nil?
   @edited_user.year_of_study = params["year_of_study"].strip unless params[:year_of_study].nil?
   @edited_user.languages = params.fetch("languages").strip unless params[:languages].nil?
   @edited_user.nationality = params.fetch("nationality") unless params[:nationality].nil?
@@ -22,10 +22,10 @@ post "/profile/edit" do
   if params[:profile_pic] && params[:profile_pic][:tempfile]
     @imgdata = params[:profile_pic][:tempfile].read
     puts "Length of imgdata: #{@imgdata.length}"
-    File.open("./public/images/user/#{@edited_user.img_hash(@edited_user.university_email)}", "wb") do |f|
+    File.open("./public/images/user/#{@edited_user.img_hash(@edited_user.email)}", "wb") do |f|
       f.write(@imgdata)
     end
-    @edited_user.profile_pic = @edited_user.img_hash(@edited_user.university_email)
+    @edited_user.profile_pic = @edited_user.img_hash(@edited_user.email)
   end
 
   if @edited_user.errors.empty?

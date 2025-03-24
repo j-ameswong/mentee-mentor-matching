@@ -3,15 +3,15 @@ get "/account" do
   erb :account
 end
 
-get "/account/changepassword" do
+get "/account/changePassword" do
   redirect "/login" unless session[:logged_in]
 
   session[:user].first_time_login = "false" if session[:user].first_time_login == "true"
   session[:user].save
-  erb :changepassword
+  erb :changePassword
 end
 
-post "/account/changepassword" do
+post "/account/changePassword" do
   redirect "/login" unless session[:logged_in]
   @user = session[:user]
   @user.errors.clear
@@ -25,8 +25,8 @@ post "/account/changepassword" do
     @user.hash_pass(params[:new_password])
     @user.save
     @success = "true"
-    puts "Password changed for #{@user.university_email}"
+    puts "Password changed for #{@user.email}"
   end
 
-  erb :changepassword
+  erb :changePassword
 end

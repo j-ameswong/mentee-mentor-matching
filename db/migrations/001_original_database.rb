@@ -6,12 +6,12 @@ Sequel.migration do
       primary_key :id
       String :first_name
       String :last_name
-      String :university_email
+      String :email
       String :date_of_birth
       BLOB :iv
       BLOB :salt
       BLOB :data_crypt
-      String :acc_type
+      String :role
       String :profile_pic
       String :languages
       String :year_of_study

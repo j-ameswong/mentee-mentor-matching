@@ -20,7 +20,7 @@
       <form action="/signup/admin" method="post">
         <div class="row centerer">
           <p>University Email:</p>
-          <input name="university_email" type="email" placeholder="University Email" autocomplete="on" />
+          <input name="email" type="email" placeholder="University Email" autocomplete="on" />
           <% if !@user.nil? && @user.errors.include?("email") %>
             <% @user.errors["email"].each do |error| %>
               <p class="error"><%= error %></p>

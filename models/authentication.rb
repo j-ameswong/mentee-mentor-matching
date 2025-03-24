@@ -30,6 +30,26 @@ class Authentication < Sequel::Model(:authentication)
     self.first_time_login = true
   end
 
+  def login(params)
+    password = params.fetch(:password, "").strip
+    if self.data_crypt.nil?
+      self.user.errors.add(:password, "not been set by admin, please contact admin")
+    else
+      aes = OpenSSL::Cipher.new('AES-128-CBC').decrypt
+      aes.iv = self.iv
+      aes.key = OpenSSL::PKCS5.pbkdf2_hmac_sha1(password, self.salt, 20_000, 16)
+      begin
+        aes.update(self.data_crypt) + aes.final
+      rescue OpenSSL::Cipher::CipherError
+        self.user.errors.add(:password, "was incorrect")
+      end
+    end
+
+    self.user.errors.add(:approval, "Approval has not been granted by admin yet, please try again later") unless self.approved
+    false unless (self.user && self.user.errors.nil?) || self.user.errors.empty?
+    true
+  end
+
   def validate
     super
 

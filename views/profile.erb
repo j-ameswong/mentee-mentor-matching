@@ -27,7 +27,7 @@
       </div>
 
       <div class="info row">
-        <p>University Email: <%= @viewed_user.university_email %></p>
+        <p>University Email: <%= @viewed_user.email %></p>
       </div>
 
       <div class="info row languages">
@@ -48,7 +48,7 @@
       </div>
 
       <div class="info row">
-        <p>Role: <%= @viewed_user.acc_type[0].upcase + @viewed_user.acc_type[1..-1] %></p>
+        <p>Role: <%= @viewed_user.role[0].upcase + @viewed_user.role[1..-1] %></p>
       </div>
 
       <div class="info row">
@@ -68,7 +68,7 @@
         </div>
       </div>
 
-      <% if session[:user].acc_type == "admin" || @viewed_user.id == session[:user].id %>
+      <% if session[:user].role == "admin" || @viewed_user.id == session[:user].id %>
         <div class="info row">
           <button type="submit">Edit</button>
         </div>

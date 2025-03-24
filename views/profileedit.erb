@@ -36,8 +36,8 @@
       </div>
 
     <div class="info row">
-      <label for="university_email">University Email:</label>
-      <input type="text" id="university_email" name="university_email" value="<%= @edited_user.university_email %>" required>
+      <label for="email">University Email:</label>
+      <input type="text" id="email" name="email" value="<%= @edited_user.email %>" required>
     </div>
 
     <div class="info row languages">
@@ -52,15 +52,15 @@
     </div>
 
     <div class="info row">
-      <label for="acc_type">Role:</label>
-      <% if session[:user].acc_type == "admin"%>
-        <select id="acc_type" name="acc_type" required>
-          <option value="mentee" <%= 'selected' if @edited_user.acc_type == "mentee" %>>Mentee</option>
-          <option value="mentor" <%= 'selected' if @edited_user.acc_type == "mentor" %>>Mentor</option>
-          <option value="admin" <%= 'selected' if @edited_user.acc_type == "admin" %>>Admin</option>
+      <label for="role">Role:</label>
+      <% if session[:user].role == "admin"%>
+        <select id="role" name="role" required>
+          <option value="mentee" <%= 'selected' if @edited_user.role == "mentee" %>>Mentee</option>
+          <option value="mentor" <%= 'selected' if @edited_user.role == "mentor" %>>Mentor</option>
+          <option value="admin" <%= 'selected' if @edited_user.role == "admin" %>>Admin</option>
         </select>
       <% else %>
-        <%= @edited_user.acc_type[0].upcase + @edited_user.acc_type[1..-1] %>
+        <%= @edited_user.role[0].upcase + @edited_user.role[1..-1] %>
       <% end %>
     </div>
 
@@ -76,7 +76,7 @@
     <div class="info row">
       <label for="year_of_study">Year of Study:</label>
 
-      <% if session[:user].acc_type == "admin"%>
+      <% if session[:user].role == "admin"%>
         <select id="year_of_study" name="year_of_study" required>
           <% # If user already has a year of study, preselect it %>
           <% if !@edited_user.year_of_study.nil? %>

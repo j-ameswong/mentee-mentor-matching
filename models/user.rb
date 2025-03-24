@@ -30,7 +30,7 @@ class User < Sequel::Model
     else
       errors.add(:email, "already taken") unless User.first(email: email).nil?
       errors.add(:email, "is in invalid format") unless valid_email_address?(email)
-      errors.add(:email, "must be your university email") unless valid_university_email?(email)
+      errors.add(:email, "must be your university email") unless valid_email?(email)
     end
 
     errors.add(:username, "cannot be empty") if username.empty?
@@ -56,13 +56,18 @@ class User < Sequel::Model
     self.role == "mentee"
   end
 
-  def find_user(field)
+  def self.find_user(field)
     # either lookup users table by email or username
-    Validation.valid_email_address(field) ? user = self.first(email: field) : user = self.first(username: field)
+    valid_email_address?(field) ? user = self.first(email: field) : user = self.first(username: field)
 
     # basically, if no user found create a user instance, appears in controllers/login.rb
-    self.errors.add(:field, "Can't be blank") if user.nil?
-    user.nil? ? self.new : user
+    if user.nil?
+      user = self.new
+      self.errors.add(:field, "User not found")
+      self.errors.add(:field, "Can't be blank") if field.empty?
+    end
+
+    user
   end
 
   def gen_uid
@@ -78,8 +83,8 @@ class User < Sequel::Model
     UserLanguage.where(user_id: self.id).delete
     UserExpertise.where(user_id: self.id).delete
 
-    Match.where(mentor_id: self.id).delete if mentor_matches.first(mentor_id: self.id)
-    mentee_matches.where(mentee_id: self.id).delete if Matches.first(mentee_id: self.id)
+    Match.where(mentor_id: self.id).delete # if Match.first(mentor_id: self.id)
+    Match.where(mentee_id: self.id).delete # if Match.first(mentee_id: self.id)
 
     mentee_profile = MenteeProfile.first(user_id: self.id)
     mentee_profile.delete if mentee_profile
@@ -96,7 +101,7 @@ class User < Sequel::Model
     self.delete
   end
 
-  # Signup method, admins bypass most of it, only needing to be in users and auth table
+  # Signup method, admins bypass most of it, only needing to be in users table initially
   def signup(params)
     # users table
     self.id = self.gen_uid
@@ -131,7 +136,7 @@ class User < Sequel::Model
         mentee.update!(params)
       end
 
-      @terms = params.fetch("terms", "").strip
+      @terms = params.fetch(:terms, "").strip
 
       auth = Authentication.new
       auth.update!(params)
@@ -146,27 +151,24 @@ class User < Sequel::Model
     all_other_errors = self.errors.clone
     if self.valid? && (self.errors.nil? || self.errors.empty?)
       puts "Attempting to save new user with UID: #{self.id}"
-      self.save
-      profile.save if profile
-      lang.save if lang
-      mentor.save if mentor
-      expertise.save if expertise
-      mentee.save if mentee
-      auth.save if auth
+      begin
+        self.save
+        profile.save if profile
+        mentor.save if mentor
+        mentee.save if mentee
+        auth.save if auth
+        true
+      rescue
+        self.delete_from_all
+        puts "Critical error when handling signup!"
+        puts $!.backtrace.join("\n") unless $!.nil?
+        false
+      end
     else
       puts "Errors found!"
       puts self.errors.merge!(all_other_errors).full_messages
+      false
     end
-
-=begin
-
-    errors.add("first_name", "Fill in your first name") if first_name.empty?
-    errors.add("last_name", "Fill in your last name") if last_name.empty?
-    errors.add("date_of_birth", "Cannot be empty") if date_of_birth.empty?
-
-    errors.add("role", "First years cannot be mentors") if year_of_study == "1" && acc_type == "mentor"
-    errors.add("role", "Only first years can be mentees") if year_of_study != "1" && acc_type == "mentee"
-=end
   end
 end
 

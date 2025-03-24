@@ -110,7 +110,6 @@ class MenteeProfile < Sequel::Model
     errors.add(:availability, "status must exist") if availability.nil?
     errors.add(:year_of_study, "cannot be empty") if @year_of_study.nil?
     errors.add(:role, "only first years can be mentees") if @year_of_study && @year_of_study.to_i > 1
-    errors.add
   end
 
   def available?

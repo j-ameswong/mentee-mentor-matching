@@ -23,35 +23,34 @@
         <div class="row centerer">
 
           <div class="column">
-            <label id="tnc" for="field">Username/University Email Address:</label>
-            <input name="field" type="text" autocomplete="on" />
-            <% if !@user.nil? && @user.errors.include?("field") %>
-              <% @user.errors["field"].each do |error| %>
+            <p><label for="field">Username/University Email Address:</label></p>
+            <input id="field" name="field" type="text" />
+            <% if @user && @user.errors[:field] %>
+              <% @user.errors[:field].each do |error| %>
                 <p><%= error %></p>
               <% end %>
             <% end %>
 
           </div>
           <div class="column">
-            <p>Password:</p>
-
-            <input name="password" type="password" />
-            <% if !@user.nil? && @user.errors.include?("password") %>
-              <% @user.errors["password"].each do |error| %>
+            <p><label for="password">Password:</label></p>
+            <input id="password" name="password" type="password" />
+            <% if @user && @user.errors[:password] %>
+              <% @user.errors[:password].each do |error| %>
                 <p><%= error %></p>
               <% end %>
             <% end %>
           </div>
         </div>
-        <br>
+
         <div class="column">
           <div class="row centerer">
-
             <input type="submit" value="Log in">
           </div>
         </div>
-        <% if !@user.nil? && !@user.errors["approval"].nil? %>
-          <% @user.errors["approval"].each do |error| %>
+
+        <% if @user && @user.errors[:approval] %>
+          <% @user.errors[:approval].each do |error| %>
             <p><%= error %></p>
           <% end %>
         <% end %>

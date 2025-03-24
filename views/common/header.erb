@@ -1,7 +1,7 @@
 <%# for when not logged in (without any options) %>
 <% @user = session[:user]%>
 <%if !(@user.nil?) %>
-    <% @accountType = @user.acc_type %>
+    <% @accountType = @user.role %>
 
 
     <% if @accountType == "admin" %>

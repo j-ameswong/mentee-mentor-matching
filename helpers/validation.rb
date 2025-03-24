@@ -10,7 +10,7 @@ module Validation
     str.match?(/\A\S+@\S+\Z/)
   end
 
-  def valid_university_email?(str)
+  def valid_email?(str)
     return false if str.nil?
 
     str.include?(".ac.uk")

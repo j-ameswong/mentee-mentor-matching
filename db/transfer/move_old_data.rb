@@ -12,8 +12,8 @@ old_users.each do |old_user|
 
   user.id = old_user[:id]
   user.username = old_user[:username]
-  user.email = old_user[:university_email]
-  user.role = old_user[:acc_type]
+  user.email = old_user[:email]
+  user.role = old_user[:role]
 
   user.save
 
@@ -48,7 +48,7 @@ old_users.each do |old_user|
     end
   end
 
-  if old_user[:acc_type] == "mentor"
+  if old_user[:role] == "mentor"
     MentorProfile.create(
       user_id: old_user[:id],
       year_of_study: old_user[:year_of_study],
@@ -61,7 +61,7 @@ old_users.each do |old_user|
     # )
   end
 
-  if old_user[:acc_type] == "mentee"
+  if old_user[:role] == "mentee"
     MenteeProfile.create(
       user_id: old_user[:id],
       availability: true

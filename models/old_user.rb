@@ -8,7 +8,7 @@ old_db = Sequel.connect("sqlite://#{__dir__}/../db/db_test_backup.sqlite3")
 # Specify user table, by default it downcases User and adds an s to the end
 class OldUser < Sequel::Model(old_db[:users])
   def signup(params)
-    self.university_email = params.fetch("university_email", "").strip
+    self.email = params.fetch("email", "").strip
 
     self.date_of_birth = params.fetch("date_of_birth", "")
 
@@ -18,7 +18,7 @@ class OldUser < Sequel::Model(old_db[:users])
     self.last_name = params.fetch("last_name", "").strip
     self.last_name[0] = last_name[0].upcase if last_name.length > 0
 
-    self.acc_type = params.fetch("acc_type", "")
+    self.role = params.fetch("role", "")
 
     # gen_uid produces a random id
     self.id = gen_uid
@@ -35,11 +35,11 @@ class OldUser < Sequel::Model(old_db[:users])
     self.approved = "false"
     self.first_time_login = "true"
 
-    if university_email.empty?
+    if email.empty?
       errors.add("email", "Fill in your email address")
     else
-      errors.add("email", "Email already taken") unless User.first(university_email: university_email).nil?
-      errors.add("email", "Please use your university email") unless university_email.include?("@sheffield.ac.uk")
+      errors.add("email", "Email already taken") unless User.first(email: email).nil?
+      errors.add("email", "Please use your university email") unless email.include?("@sheffield.ac.uk")
     end
 
     errors.add("first_name", "Fill in your first name") if first_name.empty?
@@ -51,8 +51,8 @@ class OldUser < Sequel::Model(old_db[:users])
 
     errors.add("terms", "Terms must be accepted") if terms.nil? || terms.empty? || terms != "terms_accepted"
 
-    errors.add("role", "First years cannot be mentors") if year_of_study == "1" && acc_type == "mentor"
-    errors.add("role", "Only first years can be mentees") if year_of_study != "1" && acc_type == "mentee"
+    errors.add("role", "First years cannot be mentors") if year_of_study == "1" && role == "mentor"
+    errors.add("role", "Only first years can be mentees") if year_of_study != "1" && role == "mentee"
 
     self.check_password(password, confirm_password)
 
@@ -159,7 +159,7 @@ class OldUser < Sequel::Model(old_db[:users])
 
   def self.find_user(field)
     if field.include? "sheffield.ac.uk"
-      User.first(university_email: field)
+      User.first(email: field)
     else
       User.first(username: field)
     end

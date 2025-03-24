@@ -472,3 +472,7 @@ footer {
 #statements {
     flex-direction: column;
 }
+
+.errors {
+    color: red;
+}

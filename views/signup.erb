@@ -11,7 +11,7 @@
 <% @title = "Sign Up" %>
 <%= erb :"common/loginHeader"%>
 
-<%# TODO 2: Consistent password requirements with account/changepassword page %>
+<%# TODO 2: Consistent password requirements with account/changePassword page %>
 <body>
   <div class="content centerer">
     <div class="signupPage centerer">
@@ -65,12 +65,14 @@
                      value="<%= @user.email if @user %>" required/>
 
               <% if @user && @user.errors[:email] %>
-                <% @user.errors[:last_name].each do |error| %>
+                <% @user.errors[:email].each do |error| %>
                   <p class="error"><%= error %></p>
                 <% end %>
               <% end %>
             </div>
+          </div>
 
+          <div class="row centerer">
             <div class="column">
               <label for="date_of_birth">DoB:</label>
               <input id="date_of_birth" name="date_of_birth" type="date"
@@ -101,7 +103,7 @@
               <label for="year_of_study">Year of study:</label>
               <select id="year_of_study" name="year_of_study" required>
                 <% (1..4).each do |y| %>
-                  <option value='<%= y %>' <%="selected" if @user && @params.year_of_study == "Year #{y}" %>>Year <%= y %></option>>
+                  <option value='<%= y %>' <%="selected" if @user && @params[:year_of_study] == y %>>Year <%= y %></option>>
                 <% end %>
               </select>
             </div>

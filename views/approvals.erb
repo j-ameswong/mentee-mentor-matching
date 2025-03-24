@@ -13,13 +13,13 @@
 
 <body>
   <% @unapproved.each do |user| %>
-  <p><%= user.university_email %>:
-    <% if user.acc_type != "admin" %>
+  <p><%= user.email %>:
+    <% if user.role != "admin" %>
       <a href="<%= "/approvals/approve?to_approve=#{user.id}"%>">Approve</a>
       <a href="<%= "/approvals/deny?to_deny=#{user.id}"%>">Deny</a>
-      <p><%= user.acc_type %></p>
+      <p><%= user.role %></p>
 
-    <% elsif user.acc_type == "admin" %>
+    <% elsif user.role == "admin" %>
       <div width="10rem" class="row">
         <form method="post" action="/approvals">
           <input type="hidden" name="id" value="<%= user.id %>">

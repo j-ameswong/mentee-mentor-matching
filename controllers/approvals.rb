@@ -1,12 +1,12 @@
 get "/approvals" do
-  redirect "/" unless session[:logged_in] && session[:user].acc_type == "admin"
+  redirect "/" unless session[:logged_in] && session[:user].role == "admin"
   @unapproved = User.where(Sequel.|({approved: nil}, {approved: "false"})).all
 
   erb :approvals
 end
 
 get "/approvals/approve" do
-  redirect "/" unless session[:logged_in] && session[:user].acc_type == "admin"
+  redirect "/" unless session[:logged_in] && session[:user].role == "admin"
   @user = User.first(id: params.fetch("to_approve", ""))
 
   if @user.nil?
@@ -21,7 +21,7 @@ get "/approvals/approve" do
 end
 
 get "/approvals/deny" do
-  redirect "/" unless session[:logged_in] && session[:user].acc_type.downcase == "admin"
+  redirect "/" unless session[:logged_in] && session[:user].role.downcase == "admin"
   @user = User.first(id: params.fetch("to_deny", ""))
 
   if @user.nil?
@@ -35,7 +35,7 @@ get "/approvals/deny" do
 end
 
 post "/approvals" do
-  redirect "/" unless session[:logged_in] && session[:user].acc_type.downcase == "admin"
+  redirect "/" unless session[:logged_in] && session[:user].role.downcase == "admin"
 
   temp_pass = params.fetch("temp_password", "").strip
   @user = User.first(id: params.fetch("id", ""))
