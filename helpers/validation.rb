@@ -1,5 +1,5 @@
 # Provide various functions for validating data
-class Validation
+module Validation
   def match(str1, str2)
     return false unless str1 && str2
     str1 == str2

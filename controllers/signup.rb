@@ -5,14 +5,15 @@ end
 
 post "/signup" do
   @user = User.new
-  puts params
+  @params = params
+  puts @params
 
   # @user.signup returns true if signup successful,
   # else load page and display errors
-  begin
-    @user.signup(params)
+  if
+    @user.signup(@params)
     redirect "/"
-  rescue
+  else
     erb :signup
   end
 end

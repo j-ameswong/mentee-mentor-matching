@@ -22,21 +22,20 @@ class User < Sequel::Model
   ROLES = %w[admin mentor mentee] # fancy way to do a comma separated list
 
   def validate
-    validator = Validation.new
     super
 
     errors.add(:role, "must be valid") unless ROLES.include?(role)
     if email.nil? || email.empty?
-      errors.add("email", "must be filled in")
+      errors.add(:email, "must be filled in")
     else
-      errors.add("email", "already taken") unless User.first(email: email).nil?
-      errors.add("email", "is in invalid format") unless validator.valid_email_address?(email)
-      errors.add("email", "must be your university email") unless validator.valid_university_email?(email)
+      errors.add(:email, "already taken") unless User.first(email: email).nil?
+      errors.add(:email, "is in invalid format") unless valid_email_address?(email)
+      errors.add(:email, "must be your university email") unless valid_university_email?(email)
     end
 
-    errors.add("username", "cannot be empty") if username.empty?
-    errors.add("username", "must be valid") unless validator.valid_input?(username)
-    errors.add("username", "already exists") unless User.first(username: username).nil?
+    errors.add(:username, "cannot be empty") if username.empty?
+    errors.add(:username, "must be valid") unless valid_input?(username)
+    errors.add(:username, "already exists") unless User.first(username: username).nil?
 
     errors.add(:terms, "must be accepted") if @terms.nil? || @terms.empty?
   end
@@ -79,8 +78,8 @@ class User < Sequel::Model
     UserLanguage.where(user_id: self.id).delete
     UserExpertise.where(user_id: self.id).delete
 
-    Matches.where(mentor_id: self.id).delete
-    Matches.where(mentee_id: self.id).delete
+    Match.where(mentor_id: self.id).delete if mentor_matches.first(mentor_id: self.id)
+    mentee_matches.where(mentee_id: self.id).delete if Matches.first(mentee_id: self.id)
 
     mentee_profile = MenteeProfile.first(user_id: self.id)
     mentee_profile.delete if mentee_profile

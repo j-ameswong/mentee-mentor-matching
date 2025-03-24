@@ -1,5 +1,6 @@
 require "logger"
 require_relative File.expand_path("../helpers/local_helpers", __dir__)
+include Validation
 
 # Start to build the path to the database/log file
 path = "#{__dir__}/db"

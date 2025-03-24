@@ -34,18 +34,17 @@ class Profile < Sequel::Model
   end
 
   def validate
-    validator = Validation.new
     super
 
     errors.add(:user_id, "cannot be empty") if user_id.nil?
     unless date_of_birth.nil?
-      errors.add(:date_of_birth, "is invalid") if date_of_birth == "" || !validator.str_yyyy_mm_dd_date?(date_of_birth)
+      errors.add(:date_of_birth, "is invalid") if date_of_birth == "" || !str_yyyy_mm_dd_date?(date_of_birth)
     end
-    errors.add(:first_name, "is invalid") unless validator.valid_input?(first_name)
-    errors.add(:last_name, "is invalid") unless validator.valid_input?(last_name)
+    errors.add(:first_name, "is invalid") unless valid_input?(first_name)
+    errors.add(:last_name, "is invalid") unless valid_input?(last_name)
     unless gender.nil?
       errors.add(:gender, "is required") if gender.empty?
-      errors.add(:gender, "invalid input") unless validator.valid_input?(gender)
+      errors.add(:gender, "invalid input") unless valid_input?(gender)
     end
     errors.add(:bio_brief, "is too long") if !bio_brief.nil? && bio_brief.length > 255
     unless bio_detailed.nil?
@@ -74,7 +73,7 @@ class MentorProfile < Sequel::Model
     super
     errors.add(:user_id, "cannot be empty") if user_id.nil?
     errors.add(:year_of_study, "cannot be empty") if year_of_study.nil?
-    errors.add(:year_of_study, "first years cannot be mentors") if year_of_study.to_i < 2
+    errors.add(:role, "first years cannot be mentors") if year_of_study && year_of_study.to_i < 2
     errors.add(:num_matches, "cannot exceed max_matches set") if num_matches > max_matches
     errors.add(:max_matches, "cannot exceed maximum allowed") if max_matches > 3
     errors.add(:user_id, "must belong to a mentor") unless @role.nil? || @role == "mentor"
@@ -110,7 +109,7 @@ class MenteeProfile < Sequel::Model
     errors.add(:user_id, "must belong to a mentee") unless @role == "mentee"
     errors.add(:availability, "status must exist") if availability.nil?
     errors.add(:year_of_study, "cannot be empty") if @year_of_study.nil?
-    errors.add(:year_of_study, "only first years can be mentees") if @year_of_study.to_i > 1
+    errors.add(:role, "only first years can be mentees") if @year_of_study && @year_of_study.to_i > 1
     errors.add
   end
 
