@@ -12,17 +12,17 @@
 <%= erb :"common/header" %>
 
 <body>
-  <% @unapproved.each do |user| %>
-  <p><%= user.email %>:
-    <% if user.role != "admin" %>
-      <a href="<%= "/approvals/approve?to_approve=#{user.id}"%>">Approve</a>
-      <a href="<%= "/approvals/deny?to_deny=#{user.id}"%>">Deny</a>
-      <p><%= user.role %></p>
+  <% @unapproved.each do |auth| %>
+  <p><%= auth.user.email %>:
+    <% if !auth.user.admin? %>
+      <a href="<%= "/approvals/approve?to_approve=#{auth.user.id}"%>">Approve</a>
+      <a href="<%= "/approvals/deny?to_deny=#{auth.user.id}"%>">Deny</a>
+      <p><%= auth.user.role %></p>
 
-    <% elsif user.role == "admin" %>
-      <div width="10rem" class="row">
+    <% else %>
+      <div style="width: 10rem" class="row">
         <form method="post" action="/approvals">
-          <input type="hidden" name="id" value="<%= user.id %>">
+          <input type="hidden" name="id" value="<%= auth.user.id %>">
           <input type="text" name="temp_password">
           <label for="temp_password">Temporary Password</label>
 

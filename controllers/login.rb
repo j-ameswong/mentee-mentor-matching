@@ -26,6 +26,7 @@ post "/login" do
     end
   end
 
-  @user.errors.add(:field, "user doesn't exist")
+  # check if user exists
+  @user.errors.add(:field, "user doesn't exist") unless @user.username
   erb :login
 end
