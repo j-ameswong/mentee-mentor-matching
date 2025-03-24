@@ -11,7 +11,5 @@ post "/signup/admin" do
     redirect "/"
   end
 
-  # TODO: TERMS AND CONDITIONS EHRE
-
   erb :signupAdmin
 end

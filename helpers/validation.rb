@@ -19,7 +19,7 @@ module Validation
   def valid_input?(str)
     return false if str.nil?
 
-    str.match?(/\A[A-Za-z]+\z/)
+    str.match?(/\A[A-Za-z0-9]+\z/)
   end
 
   def str_digits?(str)

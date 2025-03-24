@@ -136,8 +136,6 @@ class User < Sequel::Model
         mentee.update!(params)
       end
 
-      @terms = params.fetch(:terms, "").strip
-
       auth = Authentication.new
       auth.update!(params)
       unless auth.valid?
@@ -146,8 +144,10 @@ class User < Sequel::Model
       end
     end
 
+    @terms = params.fetch(:terms, "").strip
+
     # Looks like the memory is referencing the actual hash, and it's rewritten when checking with .valid?
-    # Below is to save the values up to a certain point and then reappending them
+    # Below is to save the values up to a certain point and then re-appending them
     all_other_errors = self.errors.clone
     if self.valid? && (self.errors.nil? || self.errors.empty?)
       puts "Attempting to save new user with UID: #{self.id}"

@@ -24,6 +24,11 @@ post "/login" do
     else
       redirect("/")
     end
+  else
+    temp_auth = Authentication.new
+    temp_auth.user_id = @user.id
+    temp_auth.login(params)
+    @user.errors.merge!(temp_auth.user.errors)
   end
 
   # check if user exists
