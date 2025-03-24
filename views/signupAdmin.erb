@@ -19,10 +19,10 @@
 
       <form action="/signup/admin" method="post">
         <div class="row centerer">
-          <p>University Email:</p>
-          <input name="email" type="email" placeholder="University Email" autocomplete="on" />
-          <% if !@user.nil? && @user.errors.include?("email") %>
-            <% @user.errors["email"].each do |error| %>
+          <p><label for="email">University Email:</label></p>
+          <input id="email" name="email" type="email" placeholder="University Email" autocomplete="on" />
+          <% if @user && @user.errors[:email] %>
+            <% @user.errors[:email].each do |error| %>
               <p class="error"><%= error %></p>
             <% end %>
           <% end %>

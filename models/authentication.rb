@@ -48,7 +48,7 @@ class Authentication < Sequel::Model(:authentication)
     end
 
     self.user.errors.add(:approval, "Approval has not been granted by admin yet, please try again later") unless self.approved
-    return false if self.user.errors.any?
+    return false if self.user.errors.nil? || self.user.errors.any?
     true
   end
 
