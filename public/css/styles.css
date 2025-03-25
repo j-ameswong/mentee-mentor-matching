@@ -80,6 +80,68 @@ header {
     outline-width: thin;
 }
 
+.dropdown {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    align-self: center;
+
+    position: relative;
+
+    grid-row: 1 / 2;
+    grid-column: 6 / 7;
+
+    width: 8vw;
+    height: 10vh;
+}
+
+#profile-menu {
+    max-width: 8vw;
+    max-height: 9.5vh;
+
+    border-radius: 50%;
+}
+
+.dropdown-content {
+    display: none;
+    z-index: 1;
+
+    position: absolute;
+    left: -7vh;
+    top: 10vh;
+
+    flex-direction: column;
+
+    background-color: var(--lblu);
+    color: var(--grey);
+    border-radius: 25px;
+
+    padding: 8px;
+    text-align: center;
+    margin: 2%;
+    width: 10vw;
+}
+
+.dropdown-link {
+    color: var(--grey);
+    text-decoration: none;
+}
+
+.dropdown-link:hover {
+    color: var(--purple);
+}
+
+#profile-menu:hover {
+    outline-style: solid;
+    outline-width: 2%;
+    outline-color: var(--lblu);
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
 .content {
     grid-row: 2 / 7;
     grid-column: 2 / 7;
@@ -93,6 +155,54 @@ h1 {
 h2 {
     color: var(--grey);
     size: 2rem;
+}
+
+p {
+    color: var(--grey);
+    size: 1rem;
+}
+
+.content-box {
+    flex-direction: column;
+
+    background-color: var(--lblu);
+    color: var(--grey);
+    border-radius: 25px;
+
+    padding: 8px;
+    text-align: center;
+    margin: 2%;
+    max-width: 50vw;
+}
+
+#home {
+    height: 80vh;
+    width: 80vw;
+
+    display: grid;
+    grid-template-columns: 35vw 35vw;
+    grid-template-rows: 35vh 35vh;
+    grid-gap: 8px;
+}
+
+#home1 {
+    grid-row: 1 / 2;
+    grid-column: 1 / 2;
+}
+
+#home2 {
+    grid-row: 2 / 3;
+    grid-column: 1 / 2;
+}
+
+#home3 {
+    grid-row: 1 / 2;
+    grid-column: 2 / 3;
+}
+
+#home4 {
+    grid-row: 2 / 3;
+    grid-column: 2 / 3;
 }
 
 .signupPage {
@@ -130,6 +240,7 @@ h2 {
 
 #tnc {
     margin: 2%;
+    line-height: 3vh;
 }
 
 #tnc-check {
@@ -178,7 +289,7 @@ input {
     align-items: center;
     text-align: center;
 }
-
+/*
 .matchesPage {
     width: 100%;
     height: 80%;
@@ -200,7 +311,7 @@ input {
 #matchPicture {
     max-width: 150px;
     max-height: 150px;
-}
+} 
 
 .matchesPage ul {
     display: block;
@@ -211,7 +322,7 @@ input {
 .matchesPage ul li {
     padding: 10px 0;
 }
-
+*/
 header a {
     display: block;
     color: black;
@@ -328,4 +439,8 @@ footer {
 .profile_pic {
     text-align: left;
     justify-content: center;
+}
+
+#statements {
+    flex-direction: column;
 }

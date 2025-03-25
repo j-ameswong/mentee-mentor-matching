@@ -8,7 +8,8 @@
   <link rel="stylesheet" href="/css/styles.css" />
 </head>
 
-<%= erb :loginHeader %>
+<% @title = "Sign Up" %>
+<%= erb :"common/loginHeader"%>
 
 <%# TODO 2: Consistent password requirements with account/changepassword page %>
 <body>
