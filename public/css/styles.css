@@ -472,3 +472,8 @@ footer {
 #statements {
     flex-direction: column;
 }
+
+html, body { /* disables horizontal scrolling */
+    max-width: 100%;
+    overflow-x: hidden;
+}
