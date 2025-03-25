@@ -14,48 +14,11 @@
 
 <body>
   <%# Eventually, we want to only show mentors if logged in as mentee, and vice versas %>
-  <div class="matchesPage centerer">
-    <div class="row centerer"><a href="/matches/get-prev"><<<</a></div>
-    <section id="match" class="row centerer">
-      <div class="column">
-        <figure id="matchPicture"><img src="/images/blankProfilePicture.webp"></figure>
-      </div>
-      <div class="column">
-        <p>Mentor name: <%= "placeholder ruby output"%></p>
-        <p>Age: <%= "placeholder ruby output"%></p>
-      </div>
-      <div class="column">
-        <p>Areas of interest:</p>
-        <ul id="interestList">
-          <li>Placeholder db 1</li>
-          <li>Placeholder db 2</li>
-          <li>Placeholder db 3</li>
-        </ul>
-      </div>
-      <div class="column">
-        <p>Experience:</p>
-        <ul id="experienceList">
-          <li>Experience Desc 1</li>
-          <li>Experience Desc 2</li>
-        </ul>
-      </div>
-      <div class="column">
-        <form method="get">
-          <input name="message" type="text" size="20" autocomplete="on" />
-          <input name="submit" type="submit" value="Apply"/>
-        </form>
-      </div>
-    </section>
-    
-    <%# I have no clue why this isn't aligning properly with the above section, please advise%>
-    <%#
-    <section id="match" class="row centerer">
-      <p>Placeholder form</p>
-    </section>
-    %>
-    
-    <div class="row centerer"><a href="/matches/get-next">>>></a></div>
-  </div>
+  <% if @accountType == "mentee" %>
+    <%= erb :menteeMatching %>
+  <% elsif @accountType == "mentor" %>
+    <%= erb :mentorMatching %>
+  <% end %>
 </body>
 
 
