@@ -96,36 +96,35 @@ def gen_profile(data)
   first_name = data[rand_user][0]
   last_name = data[rand_user][1]
 
-  email = (first_name + last_name)[0..6].downcase + '@sheffield.ac.uk'
+  username = (first_name + last_name)[0..6].downcase
 
-  id = user.gen_uid(email)
+  email = username.downcase + '@sheffield.ac.uk'
 
-  year = 1995 + rand(10)
-  month = rand(13)
-  if month == 2
-    day = rand(29)
-  elsif [1,3,5,7,8,10,12].include? month
-    day = rand(32)
-  else
-    day = rand(31)
-  end
+  id = user.gen_uid
 
-  date_of_birth = year.to_s + '-' + month.to_s + '-' + day.to_s
+  date_of_birth = Date.today - (18*365 + rand(7*365))
   
   if rand() < 0.3
     acc_type = 'mentor'
+    year_of_study = 1 + rand(4)
   else
     acc_type = 'mentee'
+    year_of_study = 1
   end
 
   params = {
   "id" => id,
+  "username" => username,
+  "password" => username,
+  "confirm_password" => username,
   "university_email" => email,
   "date_of_birth" => date_of_birth,
   "first_name" => first_name,
   "last_name" => last_name,
   "acc_type" => acc_type,
-  "password" => 'password'
+  "year_of_study" => year_of_study,
+  "approved" => false,
+  "first_time_login" => true
   }
 
   user.signup(params)
@@ -159,10 +158,11 @@ def gen_test_db(path)
     BLOB :profile_pic
     String :languages
     String :year_of_study
+    String :approved
     String :nationality
   end
 end
 
-#0..100.times do
-#  gen_profile(data)
-#end
+0..100.times do
+  gen_profile(data)
+end

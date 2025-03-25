@@ -270,6 +270,11 @@ input {
     width: 90%;
 }
 
+
+.info {
+    padding: 5px 0;
+}
+
 .row {
     display: flex;
     flex-direction: row;
@@ -400,7 +405,10 @@ footer {
 }
 
 .profilePage body {
-    min-height: 90vh;
+    display: grid;
+    grid-template-columns: 12vw 30vw 20vw 18vw 20vw 10vw;
+    grid-template-rows: 10vh auto;
+    min-height: 100vh;
 }
 
 .profilePage .row {
@@ -411,6 +419,12 @@ footer {
 
     align-items: flex-start;
     text-align: left;
+}
+
+.profilePage .centerer.column {
+    max-height: 150vh;
+    padding-top: 10vh;
+    overflow-y: auto;
 }
 
 .profilePage .languages {
@@ -429,6 +443,20 @@ footer {
 
 .profilePage .selected {
     font-weight: bold;
+}
+
+.profilePage form {
+    margin-top: 2vh;
+    padding-top: 2vh;
+}
+
+#description_div {
+    width: 100%;
+    min-height: 5vh;
+}
+
+#description_div textarea {
+    height: 200px;
 }
 
 .profilePage footer {
