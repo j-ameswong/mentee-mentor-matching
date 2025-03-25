@@ -37,7 +37,7 @@ class Authentication < Sequel::Model(:authentication)
     return false if self.user.nil?
 
     if self.data_crypt.nil?
-      self.user.errors.add(:password, "not been set by admin, please contact admin")
+      #self.user.errors.add(:password, "not been set by admin, please contact admin")
     else
       aes = OpenSSL::Cipher.new('AES-128-CBC').decrypt
       aes.iv = self.iv

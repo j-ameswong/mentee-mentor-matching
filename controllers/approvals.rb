@@ -38,7 +38,7 @@ post "/approvals" do
   redirect "/" unless session[:logged_in] && session[:user].admin?
 
   @user = User.first(id: params[:id])
-  params[:approved] = (params[:approved] == "approved")
+  params[:approved] = (params[:approved] == "approve")
 
   if @user.nil?
     redirect "/approvals"

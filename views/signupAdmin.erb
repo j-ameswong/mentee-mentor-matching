@@ -31,6 +31,9 @@
         <div id="tnc" class="row">
           <input id="terms" type="checkbox" name="terms" value="terms_accepted">
           <label for="terms">By signing up, you agree to our <a target="_blank" href="/terms">Terms & Conditions</a></label>
+          <% if @user && @user.errors[:terms] %>
+            <p class="error"><%= @user.errors[:terms][0] %></p>
+          <% end %>
         </div>
 
         <div class="row centerer">
