@@ -12,7 +12,7 @@ get "/approvals/approve" do
   if @user.nil?
     redirect "/approvals"
   else
-    @user.approved = true
+    @user.profile.approved = true
     @user.save
     puts "User #{@user.id} has been approved"
   end
@@ -38,19 +38,19 @@ post "/approvals" do
   redirect "/" unless session[:logged_in] && session[:user].admin?
 
   @user = User.first(id: params[:id])
+  params[:approved] = (params[:approved] == "approved")
 
   if @user.nil?
     redirect "/approvals"
-  elsif params[:approved] == "deny"
-    @user.delete_from_all
-    puts "Say goodbye to prospective admin #{@user.id}, he will not be missed"
-  else
+  elsif params[:approved]
     @user.authentication.update!(params)
-    @user.approved = "true"
     @user.save
     puts "Admin #{@user.id} has been approved"
+  else
+    @user.delete_from_all
+    puts "Say goodbye to prospective admin #{@user.id}, he will not be missed"
   end
 
-  @unapproved = User.where(Sequel.|({approved: nil}, {approved: "false"})).all
+  @unapproved = Authentication.where(approved: false).all
   erb :approvals
 end

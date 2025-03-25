@@ -62,9 +62,10 @@ class User < Sequel::Model
 
     # basically, if no user found create a user instance, appears in controllers/login.rb
     if user.nil?
-      user = self.new
-      self.errors.add(:field, "User not found")
-      self.errors.add(:field, "Can't be blank") if field.empty?
+      user = User.new
+      user.errors.add(:field, "User not found")
+      user.errors.add(:field, "Can't be blank") if field.empty?
+      return user
     end
 
     user

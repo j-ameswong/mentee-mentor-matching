@@ -34,6 +34,8 @@ class Authentication < Sequel::Model(:authentication)
   def login(params)
     @params = params
     @password = params.fetch(:password, "").strip
+    return false if self.user.nil?
+
     if self.data_crypt.nil?
       self.user.errors.add(:password, "not been set by admin, please contact admin")
     else

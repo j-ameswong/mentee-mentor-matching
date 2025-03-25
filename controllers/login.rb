@@ -28,10 +28,10 @@ post "/login" do
     temp_auth = Authentication.new
     temp_auth.user_id = @user.id
     temp_auth.login(params)
-    @user.errors.merge!(temp_auth.user.errors)
+    @user.errors.merge!(temp_auth.errors)
   end
 
   # check if user exists
-  @user.errors.add(:field, "user doesn't exist") unless @user.username
+  @user.errors.add(:field, "user doesn't exist")
   erb :login
 end
