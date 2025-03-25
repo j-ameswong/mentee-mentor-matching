@@ -15,13 +15,11 @@ post "/account/changePassword" do
   redirect "/login" unless session[:logged_in]
   @user = session[:user]
   @user.errors.clear
-  puts @user.inspect
 
   if @user.authentication.login({ :password => params[:old_password] })
     @user.authentication.update!(params.merge!(:password => params[:new_password]))
 
     if @user.authentication.valid?
-      puts @user.errors.full_messages
       @user.authentication.save
       @success = true
       puts "Password changed for #{@user.id}"
