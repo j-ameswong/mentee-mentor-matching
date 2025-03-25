@@ -1,24 +1,38 @@
 <nav id="sidebar">
-    <%if !(@user.nil?)%>
+    <%if !(@user.nil?) %>
         <a class="sidebar-option centerer" href="/">
                 <h2>
                     Home
                 </h2>
         </a>
     <%end%>
-        <a class="sidebar-option centerer" href=<%= @link2 %>>
-            <h2>
-                <%= @option2 %>
-            </h2>
-        </a>
+
+    <a class="sidebar-option centerer" href=<%= @link2 %>>
+        <h2>
+            <%= @option2 %>
+        </h2>
+    </a>
+
+    <%if !(@user.nil?) %>
+        <% if @accountType != "mentee" %>
+            <a class="sidebar-option centerer" href=<%= @link3 %>>
+                <h2>
+                    <%= @option3 %>
+                </h2>
+            </a>
+            <% if @accountType == "admin" %>
+                <a class="sidebar-option centerer" href=<%= @link4 %>>
+                    <h2>
+                        <%= @option4 %>
+                    </h2>
+                </a>
+            <% end %>
+        <% end %>
+    <% else %>
         <a class="sidebar-option centerer" href=<%= @link3 %>>
             <h2>
                 <%= @option3 %>
             </h2>
         </a>
-        <a class="sidebar-option centerer" href=<%= @link4 %>>
-            <h2>
-                <%= @option4 %>
-            </h2>
-        </a>
+    <% end %>
 </nav>

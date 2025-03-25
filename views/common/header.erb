@@ -1,5 +1,6 @@
 <%# for when not logged in (without any options) %>
 <% @user = session[:user]%>
+<% @accountType = "" %>
 <%if !(@user.nil?) %>
     <% @accountType = @user.acc_type %>
 
@@ -14,17 +15,11 @@
     <% elsif @accountType == "mentee" %>
         <% @option2 = "Matching" %>
         <% @link2 = "/matches" %>
-        <% @option3 = "" %>
-        <% @link3 = "/" %>
-        <% @option4 = "" %>
-        <% @link4 = "/" %>
     <% else %>
         <% @option2 = "Matching" %>
         <% @link2 = "/matches" %>
         <% @option3 = "Mentees" %>
         <% @link3 = "/" %>
-        <% @option4 = "" %>
-        <% @link4 = "/" %>
     <% end %>
 
 <% else %>
@@ -32,8 +27,6 @@
         <% @link2 = "/login" %>
         <% @option3 = "Sign Up" %>
         <% @link3 = "/signup" %>
-        <% @option4 = "" %>
-        <% @link4 = "" %>
 <% end %>
 
 <%= erb :"common/title" %>
