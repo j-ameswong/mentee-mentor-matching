@@ -12,8 +12,8 @@ get "/approvals/approve" do
   if @user.nil?
     redirect "/approvals"
   else
-    @user.profile.approved = true
-    @user.save
+    @user.authentication.update!(:approved => true)
+    @user.authentication.save
     puts "User #{@user.id} has been approved"
   end
 
@@ -44,11 +44,11 @@ post "/approvals" do
     redirect "/approvals"
   elsif params[:approved]
     @user.authentication.update!(params)
-    @user.save
+    @user.authentication.save
     puts "Admin #{@user.id} has been approved"
   else
-    @user.delete_from_all
     puts "Say goodbye to prospective admin #{@user.id}, he will not be missed"
+    @user.delete_from_all
   end
 
   @unapproved = Authentication.where(approved: false).all

@@ -6,8 +6,8 @@ end
 get "/account/changePassword" do
   redirect "/login" unless session[:logged_in]
 
-  session[:user].first_time_login = "false" if session[:user].first_time_login == "true"
-  session[:user].save
+  session[:user].authentication.update!(:first_time_login => false)
+  session[:user].authentication.save
   erb :changePassword
 end
 
@@ -15,18 +15,19 @@ post "/account/changePassword" do
   redirect "/login" unless session[:logged_in]
   @user = session[:user]
   @user.errors.clear
+  puts @user.inspect
 
-  @user.errors.add("new_password", "Password cannot be blank") if params[:new_password].empty?
-  @user.errors.add("old_password", "Password cannot be blank") if params[:old_password].empty?
-  @user.errors.add("new_password", "Passwords cannot be the same") if params[:new_password] == params[:old_password]
-  @user.errors.add("confirm_password", "Passwords must match") if params[:new_password] != params[:confirm_password]
+  if @user.authentication.login({ :password => params[:old_password] })
+    @user.authentication.update!(params.merge!(:password => params[:new_password]))
 
-  if @user.login({ "password" => params[:old_password] })
-    @user.hash_pass(params[:new_password])
-    @user.save
-    @success = "true"
-    puts "Password changed for #{@user.email}"
+    if @user.authentication.valid?
+      puts @user.errors.full_messages
+      @user.authentication.save
+      @success = true
+      puts "Password changed for #{@user.id}"
+    end
   end
 
+  @user.errors.merge!(@user.authentication.errors)
   erb :changePassword
 end

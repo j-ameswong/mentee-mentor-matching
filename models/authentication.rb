@@ -27,8 +27,18 @@ class Authentication < Sequel::Model(:authentication)
     end
 
     # Below is universally applied
-    self.approved = false if self.approved.nil? # be default false, after admin approval, true
-    self.first_time_login = true unless self.first_time_login
+    # by default false, after admin approval, true#
+    if self.approved.nil?
+      self.approved = false
+    elsif params.key?(:approved)
+      self.approved = params[:approved]
+    end
+
+    if self.first_time_login.nil?
+      self.first_time_login = false
+    elsif params.key?(:first_time_login)
+      self.first_time_login = params[:first_time_login]
+    end
   end
 
   def login(params)
@@ -36,9 +46,7 @@ class Authentication < Sequel::Model(:authentication)
     @password = params.fetch(:password, "").strip
     return false if self.user.nil?
 
-    if self.data_crypt.nil?
-      #self.user.errors.add(:password, "not been set by admin, please contact admin")
-    else
+    unless self.data_crypt.nil?
       aes = OpenSSL::Cipher.new('AES-128-CBC').decrypt
       aes.iv = self.iv
       aes.key = OpenSSL::PKCS5.pbkdf2_hmac_sha1(@password, self.salt, 20_000, 16)
@@ -67,22 +75,27 @@ class Authentication < Sequel::Model(:authentication)
       errors.add(:iv, "cannot be empty") if iv.nil?
       errors.add(:salt, "cannot be empty") if salt.nil?
       errors.add(:data_crypt, "cannot be empty") if data_crypt.nil?
+    end
 
-      if @params && @params.key?(:password)
-        if @password.nil? || @password.empty?
-          errors.add(:password, "cannot be blank")
-        else
-          errors.add(:password, "must be more than 8 characters") if @password.length < 9
-        end
-      end
-
-      if @params && @params.key?(:confirm_password)
-        if @confirm_password.nil? || @confirm_password.empty?
-          errors.add(:confirm_password, "cannot be blank")
-        else
-          errors.add(:confirm_password, "must match password") unless @password == @confirm_password
-        end
+    if @params && @params.key?(:password)
+      if @password.nil? || @password.empty?
+        errors.add(:password, "cannot be blank")
+      else
+        #errors.add(:password, "must be more than 8 characters") if @password.length < 9
       end
     end
+
+    if @params && @params.key?(:confirm_password)
+      if @confirm_password.nil? || @confirm_password.empty?
+        errors.add(:confirm_password, "cannot be blank")
+      else
+        errors.add(:confirm_password, "must match password") if !@params.key(:new_password) && @password != @confirm_password
+      end
+    end
+
+    errors.add(:new_password, "cannot be blank") if @params.key?(:new_password) && @params[:new_password].empty?
+    #errors.add(:new_password, errors[:password] - ["was incorrect"]) if @params.key?(:new_password)
+    errors.add(:new_password, "cannot be the same") if @params.key?(:new_password) && @params.key?(:old_password) && @params[:new_password] == @params[:old_password]
+    errors.add(:confirm_password, "must match") if @params.key?(:new_password) && @params.key?(:confirm_password) && @params[:new_password] != @params[:confirm_password]
   end
 end
