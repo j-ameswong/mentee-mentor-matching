@@ -4,9 +4,9 @@ CREATE TABLE users (
     last_name TEXT,
     university_email TEXT,
     date_of_birth TEXT,
-    iv 'BLOB',
-    salt 'BLOB',
-    data_crypt 'BLOB',
+    iv BLOB,
+    salt BLOB,
+    data_crypt BLOB,
     acc_type TEXT,
-    profile_pic 'BLOB'
+    profile_pic BLOB
 );
