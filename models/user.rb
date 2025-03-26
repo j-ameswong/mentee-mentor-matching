@@ -40,10 +40,6 @@ class User < Sequel::Model
     errors.add(:terms, "must be accepted") if @terms.nil? || @terms.empty?
   end
 
-  def full_name
-    "#{first_name} #{last_name}"
-  end
-
   def admin?
     self.role == "admin"
   end

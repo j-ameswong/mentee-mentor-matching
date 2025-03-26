@@ -25,6 +25,10 @@ class Profile < Sequel::Model
     TimeDifference.between(dob, now).in_years.to_i
   end
 
+  def full_name
+    "#{first_name} #{last_name}"
+  end
+
   def return_hash(value)
     Digest::SHA256.hexdigest(value)
   end

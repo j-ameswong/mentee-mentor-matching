@@ -17,6 +17,10 @@ elsif choice == "2"
   User.delete_from_all(id)
 end
 
-User.where(username: "admin2").each do |user|
+User.where(id: 454920228).each do |user|
   user.delete_from_all
+end
+
+Profile.where(last_name: "Freeborn").each do |heretic|
+  heretic.delete
 end

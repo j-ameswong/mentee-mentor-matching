@@ -18,12 +18,12 @@
     <form method="post" action="/profile?id=<%= @viewed_user.id %>" enctype="multipart/form-data">
       <figure class="row profile_pic centerer">
         <%# If profile pic has not been set by user, use default profile picture %>
-        <img width="100" height="100" src="/images/user/<%= @viewed_user.profile_pic %>" alt="Not Found"
+        <img width="100" height="100" src="/images/user/<%= @viewed_user.profile.profile_pic %>" alt="Not Found"
              onerror="this.src='/images/blankProfilePicture.webp'"/>
       </figure>
 
       <div class="info row">
-        <p>Name: <%= @viewed_user.first_name + ' ' + @viewed_user.last_name %></p>
+        <p>Name: <%= @viewed_user.profile.full_name %></p>
       </div>
 
       <div class="info row">
@@ -31,8 +31,8 @@
       </div>
 
       <div class="info row languages">
-        <% @languages = @viewed_user.languages.split(",") unless @viewed_user.languages.nil? %>
-
+        <%# TODO: change languages csv to db, update schema and migrations @languages = @viewed_user.user_languages unless @viewed_user.languages.nil? %>
+        <%# TODO: same as above for nationalities %>
         <p>Languages Spoken: </p>
         <ul>
           <% unless @languages.nil?%>
@@ -44,11 +44,11 @@
       </div>
       
       <div class="info row">
-        <p>Age: <%= @viewed_user.age(@viewed_user.date_of_birth).to_s %></p>
+        <p>Age: <%= @viewed_user.profile.age %></p>
       </div>
 
       <div class="info row">
-        <p>Role: <%= @viewed_user.role[0].upcase + @viewed_user.role[1..-1] %></p>
+        <p>Role: <%= @viewed_user.role.capitalize %></p>
       </div>
 
       <div class="info row">
