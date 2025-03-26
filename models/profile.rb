@@ -4,6 +4,7 @@ class Profile < Sequel::Model
   plugin :timestamps, update_on_create: true
 
   many_to_one :user
+  one_to_one :nationality
 
   def update!(params)
     @role = params[:role] if params.key?(:role)

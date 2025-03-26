@@ -32,9 +32,9 @@ Sequel.migration do
     create_table(:profiles) do
       primary_key :id
       foreign_key :user_id, :users
+      foreign_key :nationality_id, :nationalities
       String :first_name
       String :last_name
-      String :nationality
       Date :date_of_birth
       String :gender
       String :profile_picture
@@ -97,11 +97,26 @@ Sequel.migration do
     create_table(:user_languages) do
       primary_key :id
       foreign_key :user_id, :users
-      String :language
+      foreign_key :language_id, :languages
       DateTime :created_at
       DateTime :updated_at
 
       index :user_id
+    end
+
+    create_table(:languages) do
+      primary_key :id
+      String :language_name
+      DateTime :created_at
+      DateTime :updated_at
+    end
+
+    create_table(:nationalities) do
+      primary_key :id
+      String :country_name
+      String :country_code
+      DateTime :created_at
+      DateTime :updated_at
     end
   end
 end
