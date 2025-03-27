@@ -1,15 +1,25 @@
 # normalising data
 
 Sequel.migration do
-  alter_table(:profiles) do
-    drop_column :nationality
-    add_foreign_key :nationality_id, :nationalities
+  up do
+    alter_table(:profiles) do
+      drop_column :nationality
+      add_foreign_key :nationality_id, :nationalities
+    end
   end
+
+  down do
+    alter_table(:profiles) do
+      add_column :nationality, String
+    end
+  end
+
   change do
     create_table(:user_expertises) do
       primary_key :id
       foreign_key :user_id, :users
-      foreign_key :expertise, :expertises
+      foreign_key :expertise_id, :expertises
+      Integer :confidence_level # 1-10
       DateTime :created_at
       DateTime :updated_at
       
@@ -19,7 +29,6 @@ Sequel.migration do
     create_table(:expertises) do
       primary_key :id
       String :expertise_name
-      Integer :confidence_level # 1-10
       DateTime :created_at
       DateTime :updated_at
     end
