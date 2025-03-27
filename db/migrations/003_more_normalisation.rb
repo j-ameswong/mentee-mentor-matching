@@ -29,8 +29,6 @@ Sequel.migration do
     create_table(:expertises) do
       primary_key :id
       String :expertise_name
-      DateTime :created_at
-      DateTime :updated_at
     end
 
     create_table(:user_languages) do
@@ -48,16 +46,12 @@ Sequel.migration do
       String :language_name
       String :native_name
       String :language_code
-      DateTime :created_at
-      DateTime :updated_at
     end
 
     create_table(:nationalities) do
       primary_key :id
       String :country_name
       String :country_code
-      DateTime :created_at
-      DateTime :updated_at
     end
   end
 end
