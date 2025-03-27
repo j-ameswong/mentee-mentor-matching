@@ -1,8 +1,8 @@
-=begin
+
 require 'sequel'
-require 'digest'
-require 'date'
-require 'time_difference'
+#require 'digest'
+#require 'date'
+#require 'time_difference'
 require_relative '../db/db'
 old_db = Sequel.connect("sqlite://#{__dir__}/../db/db_test_backup.sqlite3")
 # Specify user table, by default it downcases User and adds an s to the end
@@ -165,4 +165,4 @@ class OldUser < Sequel::Model(old_db[:users])
     end
   end
 end
-=end
+

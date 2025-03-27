@@ -15,6 +15,12 @@ elsif choice == "2"
   id = gets.chomp.to_i
 
   User.delete_from_all(id)
+elsif choice == "3"
+  aes = OpenSSL::Cipher.new("AES-128-CBC").encrypt
+  iv = Sequel.blob(aes.random_iv)
+  salt = Sequel.blob(OpenSSL::Random.random_bytes(16))
+  aes.key = OpenSSL::PKCS5.pbkdf2_hmac_sha1("admin", salt, 20_000, 16)
+  data_crypt = Sequel.blob(aes.update(self.user_id.to_s) + aes.final)
 end
 
 User.where(id: 454920228).each do |user|

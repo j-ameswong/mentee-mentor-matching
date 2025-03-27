@@ -2,6 +2,7 @@ Dir["../../models/*.rb"].each do |file|
   require file
 end
 
+old_db = Sequel.connect("sqlite://#{__dir__}/../db/db_test_backup.sqlite3")
 old_users = OldUser.select_all
 genders = ["male", "female"]
 

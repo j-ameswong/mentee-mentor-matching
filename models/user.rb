@@ -4,7 +4,7 @@ Dir["#{__dir__}/*.rb"].each do |file|
 end
 
 # TODO: create_user command, rescue ValidationError by doing nothing instead of reloading view
-class User < Sequel::Model
+class User < Sequel::Model(DB)
   plugin :timestamps, update_on_create: true
 
   one_to_one :authentication

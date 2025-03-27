@@ -102,7 +102,7 @@ CREATE TABLE "user_expertises" (
     FOREIGN KEY ("user_id") REFERENCES "users" ("id"),
     FOREIGN KEY ("expertise_id") REFERENCES "expertises" ("id")
 );
-CREATE INDEX "skill_index" ON "user_expertises" ("skill");
+CREATE INDEX "user_id_user_expertises_index" ON "user_expertises" ("user_id");
 
 -- List of all possible expertises
 CREATE TABLE "expertises" (

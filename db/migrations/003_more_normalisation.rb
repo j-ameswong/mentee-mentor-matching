@@ -22,8 +22,8 @@ Sequel.migration do
       Integer :confidence_level # 1-10
       DateTime :created_at
       DateTime :updated_at
-      
-      index :skill
+
+      index :user_id
     end
 
     create_table(:expertises) do
