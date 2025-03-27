@@ -87,11 +87,19 @@ Sequel.migration do
     create_table(:user_expertises) do
       primary_key :id
       foreign_key :user_id, :users
-      String :skill
+      foreign_key :expertise, :expertises
       DateTime :created_at
       DateTime :updated_at
       
       index :skill
+    end
+
+    create_table(:expertises) do
+      primary_key :id
+      String :expertise_name
+      Integer :confidence_level # 1-10
+      DateTime :created_at
+      DateTime :updated_at
     end
 
     create_table(:user_languages) do
@@ -107,6 +115,8 @@ Sequel.migration do
     create_table(:languages) do
       primary_key :id
       String :language_name
+      String :native_name
+      String :language_code
       DateTime :created_at
       DateTime :updated_at
     end
