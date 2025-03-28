@@ -30,10 +30,9 @@ elsif choice == "3"
   auth.salt = salt
   auth.data_crypt = data_crypt
   auth.save
-end
-
-User.where(id: 454920228).each do |user|
-  user.delete_from_all
+elsif choice == "4"
+  lang = Language.first(language_name: "English")
+  puts lang.id
 end
 
 Profile.where(last_name: "Freeborn").each do |heretic|

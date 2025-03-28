@@ -25,19 +25,21 @@ class User < Sequel::Model(DB)
     super
 
     errors.add(:role, "must be valid") unless ROLES.include?(role)
-    if email.nil? || email.empty?
-      errors.add(:email, "must be filled in")
-    else
-      errors.add(:email, "already taken") unless User.first(email: email).nil?
-      errors.add(:email, "is in invalid format") unless valid_email_address?(email)
-      errors.add(:email, "must be your university email") unless valid_email?(email)
+    if @params
+      if email.nil? || email.empty?
+        errors.add(:email, "must be filled in")
+      else
+        errors.add(:email, "already taken") unless User.first(email: email).nil?
+        errors.add(:email, "is in invalid format") unless valid_email_address?(email)
+        errors.add(:email, "must be your university email") unless valid_email?(email)
+      end
+
+      errors.add(:username, "cannot be empty") if username.empty?
+      errors.add(:username, "must be valid") unless valid_input?(username)
+      errors.add(:username, "already exists") unless User.first(username: username).nil?
+
+      errors.add(:terms, "must be accepted") if @terms.nil? || @terms.empty?
     end
-
-    errors.add(:username, "cannot be empty") if username.empty?
-    errors.add(:username, "must be valid") unless valid_input?(username)
-    errors.add(:username, "already exists") unless User.first(username: username).nil?
-
-    errors.add(:terms, "must be accepted") if @terms.nil? || @terms.empty?
   end
 
   def admin?
@@ -100,6 +102,7 @@ class User < Sequel::Model(DB)
 
   # Signup method, admins bypass most of it, only needing to be in users and auth table initially
   def signup(params)
+    @params = params
     # users table
     self.id = self.gen_uid
     params = params.merge(:user_id => self.id)

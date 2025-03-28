@@ -14,11 +14,11 @@
 <body>
 <section class="centerer column">
   <%# For the below, only admins can edit someone's year of study or account type %>
-  <h3>Profile</h3>
+  <h3><%= @edited_user.username.capitalize %>'s Profile</h3>
   <form method="post" action="/profile/edit?id=<%= params[:id] %>" enctype="multipart/form-data">
       <div class="row">
         <div class="row">
-          <input type="file" id="profile_pic=" name="profile_pic" accept="image/*">
+          <input type="file" id="profile_pic" name="profile_pic" accept="image/*">
         </div>
         <div class="row">
           <label style="font-size: small" for="profile_pic">Upload Profile Picture</label>
@@ -43,14 +43,12 @@
     <div class="info row languages">
       <% languages = @edited_user.user_languages %>
       <label for="languages">Languages Spoken: (Comma separated, no spaces)</label>
-      <input type="text" id="languages" name="languages"
-             value="
-        <% @temp_csv = "" %>
-        <% languages.each do |lang| %>
-          <% @temp_csv += (lang.language.language_name + ",") %>
-        <% end %>
-        <%= params.merge!(:temp_csv => @temp_csv) %>"
-        required>
+      <% @temp_csv = "" %>
+      <% languages.each do |lang| %>
+        <% @temp_csv += (lang.language.language_name + ",") %>
+      <% end %>
+      <% params.merge!(:temp_csv => @temp_csv) %>
+      <input type="text" id="languages" name="languages" value="<%= @temp_csv %>" required>
     </div>
 
     <div class="info row">
@@ -59,7 +57,7 @@
     </div>
 
     <div class="info row">
-      <label for="role">Role:</label>
+      <label for="role">Role: </label>
       <% if session[:user].admin? %>
         <select id="role" name="role" required>
           <option value="mentee" <%= 'selected' if @edited_user.mentee? %>>Mentee</option>
@@ -75,7 +73,7 @@
       <label for="nationality">Nationality:</label>
       <select id="nationality" name="nationality" required>
         <% Nationality.each do |country| %>
-          <option value="<%= country.country_name %>" <%= 'selected' if Nationality.first(id: @edited_user.profile.nationality_id) == country %>><%= country.country_name %></option>
+          <option value="<%= country.id %>" <%= 'selected' if Nationality.first(id: @edited_user.profile.nationality_id) == country.id %>><%= country.country_name %></option>
         <% end %>
       </select>
     </div>

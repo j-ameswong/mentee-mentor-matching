@@ -14,7 +14,7 @@
 
 <body>
   <section class="centerer column">
-    <h3><%= @viewed_user.username %>'s Profile</h3>
+    <h3><%= @viewed_user.username.capitalize %>'s Profile</h3>
     <form method="post" action="/profile?id=<%= @viewed_user.id %>" enctype="multipart/form-data">
       <figure class="row profile_pic centerer">
         <%# If profile pic has not been set by user, use default profile picture %>

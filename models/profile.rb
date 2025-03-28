@@ -12,7 +12,7 @@ class Profile < Sequel::Model
     self.date_of_birth = params.fetch(:date_of_birth, "") if params.key?(:date_of_birth)
     self.first_name = params.fetch(:first_name, "").strip.capitalize if params.key?(:first_name)
     self.last_name = params.fetch(:last_name, "").strip.capitalize if params.key?(:last_name)
-    self.nationality_id = Nationality.first(id: params[:nationality]).country_name if params.key?(:nationality)
+    self.nationality_id = params[:nationality] if params.key?(:nationality)
     self.gender = params[:gender] if params.key?(:gender)
     self.profile_picture = params[:profile_picture] if params.key?(:profile_picture)
     self.bio_brief = params[:bio_brief] if params.key?(:bio_brief)

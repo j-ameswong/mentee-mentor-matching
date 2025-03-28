@@ -8,13 +8,15 @@ post "/profile/edit" do
 
   # The code here is to update the user's profile, if field is blank
   # then it will remain the same, else it will update the field
-  @edited_user.update!(params)
+  @edited_user.role = params[:role] if params[:role]
   @edited_user.profile.update!(params)
   @edited_user.mentor_profile.update!(params) if @edited_user.mentor?
-  params[:temp_csv].split(",").each do |lang|
-    user_lang = @edited_user.user_languages.new
+  params[:languages].split(",")[0..-2].each do |lang|
+    user_lang = UserLanguage.new
     user_lang.user_id = @edited_user.id
-    user_lang.language_id = Language.first(language_name: lang).id
+
+    lang_id = Language.first(language_name: lang)
+    puts lang_id.inspect
     user_lang.save
   end
 
@@ -31,7 +33,7 @@ post "/profile/edit" do
   if @edited_user.errors.empty?
     @edited_user.save
     @edited_user.profile.save
-    @edited_user.mentor_profile.save
+    @edited_user.mentor_profile.save if @edited_user.mentor?
     redirect "/profile?id=#{@edited_user.id}"
   else
     erb :profileEdit
