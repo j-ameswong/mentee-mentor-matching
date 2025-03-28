@@ -1,4 +1,5 @@
 
+=begin
 require 'sequel'
 #require 'digest'
 #require 'date'
@@ -166,3 +167,4 @@ class OldUser < Sequel::Model(old_db[:users])
   end
 end
 
+=end
