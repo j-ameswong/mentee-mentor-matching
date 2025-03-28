@@ -89,22 +89,31 @@ def gen_new(data)
   return(combined_data)
 end
 
-def gen_profile(data)
+def gen_profile(data, uname)
   user = User.new
   rand_user = (rand() * data.length).to_i
   
   first_name = data[rand_user][0]
   last_name = data[rand_user][1]
 
-  username = (first_name + last_name)[0..6].downcase
+  #username = (first_name + last_name)[0..6].downcase
+  username = uname
 
   email = username.downcase + '@sheffield.ac.uk'
 
   id = user.gen_uid
 
   date_of_birth = Date.today - (18*365 + rand(7*365))
-  
-  if rand() < 0.3
+
+  if username == "admin"
+    acc_type = 'admin'
+  elsif username == "user"
+    acc_type = 'mentee'
+    year_of_study = 1
+  elsif username == "user1"
+    acc_type = 'mentor'
+    year_of_study = 2
+  elsif rand() < 0.3
     acc_type = 'mentor'
     year_of_study = 1 + rand(4)
   else
@@ -163,6 +172,7 @@ def gen_test_db(path)
   end
 end
 
-0..100.times do
-  gen_profile(data)
+starting_users = ["admin", "user1", "user2"]
+starting_users.each do |user|
+  gen_profile(data, user)
 end
