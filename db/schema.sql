@@ -8,5 +8,12 @@ CREATE TABLE users (
     salt BLOB,
     data_crypt BLOB,
     acc_type TEXT,
-    profile_pic BLOB
+    profile_pic TEXT,
+    languages TEXT,
+    year_of_study TEXT,
+    nationality TEXT,
+    approved TEXT,
+    username TEXT,
+    first_time_login TEXT,
+    description TEXT
 );

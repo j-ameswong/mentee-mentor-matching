@@ -13,8 +13,8 @@ require "sequel"
 require_relative '../models/user.rb'
 require 'openssl'
 
-data = CSV.read("./Customer_Names.csv")
-data_test = CSV.read("../public/resources/country.csv")
+data = CSV.read("#{__dir__}/Customer_Names.csv")
+data_test = CSV.read("#{__dir__}/../public/resources/country.csv")
 
 puts data_test.length
 
