@@ -133,7 +133,7 @@ def gen_profile(data, uname)
   "acc_type" => acc_type,
   "year_of_study" => year_of_study,
   "approved" => "true",
-  "first_time_login" => true
+  "first_time_login" => "true"
   }
 
   user.signup(params)
