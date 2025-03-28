@@ -93,9 +93,11 @@ class Authentication < Sequel::Model(:authentication)
       end
     end
 
-    errors.add(:new_password, "cannot be blank") if @params.key?(:new_password) && @params[:new_password].empty?
-    #errors.add(:new_password, errors[:password] - ["was incorrect"]) if @params.key?(:new_password)
-    errors.add(:new_password, "cannot be the same") if @params.key?(:new_password) && @params.key?(:old_password) && @params[:new_password] == @params[:old_password]
-    errors.add(:confirm_password, "must match") if @params.key?(:new_password) && @params.key?(:confirm_password) && @params[:new_password] != @params[:confirm_password]
+    if @params
+      errors.add(:new_password, "cannot be blank") if @params.key?(:new_password) && @params[:new_password].empty?
+      #errors.add(:new_password, errors[:password] - ["was incorrect"]) if @params.key?(:new_password)
+      errors.add(:new_password, "cannot be the same") if @params.key?(:new_password) && @params.key?(:old_password) && @params[:new_password] == @params[:old_password]
+      errors.add(:confirm_password, "must match") if @params.key?(:new_password) && @params.key?(:confirm_password) && @params[:new_password] != @params[:confirm_password]
+    end
   end
 end

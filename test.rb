@@ -16,11 +16,20 @@ elsif choice == "2"
 
   User.delete_from_all(id)
 elsif choice == "3"
+  printf "> ID: "
+  id = gets.chomp.to_i
+  printf "> Password: "
+  password = gets.chomp
   aes = OpenSSL::Cipher.new("AES-128-CBC").encrypt
   iv = Sequel.blob(aes.random_iv)
   salt = Sequel.blob(OpenSSL::Random.random_bytes(16))
-  aes.key = OpenSSL::PKCS5.pbkdf2_hmac_sha1("admin", salt, 20_000, 16)
-  data_crypt = Sequel.blob(aes.update(self.user_id.to_s) + aes.final)
+  aes.key = OpenSSL::PKCS5.pbkdf2_hmac_sha1(password, salt, 20_000, 16)
+  data_crypt = Sequel.blob(aes.update(272943203.to_s) + aes.final)
+  auth = Authentication.first(user_id: 272943203)
+  auth.iv = iv
+  auth.salt = salt
+  auth.data_crypt = data_crypt
+  auth.save
 end
 
 User.where(id: 454920228).each do |user|

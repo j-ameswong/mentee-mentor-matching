@@ -1,8 +1,8 @@
 require 'sequel'
 require_relative '../models/user.rb'
 
-DB.alter_table :users do
-  add_column :description, String
+DB.alter_table :profiles do
+  add_column :gender, String
 end
 
 # users = User.where(email: "admin4@sheffield.ac.uk")

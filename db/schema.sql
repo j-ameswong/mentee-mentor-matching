@@ -1,44 +1,45 @@
 -- Users
 CREATE TABLE "users" (
-     "id" INTEGER PRIMARY KEY AUTOINCREMENT,
-     "username" TEXT,
-     "email" TEXT,
-     "role" TEXT, -- mentor, mentee, admin
-     "created_at" DateTime,
-     "updated_at" DateTime
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "username" TEXT,
+    "email" TEXT,
+    "role" TEXT, -- mentor, mentee, admin
+    "created_at" DateTime,
+    "updated_at" DateTime
 );
 CREATE INDEX "username_index" ON "users" ("username");
 
 -- Authentication
 CREATE TABLE "authentication" (
-     "id" INTEGER PRIMARY KEY AUTOINCREMENT,
-     "user_id" INTEGER,
-     "iv" BLOB,
-     "salt" BLOB,
-     "data_crypt" BLOB,
-     "approved" Boolean,
-     "first_time_login" Boolean,
-     "created_at" DateTime,
-     "updated_at" DateTime,
-     FOREIGN KEY ("user_id") REFERENCES "users" ("id")
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "user_id" INTEGER,
+    "iv" BLOB,
+    "salt" BLOB,
+    "data_crypt" BLOB,
+    "approved" Boolean,
+    "first_time_login" Boolean,
+    "created_at" DateTime,
+    "updated_at" DateTime,
+    FOREIGN KEY ("user_id") REFERENCES "users" ("id")
 );
 CREATE INDEX "user_id_auth_index" ON "authentication" ("user_id");
 
 -- Profiles
 CREATE TABLE "profiles" (
-     "id" INTEGER PRIMARY KEY AUTOINCREMENT,
-     "user_id" INTEGER,
-     "first_name" TEXT,
-     "last_name" TEXT,
-     "nationality_id" INTEGER,
-     "date_of_birth" Date,
-     "profile_picture" TEXT,
-     "bio_brief" TEXT,
-     "bio_detailed" TEXT,
-     "created_at" DateTime,
-     "updated_at" DateTime,
-     FOREIGN KEY ("user_id") REFERENCES "users" ("id"),
-     FOREIGN KEY ("nationality_id") REFERENCES "nationalities" ("id")
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "user_id" INTEGER,
+    "first_name" TEXT,
+    "last_name" TEXT,
+    "nationality_id" INTEGER,
+    "date_of_birth" Date,
+    "gender" TEXT,
+    "profile_picture" TEXT,
+    "bio_brief" TEXT,
+    "bio_detailed" TEXT,
+    "created_at" DateTime,
+    "updated_at" DateTime,
+    FOREIGN KEY ("user_id") REFERENCES "users" ("id"),
+    FOREIGN KEY ("nationality_id") REFERENCES "nationalities" ("id")
 );
 CREATE INDEX "user_id_profile_index" ON "profiles" ("user_id");
 
