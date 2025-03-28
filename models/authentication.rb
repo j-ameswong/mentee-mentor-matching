@@ -35,9 +35,9 @@ class Authentication < Sequel::Model(:authentication)
     end
 
     if self.first_time_login.nil?
-      self.first_time_login = false
+      self.first_time_login = true
     elsif params.key?(:first_time_login)
-      self.first_time_login = params[:first_time_login]
+      self.first_time_login = (params[:first_time_login] == true)
     end
   end
 
