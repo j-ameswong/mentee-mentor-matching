@@ -132,7 +132,7 @@ def gen_profile(data, uname)
   "last_name" => last_name,
   "acc_type" => acc_type,
   "year_of_study" => year_of_study,
-  "approved" => true,
+  "approved" => "true",
   "first_time_login" => true
   }
 
@@ -172,7 +172,7 @@ def gen_test_db(path)
   end
 end
 
-starting_users = ["admin", "user1", "user2"]
+starting_users = ["admin", "user", "user"]
 starting_users.each do |user|
   gen_profile(data, user)
 end
