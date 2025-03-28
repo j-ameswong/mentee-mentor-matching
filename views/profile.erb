@@ -31,8 +31,6 @@
       </div>
 
       <div class="info row languages">
-        <%# TODO: change languages csv to db, update schema and migrations @languages = @viewed_user.user_languages unless @viewed_user.languages.nil? %>
-        <%# TODO: same as above for nationalities %>
         <p>Languages Spoken: </p>
         <ul>
           <% unless @viewed_user.user_languages.nil?%>
