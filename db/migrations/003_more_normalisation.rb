@@ -28,7 +28,8 @@ Sequel.migration do
 
     create_table(:expertises) do
       primary_key :id
-      String :expertise_name
+      String :category
+      String :skill
     end
 
     create_table(:user_languages) do

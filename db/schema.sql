@@ -108,8 +108,10 @@ CREATE INDEX "user_id_user_expertises_index" ON "user_expertises" ("user_id");
 -- List of all possible expertises
 CREATE TABLE "expertises" (
     "id" INTEGER PRIMARY KEY AUTOINCREMENT,
-    "expertise_name" TEXT
+    "category" TEXT,
+    "skill" TEXT
 );
+CREATE INDEX "category_expertises_index" ON "expertises" ("category");
 
 -- User Languages table
 CREATE TABLE "user_languages" (
