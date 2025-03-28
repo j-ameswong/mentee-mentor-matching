@@ -41,15 +41,15 @@
     </div>
 
     <div class="info row languages">
-      <% @languages = @edited_user.user_languages %>
+      <% languages = @edited_user.user_languages %>
       <label for="languages">Languages Spoken: (Comma separated, no spaces)</label>
       <input type="text" id="languages" name="languages"
              value="
-        <% temp_csv = "" %>
-        <% @languages.each do |lang| %>
-          <% temp_csv += (lang.language.language_name + ",") %>
+        <% @temp_csv = "" %>
+        <% languages.each do |lang| %>
+          <% @temp_csv += (lang.language.language_name + ",") %>
         <% end %>
-        <%= temp_csv %>"
+        <%= params.merge!(:temp_csv => @temp_csv) %>"
         required>
     </div>
 
