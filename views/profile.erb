@@ -18,7 +18,7 @@
     <form method="post" action="/profile?id=<%= @viewed_user.id %>" enctype="multipart/form-data">
       <figure class="row profile_pic centerer">
         <%# If profile pic has not been set by user, use default profile picture %>
-        <img width="100" height="100" src="/images/user/<%= @viewed_user.profile.profile_pic %>" alt="Not Found"
+        <img width="100" height="100" src="/images/user/<%= @viewed_user.profile.profile_picture %>" alt="Not Found"
              onerror="this.src='/images/blankProfilePicture.webp'"/>
       </figure>
 
@@ -35,9 +35,9 @@
         <%# TODO: same as above for nationalities %>
         <p>Languages Spoken: </p>
         <ul>
-          <% unless @languages.nil?%>
-            <% @languages.each do |language|%>
-              <li><%= language %></li>
+          <% unless @viewed_user.user_languages.nil?%>
+            <% @viewed_user.user_languages.each do |lang|%>
+              <li><%= lang.language.language_name %></li>
             <% end %>
           <% end %>
         </ul>
@@ -52,11 +52,11 @@
       </div>
 
       <div class="info row">
-        <p>Nationality: <%= @viewed_user.nationality %> </p>
+        <p>Nationality: <%= @viewed_user.profile.nationality.country_name if @viewed_user.profile.nationality_id %> </p>
       </div>
 
       <div class="info row">
-        <p>Year of Study: <%= @viewed_user.year_of_study  %> </p>
+        <p>Year of Study: <%= @viewed_user.mentor_profile ? "Year #{@viewed_user.mentor_profile.year_of_study}" : "Year 1" %> </p>
       </div>
 
       <div class="info row">
@@ -64,11 +64,11 @@
           <p>Background Summary:</p>
         </div>
         <div class="row">
-          <p><%= @viewed_user.description %></p>
+          <p><%= @viewed_user.profile.bio_brief %></p>
         </div>
       </div>
 
-      <% if session[:user].role == "admin" || @viewed_user.id == session[:user].id %>
+      <% if session[:user].admin? || @viewed_user.id == session[:user].id %>
         <div class="info row">
           <button type="submit">Edit</button>
         </div>

@@ -38,8 +38,7 @@ get "/profile" do
   @viewed_user = User.first(id: params[:id].to_i) unless params[:id].nil?
   @viewed_user = session[:user] if @viewed_user.nil?
 
-  data = CSV.table("./public/resources/country.csv")
-  @countries = data[:value]
+  @countries = Nationality
 
   erb :profile
 end

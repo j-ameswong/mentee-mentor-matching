@@ -4,7 +4,7 @@ class Profile < Sequel::Model
   plugin :timestamps, update_on_create: true
 
   many_to_one :user
-  one_to_one :nationality
+  one_to_one :nationality, key: :id
 
   def update!(params)
     @role = params[:role] if params.key?(:role)
@@ -12,7 +12,7 @@ class Profile < Sequel::Model
     self.date_of_birth = params.fetch(:date_of_birth, "") if params.key?(:date_of_birth)
     self.first_name = params.fetch(:first_name, "").strip.capitalize if params.key?(:first_name)
     self.last_name = params.fetch(:last_name, "").strip.capitalize if params.key?(:last_name)
-    self.nationality = params[:nationality] if params.key?(:nationality)
+    self.nationality_id = Nationality.first(id: params[:nationality]).country_name if params.key?(:nationality)
     self.gender = params[:gender] if params.key?(:gender)
     self.profile_picture = params[:profile_picture] if params.key?(:profile_picture)
     self.bio_brief = params[:bio_brief] if params.key?(:bio_brief)
@@ -20,7 +20,7 @@ class Profile < Sequel::Model
   end
 
   def age
-    dob = DateTime.parse(date_of_birth)
+    dob = DateTime.parse(date_of_birth.to_s)
     now = DateTime.now
     # return age
     TimeDifference.between(dob, now).in_years.to_i
