@@ -93,50 +93,63 @@ def gen_profile(data, uname)
   user = User.new
   rand_user = (rand() * data.length).to_i
   
-  first_name = data[rand_user][0]
-  last_name = data[rand_user][1]
+  user.first_name = data[rand_user][0]
+  user.last_name = data[rand_user][1]
 
   #username = (first_name + last_name)[0..6].downcase
-  username = uname
+  user.username = uname
 
-  email = username.downcase + '@sheffield.ac.uk'
+  user.university_email = uname.downcase + '@sheffield.ac.uk'
 
-  id = user.gen_uid
+  user.id = user.gen_uid
 
-  date_of_birth = Date.today - (18*365 + rand(7*365))
+  user.date_of_birth = Date.today - (18*365 + rand(7*365))
 
   if username == "admin"
-    acc_type = 'admin'
+    user.acc_type = 'admin'
   elsif username == "user"
-    acc_type = 'mentee'
-    year_of_study = 1
+    user.acc_type = 'mentee'
+    user.year_of_study = 1
   elsif username == "user1"
-    acc_type = 'mentor'
-    year_of_study = 2
+    user.acc_type = 'mentor'
+    user.year_of_study = 2
   elsif rand() < 0.3
-    acc_type = 'mentor'
-    year_of_study = 1 + rand(4)
+    user.acc_type = 'mentor'
+    user.year_of_study = 1 + rand(4)
   else
-    acc_type = 'mentee'
-    year_of_study = 1
+    user.acc_type = 'mentee'
+    user.year_of_study = 1
   end
 
-  params = {
-  "id" => id,
-  "username" => username,
-  "password" => username,
-  "confirm_password" => username,
-  "university_email" => email,
-  "date_of_birth" => date_of_birth,
-  "first_name" => first_name,
-  "last_name" => last_name,
-  "acc_type" => acc_type,
-  "year_of_study" => year_of_study,
-  "approved" => "true",
-  "first_time_login" => "true"
-  }
+  user.approved = "true"
+  user.first_time_login = "true"
 
-  user.signup(params)
+  # Set up AES for encryption.
+  aes = OpenSSL::Cipher.new('AES-128-CBC').encrypt
+  # Generate a random IV.
+  user.iv = Sequel.blob(aes.random_iv)
+  # Generate a random salt.
+  user.salt = Sequel.blob(OpenSSL::Random.random_bytes(16))
+  # Get the key from the password and salt.
+  aes.key = OpenSSL::PKCS5.pbkdf2_hmac_sha1(uname, salt, 20_000, 16)
+  # Encrypt the data
+  user.data_crypt = Sequel.blob(aes.update(uname) + aes.final)
+  #params = {
+  #"id" => id,
+  #"username" => username,
+  #"password" => username,
+  #"confirm_password" => username,
+  #"university_email" => email,
+  #"date_of_birth" => date_of_birth,
+  #"#first_name" => first_name,
+  #"last_name" => last_name,
+  #"acc_type" => acc_type,
+  #"#year_of_study" => year_of_study,
+  #"approved" => "true",
+  #"first_time_login" => "true"
+  #}
+
+  #user.signup(params)
   user.save
 end
 
