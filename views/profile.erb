@@ -50,7 +50,7 @@
       </div>
 
       <div class="info row">
-        <p>Nationality: <%= @viewed_user.profile.nationality.country_name if @viewed_user.profile.nationality_id %> </p>
+        <p>Nationality: <%= Nationality.first(id: @viewed_user.profile.nationality_id).country_name if @viewed_user.profile.nationality_id %> </p>
       </div>
 
       <div class="info row">
@@ -62,8 +62,18 @@
           <p>Background Summary:</p>
         </div>
         <div class="row">
-          <p><%= @viewed_user.profile.id%></p>
-          <%# TODO: once the page doesnt break, above should be changed to bio_brief %>
+          <p><%= @viewed_user.profile.bio_brief %></p>
+          <%# TODO: fix broken css, when bio exceeds length of parent, entire profile wrapper breaks %>
+        </div>
+      </div>
+
+      <div class="info row">
+        <div class="row">
+          <p>Background Summary:</p>
+        </div>
+        <div class="row">
+          <p><%= @viewed_user.profile.bio_detailed %></p>
+          <%# TODO: fix broken css, same as above %>
         </div>
       </div>
 

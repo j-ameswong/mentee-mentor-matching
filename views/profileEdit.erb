@@ -82,7 +82,7 @@
       <label for="nationality">Nationality:</label>
       <select id="nationality" name="nationality" required>
         <% Nationality.each do |country| %>
-          <option value="<%= country.id %>" <%= 'selected' if Nationality.first(id: @edited_user.profile.nationality_id) == country.id %>><%= country.country_name %></option>
+          <option value="<%= country.id %>" <%= 'selected' if Nationality.first(id: @edited_user.profile.nationality_id) == country %>><%= country.country_name %></option>
         <% end %>
       </select>
     </div>
@@ -106,7 +106,7 @@
 
     <div id="bio_brief" class="info row">
       <div class="row">
-        <label for="description">Describe yourself:</label>
+        <label for="description">Describe yourself briefly:</label>
       </div>
       <div class="row">
         <textarea id="description" name="bio_brief" rows="5" cols="50"><%= @edited_user.profile.bio_brief %></textarea>
@@ -114,7 +114,7 @@
     </div>
     <div id="bio_detailed" class="info row">
       <div class="row">
-        <label for="description2">Describe yourself:</label>
+        <label for="description2">Describe yourself in detail:</label>
       </div>
       <div class="row">
         <textarea id="description2" name="bio_detailed" rows="20" cols="50"><%= @edited_user.profile.bio_detailed %></textarea>

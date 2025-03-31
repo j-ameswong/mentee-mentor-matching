@@ -16,15 +16,7 @@ post "/profile/edit" do
   # DEBUG: params[:user_languages].each {|x| puts x}
   UserLanguage.create!(params)
 
-  # Check if tempfile exists
-  if params[:profile_pic] && params[:profile_pic][:tempfile]
-    @img_data = params[:profile_pic][:tempfile].read
-    # puts "Length of img_data: #{@img_data.length}"
-    File.open(File.expand_path("../public/images/user/#{@edited_user.profile.return_hash(@edited_user.email)}", __dir__), "wb") do |f|
-      f.write(@img_data)
-    end
-    @edited_user.profile.profile_picture = @edited_user.profile.return_hash(@edited_user.email)
-  end
+
 
   if @edited_user.errors.empty?
     @edited_user.save

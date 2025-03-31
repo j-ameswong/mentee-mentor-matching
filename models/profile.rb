@@ -4,7 +4,7 @@ class Profile < Sequel::Model
   plugin :timestamps, update_on_create: true
 
   many_to_one :user
-  one_to_one :nationality, key: :id
+  many_to_one :nationality, key: :id
 
   def update!(params)
     @role = params[:role] if params.key?(:role)
@@ -14,9 +14,16 @@ class Profile < Sequel::Model
     self.last_name = params.fetch(:last_name, "").strip.capitalize if params.key?(:last_name)
     self.nationality_id = params[:nationality] if params.key?(:nationality)
     self.gender = params[:gender] if params.key?(:gender)
-    self.profile_picture = params[:profile_picture] if params.key?(:profile_picture)
+    # self.profile_picture = params[:profile_picture] if params.key?(:profile_picture)
     self.bio_brief = params[:bio_brief] if params.key?(:bio_brief)
     self.bio_detailed = params[:bio_detailed] if params.key?(:bio_detailed)
+    # Check if tempfile exists
+    if params[:profile_pic] && params[:profile_pic][:tempfile]
+      @img_data = params[:profile_pic][:tempfile].read
+      # puts "Length of img_data: #{@img_data.length}"
+      File.open(File.expand_path("../public/images/user/#{return_hash(self.user.email)}", __dir__), "wb") { |f| f.write(@img_data) }
+      self.profile_picture = return_hash(self.user.email)
+    end
   end
 
   def age
@@ -53,7 +60,8 @@ class Profile < Sequel::Model
     end
     errors.add(:bio_brief, "is too long") if !bio_brief.nil? && bio_brief.length > 255
     unless bio_detailed.nil?
-      errors.add(:bio_detailed, "is too short") if bio_detailed.length < 255
+      # TODO: once css is fixed, uncomment
+      #errors.add(:bio_detailed, "is too short") if bio_detailed.length < 255
       errors.add(:bio_detailed, "is too long") if bio_detailed.length > 2200
     end
   end
