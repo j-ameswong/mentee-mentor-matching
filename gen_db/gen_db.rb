@@ -89,22 +89,28 @@ def gen_new(data)
   return(combined_data)
 end
 
-def gen_profile(data)
+def gen_profile(data, uname)
   user = User.new
   rand_user = (rand() * data.length).to_i
   
   first_name = data[rand_user][0]
   last_name = data[rand_user][1]
 
-  username = (first_name + last_name)[0..6].downcase
-
+  #username = (first_name + last_name)[0..6].downcase
+  username = uname
   email = username.downcase + '@sheffield.ac.uk'
-
   id = user.gen_uid
-
   date_of_birth = Date.today - (18*365 + rand(7*365))
-  
-  if rand() < 0.3
+
+  if username == "admin"
+    role = 'admin'
+  elsif username == "user"
+    role = 'mentee'
+    year_of_study = 1
+  elsif username == "user1"
+    role = 'mentor'
+    year_of_study = 2
+  elsif rand() < 0.3
     role = 'mentor'
     year_of_study = 1 + rand(4)
   else
@@ -123,7 +129,7 @@ def gen_profile(data)
   "last_name" => last_name,
   "role" => role,
   "year_of_study" => year_of_study,
-  "approved" => false,
+  "approved" => true,
   "first_time_login" => true
   }
 
@@ -142,27 +148,5 @@ end
 
 #write_to_csv(gen_new(data))
 
-def gen_test_db(path)
-  db = Sequel.sqlite(path)
-
-  db.create_table? :users do
-    Integer primary_key :id
-    String :first_name
-    String :last_name
-    String :email
-    String :date_of_birth
-    BLOB :iv
-    BLOB :salt
-    BLOB :data_crypt
-    String :role
-    BLOB :profile_pic
-    String :languages
-    String :year_of_study
-    String :approved
-    String :nationality
-  end
-end
-
-0..100.times do
-  gen_profile(data)
-end
+starting_users = ["admin", "user1", "user2"]
+starting_users.each { |user| gen_profile(data, user)}
