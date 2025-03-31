@@ -12,12 +12,20 @@ post "/profile/edit" do
   @edited_user.profile.update!(params)
   @edited_user.mentor_profile.update!(params) if @edited_user.mentor?
   params[:languages].split(",")[0..-2].each do |lang|
+    lang = Language.first(language_name: lang)
+    next unless lang
+    user_lang = UserLanguage.first(user_id: @edited_user.id, language_id: lang.id)
+    next if user_lang
+
+
     user_lang = UserLanguage.new
     user_lang.user_id = @edited_user.id
 
     lang_id = Language.first(language_name: lang)
     puts lang_id.inspect
-    user_lang.save
+    # user_lang.language_id = lang_id.id unless lang_id.nil?
+    #puts user_lang.inspect
+    #user_lang.save
   end
 
   # Check if tempfile exists
