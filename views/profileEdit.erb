@@ -40,16 +40,25 @@
       <input type="text" id="email" name="email" value="<%= @edited_user.email %>" required>
     </div>
 
-    <div class="info row languages">
-      <% languages = @edited_user.user_languages %>
-      <label for="languages">Languages Spoken: (Comma separated, no spaces)</label>
-      <% @temp_csv = "" %>
-      <% languages.each do |lang| %>
-        <% @temp_csv += (lang.language.language_name + ",") %>
+    <div class="info row languages" id="languages-container">
+      <% @edited_user.user_languages.each do |user_lang| %>
+        <div class="language-select-wrapper">
+          <select class="language-select" name="user_languages[]">
+            <% @languages.each do |lang| %>
+              <option value="<%= lang.id %>" <%= 'selected' if lang.id == user_lang.language_id %>>
+                <%= lang.language_name %>
+              </option>
+            <% end %>
+          </select>
+          <button type="button" class="remove-language">Remove</button>
+        </div>
       <% end %>
-      <% params.merge!(:temp_csv => @temp_csv) %>
-      <input type="text" id="languages" name="languages" value="<%= @temp_csv %>" required>
     </div>
+
+    <button type="button" id="add-language">Add Language</button>
+
+    <script>const languagesData = <%= @languages.to_json %>;</script>
+    <script src="/js/languages.js"></script>
 
     <div class="info row">
       <label for="date_of_birth"></label>
@@ -95,12 +104,20 @@
       <% end %>
     </div>
 
-    <div id="description_div" class="info row">
+    <div id="bio_brief" class="info row">
       <div class="row">
         <label for="description">Describe yourself:</label>
       </div>
       <div class="row">
-        <textarea id="description" name="description" rows="10" cols="50"><%= @edited_user.profile.bio_brief %></textarea>
+        <textarea id="description" name="bio_brief" rows="5" cols="50"><%= @edited_user.profile.bio_brief %></textarea>
+      </div>
+    </div>
+    <div id="bio_detailed" class="info row">
+      <div class="row">
+        <label for="description2">Describe yourself:</label>
+      </div>
+      <div class="row">
+        <textarea id="description2" name="bio_detailed" rows="20" cols="50"><%= @edited_user.profile.bio_detailed %></textarea>
       </div>
     </div>
 

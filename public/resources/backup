@@ -1,0 +1,10 @@
+    <div class="info row languages">
+      <% @edited_user.user_languages.each do |lang| %>
+        <select id="languages_list" name="languages_list">
+          <% @temp_csv += (Language.first(id: lang.language_id).language_name + ",") %>
+          <% Language.each do |language| %>
+            <option value="<%= language.id %>" <%= "selected" if language.id == lang.language_id %>><%= language.language_name %></option>
+          <% end %>
+      <% end %>
+      </select>
+    </div>

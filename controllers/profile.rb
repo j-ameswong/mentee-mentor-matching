@@ -2,31 +2,19 @@ require "csv"
 
 post "/profile/edit" do
   redirect "/" unless session[:logged_in]
-  puts params
+  # DEBUG: puts params
   @edited_user = User.first(id: params[:id].to_i)
   redirect "/profile" if @edited_user.nil?
 
   # The code here is to update the user's profile, if field is blank
   # then it will remain the same, else it will update the field
+  params.merge!(:user_id => @edited_user.id)
+
   @edited_user.role = params[:role] if params[:role]
   @edited_user.profile.update!(params)
   @edited_user.mentor_profile.update!(params) if @edited_user.mentor?
-  params[:languages].split(",")[0..-2].each do |lang|
-    lang = Language.first(language_name: lang)
-    next unless lang
-    user_lang = UserLanguage.first(user_id: @edited_user.id, language_id: lang.id)
-    next if user_lang
-
-
-    user_lang = UserLanguage.new
-    user_lang.user_id = @edited_user.id
-
-    lang_id = Language.first(language_name: lang)
-    puts lang_id.inspect
-    # user_lang.language_id = lang_id.id unless lang_id.nil?
-    #puts user_lang.inspect
-    #user_lang.save
-  end
+  # DEBUG: params[:user_languages].each {|x| puts x}
+  UserLanguage.create!(params)
 
   # Check if tempfile exists
   if params[:profile_pic] && params[:profile_pic][:tempfile]
@@ -71,6 +59,7 @@ end
 
 get "/profile/edit" do
   redirect "/" unless session[:logged_in]
+  @languages = Language.all
 
   @edited_user = User.first(id: params[:id].to_i) unless params[:id].nil?
   @edited_user = session[:user] if @edited_user.nil?
