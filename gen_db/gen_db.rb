@@ -135,6 +135,7 @@ def gen_profile(data, uname)
 
   user.signup(params)
   user.save
+  user.authentication.approved = true
 end
 
 def write_to_csv(combined_data)

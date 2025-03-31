@@ -13,6 +13,7 @@
 <%= erb :"common/header" %>
 
 <body>
+  <div class="content" >
   <section class="centerer column">
     <h3><%= @viewed_user.username.capitalize %>'s Profile</h3>
     <form method="post" action="/profile?id=<%= @viewed_user.id %>" enctype="multipart/form-data">
@@ -84,7 +85,7 @@
       <% end %>
     </form>
   </section>
+  </div>
 </body>
-
 
 </html>

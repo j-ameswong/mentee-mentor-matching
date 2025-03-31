@@ -8,43 +8,15 @@
 </head>
 <% @title = "Matching" %>
 <%= erb :"common/header" %>
-  <body>
-    Eventually, we want to only show mentors if logged in as mentee, and vice versas
-    <div class="matchesPage centerer">
-      <div class="row centerer"><a href="/matches/get-prev"><<<</a></div>
-      <section id="match" class="row centerer">
-        <div class="column">
-          <p>Mentor name: <%= "placeholder ruby output"%></p>
-          <p>Age: <%= "placeholder ruby output"%></p>
-        </div>
-        <div class="column">
-          <table>
-            <thead>
-                <tr>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Email</th>
-                </tr>
-            </thead>
-            <tbody>
-              <% @mentors.each do |mentor|%>
-                <tr>
-                    <td>
-                      <%= mentor.first_name %>
-                    </td>
-                    <td>
-                      <%= mentor.last_name %>
-                    </td>
-                    <td>
-                      <%= mentor.university_email %> 
-                    </td>
-                </tr>
-              <%end%>
-            </tbody>
-        </table>
-        </div>
-      </section>
-      <div class="row centerer"><a href="/matches/get-next">>>></a></div>
-    </div>
-  </body>
+
+<body>
+  <%# Eventually, we want to only show mentors if logged in as mentee, and vice versas %>
+  <% if @accountType == "mentee" %>
+    <%= erb :menteeMatching %>
+  <% elsif @accountType == "mentor" %>
+    <%= erb :mentorMatching %>
+  <% end %>
+</body>
+
+
 </html>
