@@ -16,11 +16,23 @@
         <tr>
           <th>Year of Study</th>
           <th>Expertise</th>
+          <th>Age</th>
+          <th>Bio</th>
+          <th>Nationality</th>
         </tr></thead>
         <tbody>
           <% MentorProfile.each do |row| %>
-            <%  %>
+            <% if row.availability %>
+              <tr>
+                <td><%= row.year_of_study %></td>
+                <td><%= row.user.user_expertises[0] %></td>
+                <td><%= row.user.profile.age %></td>
+                <td><%= row.user.profile.bio_brief %></td>
+                <td><%= Nationality.first(id: row.user.profile.nationality_id).country_name %></td>
+              </tr>
+            <% end %>
           <% end %>
+          </tr>
         </tbody>
       </table>
       <div class="matching-centerer">

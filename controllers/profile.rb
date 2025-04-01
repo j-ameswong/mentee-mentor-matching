@@ -12,7 +12,7 @@ post "/profile/edit" do
 
   @edited_user.role = params[:role] if params[:role]
   @edited_user.profile.update!(params)
-  @edited_user.mentor_profile.update!(params) if @edited_user.mentor?
+  @edited_user.mentor_profile.update!(params.merge!(:availability => true)) if @edited_user.mentor?
   # DEBUG: params[:user_languages].each {|x| puts x}
   UserLanguage.create!(params)
 

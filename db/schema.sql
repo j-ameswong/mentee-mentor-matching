@@ -57,6 +57,7 @@ CREATE TABLE "mentor_profiles" (
     "year_of_study" INTEGER,
     "num_matches" INTEGER, -- Cannot exceed max_matches
     "max_matches" INTEGER, -- This should only be set by mentor
+    "availability" Boolean,
     "badges" TEXT,
     "created_at" DateTime,
     "updated_at" DateTime,
@@ -97,7 +98,6 @@ CREATE TABLE "user_expertises" (
     "id" INTEGER PRIMARY KEY AUTOINCREMENT,
     "user_id" INTEGER,
     "expertise_id" INTEGER,
-    "confidence_level" INTEGER, -- 1-10, level of perceived skill in the expertise
     "created_at" DateTime,
     "updated_at" DateTime,
     FOREIGN KEY ("user_id") REFERENCES "users" ("id"),
