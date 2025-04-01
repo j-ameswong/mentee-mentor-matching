@@ -298,6 +298,8 @@ input[type="submit" i] {
   border: none;
   background-color: var(--lgrey);
   color: var(--grey);
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
 }
 
 input[type="password" i] {
@@ -308,6 +310,8 @@ input[type="password" i] {
   border: none;
   background-color: var(--lgrey);
   color: var(--grey);
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
 }
 
 input[type="text" i] {
@@ -318,6 +322,8 @@ input[type="text" i] {
   border: none;
   background-color: var(--lgrey);
   color: var(--grey);
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
 }
 
 input[type="email" i] {
@@ -331,6 +337,13 @@ input[type="email" i] {
 }
 
 input[type="date" i] {
+  border-radius: 25px;
+  outline: none;
+  border: none;
+  background-color: var(--lgrey);
+  color: var(--grey);
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
 }
 
 label input[type="checkbox" i] {
@@ -359,6 +372,13 @@ label input[type="checkbox" i]:checked + span:before {
 }
 
 select {
+  border-radius: 25px;
+  outline: none;
+  border: none;
+  background-color: var(--lgrey);
+  color: var(--grey);
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
 }
 
 .info {

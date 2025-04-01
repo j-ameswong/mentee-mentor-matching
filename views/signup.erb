@@ -29,7 +29,7 @@
           <br>
 
           <div class="row centerer">
-            <input name="username" id="username" type="text" value="<%= @user.username if @user %>" required/>
+            <input name="username" id="username" type="text" value="<%= @user.username if @user %>" placeholder="New Username" required/>
             <% if @user && @user.errors[:username] %>
               <% @user.errors[:username].each do |error| %>
                 <p class="error"><%= error %></p>
@@ -45,7 +45,7 @@
           <br>
 
           <div class="row centerer">
-            <input name="first_name" id="first_name" type="text" value="<%= @params[:first_name] if @user && @params %>" required/>
+            <input name="first_name" id="first_name" type="text" value="<%= @params[:first_name] if @user && @params %>" placeholder="Your First Name" required/>
             <% if @user && @user.errors[:first_name] %>
               <% @user.errors[:first_name].each do |error| %>
                 <p class="error"><%= error %></p>
@@ -61,7 +61,7 @@
           <br>
 
           <div class="row centerer">
-            <input name="last_name" id="last_name" type="text" value="<%= @params[:last_name] if @user && @params %>" required/>
+            <input name="last_name" id="last_name" type="text" value="<%= @params[:last_name] if @user && @params %>" placeholder="Your Last Name" required/>
             <% if @user && @user.errors[:last_name] %>
               <% @user.errors[:last_name].each do |error| %>
                 <p class="error"><%= error %></p>
@@ -77,7 +77,7 @@
           <br>
 
           <div class="row centerer">
-            <input id="email" name="email" type="email" value="<%= @user.email if @user %>" required/>
+            <input id="email" name="email" type="email" value="<%= @user.email if @user %>" placeholder="University Email Address" required/>
             <% if @user && @user.errors[:email] %>
               <% @user.errors[:email].each do |error| %>
                 <p class="error"><%= error %></p>
@@ -152,7 +152,7 @@
           <br>
 
           <div class="row centerer">
-            <input id="password" name="password" type="password" />
+            <input id="password" name="password" type="password" placeholder="New Password" />
             <% if @user && @user.errors[:password] %>
               <% @user.errors[:password].each do |error| %>
                 <p class="error"><%= error %></p>
@@ -168,7 +168,7 @@
           <br>
 
           <div class="row centerer">
-            <input id="confirm_password" name="confirm_password" type="password" />
+            <input id="confirm_password" name="confirm_password" type="password" placeholder="Re-enter Password" />
             <% if @user && @user.errors[:confirm_password] %>
               <% @user.errors[:confirm_password].each do |error| %>
                 <p class="error"><%= error %></p>
