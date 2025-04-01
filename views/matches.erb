@@ -10,10 +10,10 @@
 <%= erb :"common/header" %>
 
 <body>
-  <%# Eventually, we want to only show mentors if logged in as mentee, and vice versas %>
-  <% if @accountType == "mentee" %>
+  <%# CONTENT FOR MENTEE USERS IN "menteeMatching.erb", CONTENT FOR MENTOR USERS IN "mentorMatching.erb" %>
+  <% if @user.mentee? %>
     <%= erb :menteeMatching %>
-  <% elsif @accountType == "mentor" %>
+  <% elsif @user.mentor? %>
     <%= erb :mentorMatching %>
   <% end %>
 </body>

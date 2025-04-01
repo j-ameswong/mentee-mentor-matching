@@ -1,0 +1,10 @@
+<%# TODO: if mentee is matched, show mentor profile, else show available mentors %>
+
+<% if @user.mentee_profile.availability %>
+    
+
+<% else %>
+    <% @mentor_id = @user.matches.mentor_id %>
+    <% @mentor = User.first(id: @mentor_id) %>
+
+<% end %>
