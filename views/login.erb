@@ -20,20 +20,29 @@
 
       <form method="post">
 
-        <div class="row centerer">
+        <div class="column">
+          <div class="row centerer">
+            <label class="login-text" for="field">Username/University Email Address:</label>
+          </div>
+          <br>
 
-          <div class="column">
-            <p><label for="field">Username/University Email Address:</label></p>
+          <div class="row centerer">
             <input id="field" name="field" type="text" />
             <% if @user && @user.errors[:field] %>
               <% @user.errors[:field].each do |error| %>
                 <p><%= error %></p>
               <% end %>
             <% end %>
-
           </div>
-          <div class="column">
-            <p><label for="password">Password:</label></p>
+          <br>
+          <br>
+        
+          <div class="row centerer">
+            <label class="login-text" for="password">Password:</label>
+          </div>
+          <br>
+
+          <div class="row centerer">
             <input id="password" name="password" type="password" />
             <% if @user && @user.errors[:password] %>
               <% @user.errors[:password].each do |error| %>
@@ -41,9 +50,9 @@
               <% end %>
             <% end %>
           </div>
-        </div>
+          <br>
+          <br>
 
-        <div class="column">
           <div class="row centerer">
             <input type="submit" value="Log in">
           </div>

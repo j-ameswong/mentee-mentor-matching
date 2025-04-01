@@ -281,10 +281,38 @@ p {
     margin-bottom: 10vh;
 }
 
+.login-text {
+    line-height: 2vh;
+}
+
 input {
     width: 90%;
 }
 
+input[type="submit" i] {
+    width: 10vw;
+    border-radius: 25px;
+    outline: none;
+    border: none;
+    background-color: var(--lgrey);
+    color: var(--grey);
+}
+
+input[type="password" i] {
+    width: 30vw;
+    border-radius: 25px;
+    outline: none;
+    border: none;
+    background-color: var(--lgrey);
+}
+
+input[type="text" i] {
+    width: 30vw;
+    border-radius: 25px;
+    outline: none;
+    border: none;
+    background-color: var(--lgrey);
+}
 
 .info {
     padding: 5px 0;
