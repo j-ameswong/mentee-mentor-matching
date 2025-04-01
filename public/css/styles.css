@@ -421,3 +421,12 @@ body {
     max-width: 100%;
     overflow-x: hidden;
 }
+
+#help-request {
+
+    width: 50vw;
+    height: 15vw;
+    vertical-align: top;
+    font-family: inherit;
+
+}

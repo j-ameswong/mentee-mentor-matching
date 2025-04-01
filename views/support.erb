@@ -1,3 +1,5 @@
+<%#alex%>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -15,7 +17,19 @@
   <div class = "content">
     <h2>HELP AND SUPPORT</h2>
     <div class = "row centerer">
-      <input name = "submit" type = "text">
+      <form action = "" method = "post">
+        <label for="help-request-type">What do you need help with?:</label>
+        <select id = "help-category">
+          <option value = "option1">Option 1</option>
+          <option value = "option2">Option 2</option>
+          <option value = "option3">Option 3</option>
+          <option value = "option4">Option 4</option>
+          <option value = "option5">Option 5</option>
+        </select><br><br><br><br><br>
+        <label for="help-request">Please Specify: </label>
+        <textarea id = "help-request"></textarea>
+        <input type="submit" value ="Submit">
+      </form>
     </div>
   </div>
 </body>
