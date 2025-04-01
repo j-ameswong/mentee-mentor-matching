@@ -14,6 +14,13 @@
 
 <body>
   <div class="content">
+		<div class="centerer column content-container">
+		<select name="filter-accounts" class="account-filter">
+			<option value="All">All</option>
+			<option value="Admin">Admins</option>
+			<option value="Mentor">Mentors</option>
+			<option value="Mentee">Mentees</option>
+		</select>
     <section class="row centerer">
       <% @unapproved.each do |auth| %>
         <div class="column centerer">
@@ -44,6 +51,7 @@
           </div>
         </section>
       </div>
+			</div>
     <% end %>
 </body>
 

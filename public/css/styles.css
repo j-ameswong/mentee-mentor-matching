@@ -430,3 +430,11 @@ body {
     font-family: inherit;
 
 }
+
+.content-container {
+    margin: 4%;
+}
+
+.account-filter {
+    align-items: self-start;
+}
