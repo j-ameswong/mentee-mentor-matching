@@ -2,10 +2,10 @@
 id INTEGER PRIMARY KEY,
     first_name TEXT,
     last_name TEXT,
-    university_email TEXT,
+    email TEXT,
     date_of_birth TEXT,
     password_ TEXT, 
-    acc_type TEXT)
+    role TEXT)
 =end
 require "csv"
 require "digest"
@@ -22,16 +22,16 @@ def gen_new(data)
   id = []
   first_name = []
   last_name = []
-  university_email = []
+  email = []
   date_of_birth = []
   password_ = []
-  acc_type = []
+  role = []
 
   counter = 0
   data[1..-1].each do |row|
     first_name[counter] = row[0]
     last_name[counter] = row[1]
-    university_email[counter] = (row[0] + row[1])[0..6].downcase + '@sheffield.ac.uk'
+    email[counter] = (row[0] + row[1])[0..6].downcase + '@sheffield.ac.uk'
 
     month = rand(13)
     if month == 2
@@ -58,9 +58,9 @@ def gen_new(data)
 
     r = rand()
     if r < 0.3
-      acc_type[counter] = 'mentor'
+      role[counter] = 'mentor'
     else
-      acc_type[counter] = 'mentee'
+      role[counter] = 'mentee'
     end
 
     idd = ''
@@ -85,30 +85,36 @@ def gen_new(data)
     counter = counter + 1
   end
 
-  combined_data = [id, first_name, last_name, university_email, date_of_birth, password_, acc_type]
+  combined_data = [id, first_name, last_name, email, date_of_birth, password_, role]
   return(combined_data)
 end
 
-def gen_profile(data)
+def gen_profile(data, uname)
   user = User.new
   rand_user = (rand() * data.length).to_i
   
   first_name = data[rand_user][0]
   last_name = data[rand_user][1]
 
-  username = (first_name + last_name)[0..6].downcase
-
+  #username = (first_name + last_name)[0..6].downcase
+  username = uname
   email = username.downcase + '@sheffield.ac.uk'
-
   id = user.gen_uid
-
   date_of_birth = Date.today - (18*365 + rand(7*365))
-  
-  if rand() < 0.3
-    acc_type = 'mentor'
+
+  if username == "admin"
+    role = 'admin'
+  elsif username == "user"
+    role = 'mentee'
+    year_of_study = 1
+  elsif username == "user1"
+    role = 'mentor'
+    year_of_study = 2
+  elsif rand() < 0.3
+    role = 'mentor'
     year_of_study = 1 + rand(4)
   else
-    acc_type = 'mentee'
+    role = 'mentee'
     year_of_study = 1
   end
 
@@ -117,23 +123,24 @@ def gen_profile(data)
   "username" => username,
   "password" => username,
   "confirm_password" => username,
-  "university_email" => email,
+  "email" => email,
   "date_of_birth" => date_of_birth,
   "first_name" => first_name,
   "last_name" => last_name,
-  "acc_type" => acc_type,
+  "role" => role,
   "year_of_study" => year_of_study,
-  "approved" => false,
+  "approved" => true,
   "first_time_login" => true
   }
 
   user.signup(params)
   user.save
+  user.authentication.approved = true
 end
 
 def write_to_csv(combined_data)
   CSV.open("./mentormentee.csv", "wb") do |csv|
-    csv << ['id', 'first_name', 'last_name', 'university_email', 'date_of_birth', 'password_', 'acc_type']
+    csv << ['id', 'first_name', 'last_name', 'email', 'date_of_birth', 'password_', 'role']
     (0...combined_data[0].length).each do |i|
       csv << [combined_data[0][i], combined_data[1][i], combined_data[2][i], combined_data[3][i], combined_data[4][i], combined_data[5][i], combined_data[6][i]]
     end
@@ -142,27 +149,5 @@ end
 
 #write_to_csv(gen_new(data))
 
-def gen_test_db(path)
-  db = Sequel.sqlite(path)
-
-  db.create_table? :users do
-    Integer primary_key :id
-    String :first_name
-    String :last_name
-    String :university_email
-    String :date_of_birth
-    BLOB :iv
-    BLOB :salt
-    BLOB :data_crypt
-    String :acc_type
-    BLOB :profile_pic
-    String :languages
-    String :year_of_study
-    String :approved
-    String :nationality
-  end
-end
-
-0..100.times do
-  gen_profile(data)
-end
+starting_users = ["admin", "user1", "user2"]
+starting_users.each { |user| gen_profile(data, user)}

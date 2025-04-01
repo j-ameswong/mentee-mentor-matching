@@ -19,15 +19,23 @@
 
       <form action="/signup/admin" method="post">
         <div class="row centerer">
-          <p>University Email:</p>
-          <input name="university_email" type="email" placeholder="University Email" autocomplete="on" />
-          <% if !@user.nil? && @user.errors.include?("email") %>
-            <% @user.errors["email"].each do |error| %>
+          <p><label for="email">University Email:</label></p>
+          <input id="email" name="email" type="email" placeholder="University Email" autocomplete="on" />
+          <% if @user && @user.errors[:email] %>
+            <% @user.errors[:email].each do |error| %>
               <p class="error"><%= error %></p>
             <% end %>
           <% end %>
         </div>
-        <br>
+
+        <div id="tnc" class="row">
+          <input id="terms" type="checkbox" name="terms" value="terms_accepted">
+          <label for="terms">By signing up, you agree to our <a target="_blank" href="/terms">Terms & Conditions</a></label>
+          <% if @user && @user.errors[:terms] %>
+            <p class="error"><%= @user.errors[:terms][0] %></p>
+          <% end %>
+        </div>
+
         <div class="row centerer">
           <input type="submit" value="Register">
         </div>

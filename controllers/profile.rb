@@ -2,37 +2,29 @@ require "csv"
 
 post "/profile/edit" do
   redirect "/" unless session[:logged_in]
-  puts params
+  # DEBUG: puts params
   @edited_user = User.first(id: params[:id].to_i)
   redirect "/profile" if @edited_user.nil?
 
   # The code here is to update the user's profile, if field is blank
   # then it will remain the same, else it will update the field
-  @edited_user.university_email = params.fetch("university_email").strip unless params[:university_email].nil?
-  @edited_user.date_of_birth = params.fetch("date_of_birth").strip unless params[:date_of_birth].nil?
-  @edited_user.first_name = params.fetch("first_name").strip unless params[:first_name].nil?
-  @edited_user.last_name = params.fetch("last_name").strip unless params[:last_name].nil?
-  @edited_user.acc_type = params.fetch("acc_type", @edited_user.acc_type).strip unless params[:acc_type].nil?
-  @edited_user.year_of_study = params["year_of_study"].strip unless params[:year_of_study].nil?
-  @edited_user.languages = params.fetch("languages").strip unless params[:languages].nil?
-  @edited_user.nationality = params.fetch("nationality") unless params[:nationality].nil?
-  @edited_user.description = params.fetch("description").strip unless params[:description].nil?
+  params.merge!(:user_id => @edited_user.id)
 
-  # Check if tempfile exists
-  if params[:profile_pic] && params[:profile_pic][:tempfile]
-    @imgdata = params[:profile_pic][:tempfile].read
-    puts "Length of imgdata: #{@imgdata.length}"
-    File.open("./public/images/user/#{@edited_user.img_hash(@edited_user.university_email)}", "wb") do |f|
-      f.write(@imgdata)
-    end
-    @edited_user.profile_pic = @edited_user.img_hash(@edited_user.university_email)
-  end
+  @edited_user.role = params[:role] if params[:role]
+  @edited_user.profile.update!(params)
+  @edited_user.mentor_profile.update!(params) if @edited_user.mentor?
+  # DEBUG: params[:user_languages].each {|x| puts x}
+  UserLanguage.create!(params)
+
+
 
   if @edited_user.errors.empty?
     @edited_user.save
+    @edited_user.profile.save
+    @edited_user.mentor_profile.save if @edited_user.mentor?
     redirect "/profile?id=#{@edited_user.id}"
   else
-    erb :profileedit
+    erb :profileEdit
   end
 end
 
@@ -47,9 +39,6 @@ get "/profile" do
   @viewed_user = User.first(id: params[:id].to_i) unless params[:id].nil?
   @viewed_user = session[:user] if @viewed_user.nil?
 
-  @data = CSV.table("./public/resources/country.csv")
-  @countries = @data[:value]
-
   erb :profile
 end
 
@@ -62,21 +51,13 @@ end
 
 get "/profile/edit" do
   redirect "/" unless session[:logged_in]
+  @languages = Language.all
 
-  if params[:id].nil?
-    @edited_user = session[:user]
-  else
-    @edited_user = User.first(id: params[:id].to_i)
-    puts @edited_user.inspect
-  end
+  @edited_user = User.first(id: params[:id].to_i) unless params[:id].nil?
+  @edited_user = session[:user] if @edited_user.nil?
 
-  redirect "/profile" if @edited_user.nil?
+  @edited_user.authentication.update!(:first_time_login => false)
+  @edited_user.authentication.save
 
-  @edited_user.first_time_login = "false" if @edited_user.first_time_login == "true"
-  @edited_user.save
-
-  @data = CSV.table("./public/resources/country.csv")
-  @countries = @data[:value]
-
-  erb :profileedit
+  erb :profileEdit
 end

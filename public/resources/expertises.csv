@@ -1,0 +1,72 @@
+Category,Skill
+Core Programming & Languages,Python
+Core Programming & Languages,Java
+Core Programming & Languages,C/C++
+Core Programming & Languages,JavaScript
+Core Programming & Languages,TypeScript
+Core Programming & Languages,Go (Golang)
+Core Programming & Languages,Rust
+Core Programming & Languages,Swift
+Core Programming & Languages,Kotlin
+Core Programming & Languages,R (Programming)
+Core Programming & Languages,Bash/Shell Scripting
+Web Development,Frontend (HTML, CSS, React, Angular, Vue.js)
+Web Development,Backend (Node.js, Django, Flask, Spring Boot, Express.js)
+Web Development,Full-Stack Development
+Web Development,RESTful APIs
+Web Development,GraphQL
+Web Development,Web Security (OWASP, HTTPS, CSP)
+Mobile Development,Android (Kotlin/Java)
+Mobile Development,iOS (Swift)
+Mobile Development,React Native
+Mobile Development,Flutter
+Mobile Development,Cross-Platform Mobile Dev
+Data Structures & Algorithms,Problem Solving (LeetCode, Codeforces)
+Data Structures & Algorithms,Competitive Programming
+Data Structures & Algorithms,Algorithm Design & Analysis
+Data Structures & Algorithms,Big-O & Complexity Analysis
+Databases & Data Management,SQL (PostgreSQL, MySQL, SQLite)
+Databases & Data Management,NoSQL (MongoDB, Cassandra, Redis)
+Databases & Data Management,Database Design & Optimization
+Databases & Data Management,ORMs (Hibernate, SQLAlchemy, Prisma)
+Software Engineering & DevOps,Software Design Patterns
+Software Engineering & DevOps,Agile & Scrum
+Software Engineering & DevOps,Test-Driven Development (TDD)
+Software Engineering & DevOps,CI/CD (GitHub Actions, Jenkins, Travis CI)
+Software Engineering & DevOps,Docker & Kubernetes
+Software Engineering & DevOps,Cloud Computing (AWS, GCP, Azure)
+Software Engineering & DevOps,Microservices Architecture
+Artificial Intelligence & Machine Learning,Machine Learning (Scikit-learn, TensorFlow, PyTorch)
+Artificial Intelligence & Machine Learning,Deep Learning (CNNs, RNNs, Transformers)
+Artificial Intelligence & Machine Learning,Natural Language Processing (NLP)
+Artificial Intelligence & Machine Learning,Computer Vision (OpenCV)
+Artificial Intelligence & Machine Learning,Reinforcement Learning
+Artificial Intelligence & Machine Learning,Data Science & Analytics (Pandas, NumPy, Matplotlib)
+Cybersecurity,Ethical Hacking
+Cybersecurity,Penetration Testing
+Cybersecurity,Cryptography
+Cybersecurity,Network Security
+Cybersecurity,Secure Coding Practices
+Networking & Systems,Computer Networks (TCP/IP, DNS, HTTP)
+Networking & Systems,Operating Systems (Linux, Windows Kernel)
+Networking & Systems,Distributed Systems
+Networking & Systems,Parallel & Concurrent Programming
+Game Development,Unity
+Game Development,Unreal Engine
+Game Development,Game Design Principles
+Game Development,Physics Engines
+Blockchain & Web3,Smart Contracts (Solidity)
+Blockchain & Web3,Ethereum, Solana
+Blockchain & Web3,DApp Development
+Blockchain & Web3,Cryptocurrency Fundamentals
+Human-Computer Interaction (HCI) & UI/UX,UI/UX Design (Figma, Adobe XD)
+Human-Computer Interaction (HCI) & UI/UX,Usability Testing
+Human-Computer Interaction (HCI) & UI/UX,Accessibility in Computing
+Academic & Research Skills,Research Paper Writing
+Academic & Research Skills,LaTeX
+Academic & Research Skills,Technical Writing
+Academic & Research Skills,Academic Publishing
+Soft Skills & Career Development,Interview Preparation (FAANG, Tech Interviews)
+Soft Skills & Career Development,Resume & Portfolio Review
+Soft Skills & Career Development,Public Speaking & Presentations
+Soft Skills & Career Development,Team Collaboration

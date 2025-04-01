@@ -1,166 +1,173 @@
-require 'sequel'
-require 'digest'
-require 'date'
-require 'time_difference'
 require_relative '../db/db'
+Dir["#{__dir__}/*.rb"].each do |file|
+  require file
+end
 
-# Specify user table, by default it downcases User and adds an s to the end
+# TODO: create_user command, rescue ValidationError by doing nothing instead of reloading view
 class User < Sequel::Model(DB)
-  def signup(params)
-    self.university_email = params.fetch("university_email", "").strip
+  plugin :timestamps, update_on_create: true
 
-    self.date_of_birth = params.fetch("date_of_birth", "")
+  one_to_one :authentication
+  one_to_one :profile
+  one_to_one :mentor_profile
+  one_to_one :mentee_profile
 
-    self.first_name = params.fetch("first_name", "").strip
-    self.first_name[0] = first_name[0].upcase if first_name.length > 0
+  one_to_many :mentor_matches, class: :Match, key: :mentor_id
+  one_to_many :mentee_matches, class: :Match, key: :mentee_id
 
-    self.last_name = params.fetch("last_name", "").strip
-    self.last_name[0] = last_name[0].upcase if last_name.length > 0
+  one_to_many :user_languages
+  one_to_many :user_expertises
 
-    self.acc_type = params.fetch("acc_type", "")
+  # enum for roles
+  ROLES = %w[admin mentor mentee] # fancy way to do a comma separated list
 
-    # gen_uid produces a random id
-    self.id = gen_uid
+  def validate
+    super
 
-    self.year_of_study = params.fetch("year_of_study")
-
-    self.username = params.fetch("username", "").strip.downcase
-
-    terms = params.fetch("terms", "").strip
-
-    password = params.fetch("password", "").strip
-    confirm_password = params.fetch("confirm_password", "").strip
-
-    self.approved = "false"
-    self.first_time_login = "true"
-
-    if university_email.empty?
-      errors.add("email", "Fill in your email address")
-    else
-      errors.add("email", "Email already taken") unless User.first(university_email: university_email).nil?
-      errors.add("email", "Please use your university email") unless university_email.include?("@sheffield.ac.uk")
-    end
-
-    errors.add("first_name", "Fill in your first name") if first_name.empty?
-    errors.add("last_name", "Fill in your last name") if last_name.empty?
-    errors.add("date_of_birth", "Cannot be empty") if date_of_birth.empty?
-
-    errors.add("username", "Username cannot be empty") if username.empty?
-    errors.add("username", "Username already exists") unless User.first(username: username).nil?
-
-    errors.add("terms", "Terms must be accepted") if terms.nil? || terms.empty? || terms != "terms_accepted"
-
-    errors.add("role", "First years cannot be mentors") if year_of_study == "1" && acc_type == "mentor"
-    errors.add("role", "Only first years can be mentees") if year_of_study != "1" && acc_type == "mentee"
-
-    self.check_password(password, confirm_password)
-
-    # Set up AES for encryption.
-    aes = OpenSSL::Cipher.new('AES-128-CBC').encrypt
-    # Generate a random IV.
-    self.iv = Sequel.blob(aes.random_iv)
-    # Generate a random salt.
-    self.salt = Sequel.blob(OpenSSL::Random.random_bytes(16))
-    # Get the key from the password and salt.
-    aes.key = OpenSSL::PKCS5.pbkdf2_hmac_sha1(password, salt, 20_000, 16)
-    # Encrypt the data
-    self.data_crypt = Sequel.blob(aes.update(username) + aes.final)
-
-    if iv.nil? || iv.empty? || salt.nil? || salt.empty? || data_crypt.nil? || data_crypt.empty?
-      errors.add("encryption", "Encryption error")
-    end
-
-    if self.errors.nil?
-      puts "Critical error! User.errors is nil"
-    end
-    return false unless self.errors.empty?
-
-    true
-  end
-
-  def login(params)
-    password = params.fetch("password", "").strip
-    # temp solution to fix admin attempting to sign in before approval
-    if self.iv.nil? || self.salt.nil? || self.data_crypt.nil?
-      errors.add("password", "Password has not been set by admin, please contact admin")
-    else
-      # Set up AES for decryption.
-      aes = OpenSSL::Cipher.new('AES-128-CBC').decrypt
-
-      # Set the IV.
-      aes.iv = self.iv
-
-      # Get the key from the password and salt.
-      aes.key = OpenSSL::PKCS5.pbkdf2_hmac_sha1(password, self.salt, 20_000, 16)
-
-      # Try to decrypt the data.
-      begin
-        aes.update(self.data_crypt) + aes.final
-      rescue OpenSSL::Cipher::CipherError
-        errors.add("password", "Password was incorrect")
+    errors.add(:role, "must be valid") unless ROLES.include?(role)
+    if @params
+      if email.nil? || email.empty?
+        errors.add(:email, "must be filled in")
+      else
+        errors.add(:email, "already taken") unless User.first(email: email).nil?
+        errors.add(:email, "is in invalid format") unless valid_email_address?(email)
+        errors.add(:email, "must be your university email") unless valid_email?(email)
       end
+
+      errors.add(:username, "cannot be empty") if username.empty?
+      errors.add(:username, "must be valid") unless valid_input?(username)
+      errors.add(:username, "already exists") unless User.first(username: username).nil?
+
+      errors.add(:terms, "must be accepted") if @terms.nil? || @terms.empty?
     end
-
-    errors.add("approval", "Approval has not been granted by admin yet, please try again later") if self.approved != "true"
-    return false unless errors.empty?
-    true
   end
 
-  def gen_uid
-    # generate and return unique id
-    idd = 100000000 + rand(899999999)
-    while User.first(id: idd) != nil
-      idd = 100000000 + rand(899999999)
-    end
-
-    idd
+  def admin?
+    self.role == "admin"
   end
 
-  def age(date_of_birth)
-    dob = DateTime.parse(date_of_birth)
-    now = DateTime.now
-    # return age
-    TimeDifference.between(dob, now).in_years.to_i
-  end
-  
-  def img_hash(username)
-    Digest::SHA256.hexdigest(username)
+  def mentor?
+    self.role == "mentor"
   end
 
-  # function useful for hashing and storing temporary password for admin
-  def hash_pass(password)
-    # Set up AES for encryption.
-    aes = OpenSSL::Cipher.new('AES-128-CBC').encrypt
-
-    # Generate a random IV.
-    self.iv = Sequel.blob(aes.random_iv)
-
-    # Generate a random salt.
-    self.salt = Sequel.blob(OpenSSL::Random.random_bytes(16))
-
-    # Get the key from the password and salt.
-    aes.key = OpenSSL::PKCS5.pbkdf2_hmac_sha1(password, salt, 20_000, 16)
-
-    # Encrypt the data
-    self.data_crypt = Sequel.blob(aes.update(self.username) + aes.final)
-  end
-
-  def check_password(password, confirm_pass)
-    if password.empty?
-      errors.add("password", "Please fill in your password")
-    else
-      errors.add("password", "Password must be at least 8 characters") if password.length < 8
-    end
-
-    errors.add("confirm_password", "Please confirm your password") if confirm_pass.nil? || confirm_pass.empty?
-    errors.add("password_mismatch", "Passwords do not match, please try again") if password != confirm_pass
+  def mentee?
+    self.role == "mentee"
   end
 
   def self.find_user(field)
-    if field.include? "sheffield.ac.uk"
-      User.first(university_email: field)
+    # either lookup users table by email or username
+    valid_email_address?(field) ? user = self.first(email: field) : user = self.first(username: field)
+
+    # basically, if no user found create a user instance, appears in controllers/login.rb
+    if user.nil?
+      user = User.new
+      user.errors.add(:field, "User not found")
+      user.errors.add(:field, "Can't be blank") if field.empty?
+      return user
+    end
+
+    user
+  end
+
+  def gen_uid
+    # generate until return unique 9 digit id
+    id = 100000000 + rand(899999999)
+    while User.first(id: id) != nil
+      id = 100000000 + rand(899999999)
+    end
+    id
+  end
+
+  def delete_from_all
+    UserLanguage.where(user_id: self.id).delete
+    UserExpertise.where(user_id: self.id).delete
+
+    Match.where(mentor_id: self.id).delete # if Match.first(mentor_id: self.id)
+    Match.where(mentee_id: self.id).delete # if Match.first(mentee_id: self.id)
+
+    mentee_profile = MenteeProfile.first(user_id: self.id)
+    mentee_profile.delete if mentee_profile
+
+    mentor_profile = MentorProfile.first(user_id: self.id)
+    mentor_profile.delete if mentor_profile
+
+    profile = Profile.first(user_id: self.id)
+    profile.delete if profile
+
+    authentication = Authentication.first(user_id: self.id)
+    authentication.delete if authentication
+
+    self.delete
+  end
+
+  # Signup method, admins bypass most of it, only needing to be in users and auth table initially
+  def signup(params)
+    @params = params
+    # users table
+    self.id = self.gen_uid
+    params = params.merge(:user_id => self.id)
+    self.username = params.fetch(:username, "").strip.downcase
+    self.email = params.fetch(:email, "").strip.downcase
+    self.role = params[:role]
+
+    # profiles table, Profile class, admins dont need profile
+    unless self.admin?
+      profile = Profile.new
+      profile.update!(params)
+      unless profile.valid?
+        puts "Error when writing to profiles!"
+        self.errors.merge!(profile.errors)
+        #puts self.errors.full_messages
+      end
+
+      # mentor_profiles table, MentorProfile class
+      if self.mentor?
+        mentor = MentorProfile.new
+        mentor.update!(params)
+        unless mentor.valid?
+          puts "Error when writing to mentor_profiles!"
+          self.errors.merge!(mentor.errors)
+          #puts self.errors.full_messages
+        end
+      end
+
+      if self.mentee?
+        mentee = MenteeProfile.new
+        mentee.update!(params)
+      end
+    end
+
+    auth = Authentication.new
+    auth.update!(params)
+    unless auth.valid?
+      puts "Error when writing to authentication!"
+      self.errors.merge!(auth.errors)
+    end
+
+    @terms = params.fetch(:terms, "").strip
+
+    # Looks like the memory is referencing the actual hash, and it's rewritten when checking with .valid?
+    # Below is to save the values up to a certain point and then re-appending them
+    all_other_errors = self.errors.clone
+    if self.valid? && (self.errors.nil? || self.errors.empty?)
+      puts "Attempting to save new user with UID: #{self.id}"
+      begin
+        self.save
+        profile.save if profile
+        mentor.save if mentor
+        mentee.save if mentee
+        auth.save if auth
+        true
+      rescue
+        self.delete_from_all
+        puts "Critical error when handling signup!"
+        puts $!.backtrace.join("\n") unless $!.nil?
+        false
+      end
     else
-      User.first(username: field)
+      puts "Errors found!"
+      puts self.errors.merge!(all_other_errors).full_messages
+      false
     end
   end
 end

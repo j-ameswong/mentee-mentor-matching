@@ -1,19 +1,19 @@
 get "/approvals" do
-  redirect "/" unless session[:logged_in] && session[:user].acc_type == "admin"
-  @unapproved = User.where(Sequel.|({approved: nil}, {approved: "false"})).all
+  redirect "/" unless session[:logged_in] && session[:user].admin?
+  @unapproved = Authentication.where(approved: false).all
 
   erb :approvals
 end
 
 get "/approvals/approve" do
-  redirect "/" unless session[:logged_in] && session[:user].acc_type == "admin"
-  @user = User.first(id: params.fetch("to_approve", ""))
+  redirect "/" unless session[:logged_in] && session[:user].admin?
+  @user = User.first(id: params.fetch(:to_approve, ""))
 
   if @user.nil?
     redirect "/approvals"
   else
-    @user.approved = "true"
-    @user.save
+    @user.authentication.update!(:approved => true)
+    @user.authentication.save
     puts "User #{@user.id} has been approved"
   end
 
@@ -21,40 +21,36 @@ get "/approvals/approve" do
 end
 
 get "/approvals/deny" do
-  redirect "/" unless session[:logged_in] && session[:user].acc_type.downcase == "admin"
-  @user = User.first(id: params.fetch("to_deny", ""))
+  redirect "/" unless session[:logged_in] && session[:user].role.downcase == "admin"
+  @user = User.first(id: params.fetch(:to_deny, ""))
 
   if @user.nil?
     redirect "/approvals"
   else
-    @user.delete
     puts "Say goodbye to user #{@user.id}, he will not be missed"
+    @user.delete_from_all
   end
 
   redirect "/approvals"
 end
 
 post "/approvals" do
-  redirect "/" unless session[:logged_in] && session[:user].acc_type.downcase == "admin"
+  redirect "/" unless session[:logged_in] && session[:user].admin?
 
-  temp_pass = params.fetch("temp_password", "").strip
-  @user = User.first(id: params.fetch("id", ""))
-  approval = params.fetch("approved", "")
+  @user = User.first(id: params[:id])
+  params[:approved] = (params[:approved] == "approve")
 
   if @user.nil?
     redirect "/approvals"
-  elsif approval != "approve"
-    @user.delete
-    puts "Say goodbye to prospective admin #{@user.id}, he will not be missed"
-  elsif temp_pass.empty?
-    @user.errors.add "temp_password", "is empty"
+  elsif params[:approved]
+    @user.authentication.update!(params)
+    @user.authentication.save
+    puts "Admin #{@user.id} has been approved"
   else
-    @user.hash_pass(temp_pass)
-    @user.approved = "true"
-    @user.save
-    puts "User #{@user.id} has been approved"
+    puts "Say goodbye to prospective admin #{@user.id}, he will not be missed"
+    @user.delete_from_all
   end
 
-  @unapproved = User.where(Sequel.|({approved: nil}, {approved: "false"})).all
+  @unapproved = Authentication.where(approved: false).all
   erb :approvals
 end

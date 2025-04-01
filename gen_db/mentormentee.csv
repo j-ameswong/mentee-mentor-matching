@@ -1,4 +1,4 @@
-id,first_name,last_name,university_email,date_of_birth,password_,acc_type
+id,first_name,last_name,email,date_of_birth,password_,role
 734330508,Mechelle,Stoneman,mechell@sheffield.ac.uk,2002/03/19,95655d7db4d7dfc4835013fd8b8b9e5248dfba2e818385d526282840eee0fb25,mentee
 222868584,Tyesha,Freitag,tyeshaf@sheffield.ac.uk,1999/05/26,f44b807b66ccac1cb98c7b9027fb278006d0bfb3600e4a9e2c62111c628b6484,mentee
 287822753,Dean,Stoecker,deansto@sheffield.ac.uk,2002/10/08,409bf49756e15204ba46175341db17c05b2ed2837f249c9e136b44150f56835a,mentor
