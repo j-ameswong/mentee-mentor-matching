@@ -18,23 +18,28 @@
       <h2>Sign up for new admin account</h2>
 
       <form action="/signup/admin" method="post">
+        
         <div class="row centerer">
           <p><label for="email">University Email:</label></p>
-          <input id="email" name="email" type="email" placeholder="University Email" autocomplete="on" />
+          <input id="email" name="email" type="email" placeholder="University Email Address" autocomplete="on" />
           <% if @user && @user.errors[:email] %>
             <% @user.errors[:email].each do |error| %>
               <p class="error"><%= error %></p>
             <% end %>
           <% end %>
         </div>
+        <br>
+        <br>
 
-        <div id="tnc" class="row">
-          <input id="terms" type="checkbox" name="terms" value="terms_accepted">
-          <label for="terms">By signing up, you agree to our <a target="_blank" href="/terms">Terms & Conditions</a></label>
-          <% if @user && @user.errors[:terms] %>
-            <p class="error"><%= @user.errors[:terms][0] %></p>
-          <% end %>
+        <div id="tnc" class="row centerer">
+            
+          <label for="terms">
+            <input id="terms" type="checkbox" name="terms" value="terms_accepted" />
+            <span></span>
+            By signing up, you agree to our <a target="_blank" href="/terms">Terms & Conditions</a>
+          </label>
         </div>
+        <br>
 
         <div class="row centerer">
           <input type="submit" value="Register">
