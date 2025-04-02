@@ -111,8 +111,14 @@ header {
     height: 10vh;
 }
 
+.logout-btn {
+    margin-top: 2%;
+    border-top: 1px solid var(--grey);
+    padding-top: 2%;
+}
+
 #profile-menu {
-    max-width: 8vw;
+    max-width: 6vw;
     max-height: 9.5vh;
 
     border-radius: 50%;
@@ -123,19 +129,22 @@ header {
     z-index: 1;
 
     position: absolute;
-    left: -7vh;
+    right: 1vw;
     top: 9.5vh;
 
     flex-direction: column;
 
-    background-color: var(--lblu);
+    background-color: var(--lgrey);
+    font-size: 0.9rem;
+    font-weight: bold;
     color: var(--grey);
     border-radius: 25px;
+    box-shadow: 0 0.625rem 1.25rem 0 rgba(0, 0, 0, 0.2);
 
     padding: 8px;
     text-align: center;
-    margin: 2%;
-    width: 10vw;
+    margin: 3%;
+    width: 20vw;
 }
 
 .dropdown-link {
