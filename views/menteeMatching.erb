@@ -30,15 +30,16 @@
                 <td><%= row.user.profile.bio_brief %></td>
                 <td><%= Nationality.first(id: row.user.profile.nationality_id).country_name %></td>
               </tr>
+            <button type="button" id="apply-mentor" class="apply-mentor">Apply</button>
             <% end %>
           <% end %>
           </tr>
         </tbody>
       </table>
-      <div class="matching-centerer">
+      </section>
 
-      </div>
-    </section>
+      <div id="matching-wrapper"></div>
+    <script src="/js/menteeMatching.js"></script>
   </div>
 </body>
 
