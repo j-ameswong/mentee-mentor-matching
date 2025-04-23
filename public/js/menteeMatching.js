@@ -12,6 +12,8 @@ document.addEventListener('DOMContentLoaded', function () {
         textArea.columns = 45;
         form.appendChild(textArea);
 
+        const mentorInfo =
+
         const submitButton = document.createElement('button');
         submitButton.type = 'submit';
         submitButton.value = 'Submit';

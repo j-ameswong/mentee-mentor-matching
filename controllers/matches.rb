@@ -9,6 +9,10 @@ get "/matches/mentee" do
   erb :menteeMatching
 end
 
+post "/matches/mentee" do
+  match = Match.new
+end
+
 get "/matches/mentor" do
   erb :mentorMatching
 end
