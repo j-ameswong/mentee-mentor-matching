@@ -11,6 +11,7 @@ end
 
 post "/matches/mentee" do
   match = Match.new
+  match.generate({})
 end
 
 get "/matches/mentor" do

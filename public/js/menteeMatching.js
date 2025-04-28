@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener("DOMContentLoaded", function () {
     const applyButton = document.getElementById('apply-mentor');
     const wrapper = document.getElementById('matching-wrapper');
     function createTextarea() {
@@ -12,7 +12,11 @@ document.addEventListener('DOMContentLoaded', function () {
         textArea.columns = 45;
         form.appendChild(textArea);
 
-        const mentorInfo =
+        const mentorInfo = document.createElement('input');
+        mentorInfo.name = 'mentor_id';
+        mentorInfo.style.display = 'none';
+        mentorInfo.value = wrapper.className;
+        form.appendChild(mentorInfo);
 
         const submitButton = document.createElement('button');
         submitButton.type = 'submit';

@@ -23,13 +23,17 @@
                 <%= Nationality.first(id: row.user.profile.nationality_id).country_name %>
               </div>
 
-            <button type="button" id="apply-mentor" class="apply-mentor">Apply</button>
+              <div class="row">
+                <button type="button" id="apply-mentor" class="apply-mentor">Apply</button>
+              </div>
+              <div class="row">
+                <div class="<%= row.user.id %>>" id="matching-wrapper"></div>
+              </div>
             <% end %>
           <% end %>
         </div>
       </section>
 
-      <div id="matching-wrapper"></div>
     <script src="/js/menteeMatching.js"></script>
   </div>
 </body>
