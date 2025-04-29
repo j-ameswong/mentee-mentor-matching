@@ -21,6 +21,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const submitButton = document.createElement('button');
         submitButton.type = 'submit';
         submitButton.value = 'Submit';
+        submitButton.textContent = 'Submit';
         form.appendChild(submitButton);
 
         return form;
