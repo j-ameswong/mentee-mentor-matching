@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Matches</title>
+  <meta name="author" content="Team 17">
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<% @title = "Matching" %>
+<%= erb :"common/header" %>
+
+<body>
+  <%# CONTENT FOR MENTEE USERS IN "menteeMatching.erb", CONTENT FOR MENTOR USERS IN "mentorMatching.erb" %>
+  <% if @user.mentee? %>
+    <%= erb :menteeMatching %>
+  <% elsif @user.mentor? %>
+    <%= erb :mentorMatching %>
+  <% end %>
+</body>
+
+
+</html>

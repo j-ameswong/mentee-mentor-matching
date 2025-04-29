@@ -13,144 +13,188 @@
 
 <%# TODO 2: Consistent password requirements with account/changePassword page %>
 <body>
-  <div class="content centerer">
-    <div class="signupPage centerer">
-      <section id="signup" class="centerer">
-        <h2>Sign up for new account</h2>
+  <div class="signupPage content centerer">
 
-        <form action="/signup" method="post">
+    <section id="signup" class="centerer">
+
+      <h2>Sign up for new account</h2>
+
+      <form action="/signup" method="post">
+
+        <div class="column centerer">
+
           <div class="row centerer">
             <label for="username">Username:</label>
-            <br>
-            <input name="username" id="username" type="text"
-                  value="<%= @user.username if @user %>" required/>
+          </div>
+          <br>
 
+          <div class="row centerer">
+            <input name="username" id="username" type="text" value="<%= @user.username if @user %>" placeholder="New Username" required/>
             <% if @user && @user.errors[:username] %>
               <% @user.errors[:username].each do |error| %>
                 <p class="error"><%= error %></p>
               <% end %>
             <% end %>
           </div>
+          <br>
+          <br>
 
           <div class="row centerer">
-            <div class="column">
-              <label for="first_name">First Name:</label>
-              <input name="first_name" id="first_name" type="text"
-                    value="<%= @params[:first_name] if @user && @params %>" required/>
-
-              <% if @user && @user.errors[:first_name] %>
-                <% @user.errors[:first_name].each do |error| %>
-                  <p class="error"><%= error %></p>
-                <% end %>
-              <% end %>
-            </div>
-
-            <div class="column">
-              <label for="last_name">Last Name:</label>
-              <input name="last_name" id="last_name" type="text"
-                    value="<%= @params[:last_name] if @user && @params %>" required/>
-
-              <% if @user && @user.errors[:last_name] %>
-                <% @user.errors[:last_name].each do |error| %>
-                  <p class="error"><%= error %></p>
-                <% end %>
-              <% end %>
-            </div>
+            <label for="first_name">First Name:</label>
           </div>
+          <br>
 
           <div class="row centerer">
-            <div class="column">
-              <label for="email">University Email:</label>
-              <input id="email" name="email" type="email"
-                     value="<%= @user.email if @user %>" required/>
-
-              <% if @user && @user.errors[:email] %>
-                <% @user.errors[:email].each do |error| %>
-                  <p class="error"><%= error %></p>
-                <% end %>
+            <input name="first_name" id="first_name" type="text" value="<%= @params[:first_name] if @user && @params %>" placeholder="Your First Name" required/>
+            <% if @user && @user.errors[:first_name] %>
+              <% @user.errors[:first_name].each do |error| %>
+                <p class="error"><%= error %></p>
               <% end %>
-            </div>
+            <% end %>
           </div>
+          <br>
+          <br>
 
           <div class="row centerer">
-            <div class="column">
-              <label for="date_of_birth">DoB:</label>
-              <input id="date_of_birth" name="date_of_birth" type="date"
-                     value="<%= @params[:date_of_birth] if @params %>" required/>
+            <label for="last_name">Last Name:</label>
+          </div>
+          <br>
 
-              <% if @user && @user.errors[:date_of_birth] %>
-                <% @user.errors[:date_of_birth].each do |error| %>
-                  <p class="error"><%= error %></p>
-                <% end %>
+          <div class="row centerer">
+            <input name="last_name" id="last_name" type="text" value="<%= @params[:last_name] if @user && @params %>" placeholder="Your Last Name" required/>
+            <% if @user && @user.errors[:last_name] %>
+              <% @user.errors[:last_name].each do |error| %>
+                <p class="error"><%= error %></p>
               <% end %>
+            <% end %>
+          </div>
+          <br>
+          <br>
+
+          <div class="row centerer">
+            <label for="email">University Email:</label>
+          </div>
+          <br>
+
+          <div class="row centerer">
+            <input id="email" name="email" type="email" value="<%= @user.email if @user %>" placeholder="University Email Address" required/>
+            <% if @user && @user.errors[:email] %>
+              <% @user.errors[:email].each do |error| %>
+                <p class="error"><%= error %></p>
+              <% end %>
+            <% end %>
+          </div>
+          <br>
+          <br>
+
+          <div class="row centerer">
+
+            <div class="column centerer">
+
+              <div class="row centerer">
+                <label for="date_of_birth">DoB:</label>
+              </div>
+              <br>
+
+              <div class="row centerer">
+                <input id="date_of_birth" name="date_of_birth" type="date" value="<%= @params[:date_of_birth] if @params %>" required/>
+                <% if @user && @user.errors[:date_of_birth] %>
+                  <% @user.errors[:date_of_birth].each do |error| %>
+                    <p class="error"><%= error %></p>
+                  <% end %>
+                <% end %>
+              </div>
+
+            </div>
+
+            <div class="column centerer">
+
+              <div class="row centerer">
+                <label for="role">Role:</label>
+              </div>
+              <br>
+
+              <div class="row centerer">
+                <select id="role" name="role" required>
+                  <option value="mentee" <%="selected" if @user && @user.mentee? %>>Mentee</option>
+                  <option value="mentor" <%="selected" if @user && @user.mentor? %>>Mentor</option>
+                </select>
+
+                <% if @user && @user.errors[:role] %>
+                  <% @user.errors[:role].each do |error| %>
+                    <p class="error"><%= error %></p>
+                  <% end %>
+                <% end %>
+              </div>
             </div>
 
             <div class="column">
-              <label for="role">Role:</label>
-              <select id="role" name="role" required>
-                <option value="mentee" <%="selected" if @user && @user.mentee? %>>Mentee</option>
-                <option value="mentor" <%="selected" if @user && @user.mentor? %>>Mentor</option>
-              </select>
+              <div class="row centerer">
+                <label for="year_of_study">Year of study:</label>
+              </div>
+              <br>
 
-              <% if @user && @user.errors[:role] %>
-                <% @user.errors[:role].each do |error| %>
-                  <p class="error"><%= error %></p>
-                <% end %>
-              <% end %>
-            </div>
-
-            <div class="column">
-              <label for="year_of_study">Year of study:</label>
-              <select id="year_of_study" name="year_of_study" required>
-                <% (1..4).each do |y| %>
-                  <option value='<%= y %>' <%="selected" if @user && @params[:year_of_study] == y %>>Year <%= y %></option>>
-                <% end %>
-              </select>
+              <div class="row centerer">
+                <select id="year_of_study" name="year_of_study" required>
+                  <% (1..4).each do |y| %>
+                    <option value='<%= y %>' <%="selected" if @user && @params[:year_of_study] == y %>>Year <%= y %></option>>
+                  <% end %>
+                </select>
+              </div>
             </div>
           </div>
-
-
-          <div class="column">
-            <div class="row centerer">
-              <label for="password">Password:</label>
-            </div>
-
-            <div class="row centerer">
-              <input id="password" name="password" type="password" />
-              <% if @user && @user.errors[:password] %>
-                <% @user.errors[:password].each do |error| %>
-                  <p class="error"><%= error %></p>
-                <% end %>
-              <% end %>
-            </div>
-
-            <div class="row centerer">
-              <label for="confirm_password">Confirm Password:</label>
-            </div>
-
-            <div class="row centerer">
-              <input id="confirm_password" name="confirm_password" type="password" />
-              <% if @user && @user.errors[:confirm_password] %>
-                <% @user.errors[:confirm_password].each do |error| %>
-                  <p class="error"><%= error %></p>
-                <% end %>
-              <% end %>
-            </div>
-
-            <div id="tnc" class="row">
-              <input id="terms" type="checkbox" name="terms" value="terms_accepted">
-              <label for="terms">By signing up, you agree to our <a target="_blank" href="/terms">Terms & Conditions</a></label>
-            </div>
-
-            <div class="row centerer">
-              <input type="submit" value="Register">
-            </div>
+          <br>
+          <br>
+        
+          <div class="row centerer">
+            <label for="password">Password:</label>
           </div>
+          <br>
+
+          <div class="row centerer">
+            <input id="password" name="password" type="password" placeholder="New Password" />
+            <% if @user && @user.errors[:password] %>
+              <% @user.errors[:password].each do |error| %>
+                <p class="error"><%= error %></p>
+              <% end %>
+            <% end %>
+          </div>
+          <br>
+          <br>
+
+          <div class="row centerer">
+            <label for="confirm_password">Confirm Password:</label>
+          </div>
+          <br>
+
+          <div class="row centerer">
+            <input id="confirm_password" name="confirm_password" type="password" placeholder="Re-enter Password" />
+            <% if @user && @user.errors[:confirm_password] %>
+              <% @user.errors[:confirm_password].each do |error| %>
+                <p class="error"><%= error %></p>
+              <% end %>
+            <% end %>
+          </div>
+          <br>
+
+          <div id="tnc" class="row centerer">
+            
+            <label for="terms">
+              <input id="terms" type="checkbox" name="terms" value="terms_accepted" />
+              <span></span>
+              By signing up, you agree to our <a target="_blank" href="/terms">Terms & Conditions</a>
+            </label>
+          </div>
+          <br>
+
+          <div class="row centerer">
+            <input type="submit" value="Register">
+          </div>
+        </div>
       </form>
 
-        <p><a href="/login">Log in instead</a></p>
-      </section>
-    </div>
+      <p><a href="/login">Log in instead</a></p>
+    </section>
   </div>
 </body>
 

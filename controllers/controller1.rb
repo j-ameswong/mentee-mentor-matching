@@ -8,6 +8,11 @@ get "/support" do
   erb :support
 end
 
+post "/support" do
+  "Give the option and details to all admins"
+  erb :support
+end
+
 get "/example" do
   redirect "/login" unless session[:logged_in]
   erb :example
