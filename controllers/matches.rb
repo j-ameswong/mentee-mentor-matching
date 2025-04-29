@@ -11,7 +11,9 @@ end
 
 post "/matches/mentee" do
   match = Match.new
-  match.generate({})
+  match.generate(params.merge(:mentee_id => session[:user].id))
+
+  redirect "/matches/mentee"
 end
 
 get "/matches/mentor" do

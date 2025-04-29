@@ -160,6 +160,8 @@ class User < Sequel::Model(DB)
         true
       rescue
         self.delete_from_all
+
+        # copied from example, puts error when there is an error, avoid termination
         puts "Critical error when handling signup!"
         puts $!.backtrace.join("\n") unless $!.nil?
         false
