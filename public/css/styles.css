@@ -203,6 +203,7 @@ p {
 }
 
 #welcome {
+  color: var(--grey);
   grid-column: 1/2;
 }
 
@@ -575,4 +576,8 @@ body {
 
 #email-text {
   margin: 0 0 1% 0;
+}
+
+#mentee-list {
+  max-width: none;
 }
