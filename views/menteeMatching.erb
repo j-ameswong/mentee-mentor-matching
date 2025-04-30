@@ -16,18 +16,23 @@
           <% MentorProfile.each do |row| %>
             <% if row.availability %>
               <div class="row">
-                <%="Year " + row.year_of_study.to_s %>
-                <%= row.user.user_expertises[0] %>
-                <%= row.user.profile.age %>
-                <%= row.user.profile.bio_brief %>
-                <%= Nationality.first(id: row.user.profile.nationality_id).country_name %>
+                <div class="column">
+                    <%="Year " + row.year_of_study.to_s %>
+                </div>
+                <div class="column">
+                  <%= row.user.user_expertises.each {|skill| skill} %>
+                </div>
+                <div class="column">
+                  <%= row.user.profile.age %>
+                </div>
+                  <%= row.user.profile.bio_brief %>
+                <div class="column">
+                  <%= Nationality.first(id: row.user.profile.nationality_id).country_name %>
+                </div>
               </div>
 
-              <div class="row">
-                <button type="button" id="apply-mentor" class="apply-mentor">Apply</button>
-              </div>
-              <div class="row">
-                <div class="<%= row.user.id %>" id="matching-wrapper"></div>
+              <div class="matching-wrapper" id="<%= row.user.id %>-wrapper">
+                <button type="button" class="apply-mentor" id="<%= row.user.id %>-apply">Apply</button>
               </div>
             <% end %>
           <% end %>
