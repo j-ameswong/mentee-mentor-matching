@@ -12,7 +12,7 @@
 <%= erb :"common/header" %>
 
 <body>
-<section class="centerer column">
+<section class="content">
   <%# For the below, only admins can edit someone's year of study or account type %>
   <h3><%= @edited_user.username.capitalize %>'s Profile</h3>
   <form method="post" action="/profile/edit?id=<%= params[:id] %>" enctype="multipart/form-data">
