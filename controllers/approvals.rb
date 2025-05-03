@@ -7,7 +7,7 @@ end
 
 get "/approvals/approve" do
   redirect "/" unless session[:logged_in] && session[:user].admin?
-  @user = User.first(id: params.fetch(:to_approve, ""))
+  @user = User.first(id: h(params.fetch(:to_approve, "")))
 
   if @user.nil?
     redirect "/approvals"
@@ -22,7 +22,7 @@ end
 
 get "/approvals/deny" do
   redirect "/" unless session[:logged_in] && session[:user].role.downcase == "admin"
-  @user = User.first(id: params.fetch(:to_deny, ""))
+  @user = User.first(id: h(params.fetch(:to_deny, "")))
 
   if @user.nil?
     redirect "/approvals"

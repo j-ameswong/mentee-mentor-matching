@@ -7,6 +7,7 @@
   <title><%= @title %></title>
   <meta name="author" content="Team 17">
   <link rel="stylesheet" href="/css/styles.css"/>
+  <link rel="icon" href="/images/UniConnectLogo.png" type="image/x-icon">
 </head>
 
 <body>
@@ -22,7 +23,7 @@
         <% @whatIs = "UniConnect is a web application which can be used to match with mentees whose profiles you like the look of."%>
         <% @howTo = "UniConnect is designed as a useful tool to help find mentees for you to share your university experience with, and hopefully help with theirs. To get started, all you need to do is go to the 'Matching' page (linked to the left of this text) to view all mentees who have applied to you. You can then view their profiles, and if you like them, you can accept their applications. If you do, you will gain access to each other's contact information (university email address) so that you can begin to get in touch."%>
     <% end %>
-    <div class="content">
+    <div id="home" class="content">
         <h1 id="welcome" class="centerer">Welcome to UniConnect!</h1>    
         <%= erb :homeContent %>
     </div>

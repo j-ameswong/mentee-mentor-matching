@@ -5,7 +5,7 @@ end
 
 post "/signup" do
   @user = User.new
-  @params = params
+  @params = h(params)
   puts @params
 
   # @user.signup returns true if signup successful,
