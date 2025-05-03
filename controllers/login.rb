@@ -7,7 +7,6 @@ end
 post "/login" do
   # input field, could be username or email
   field = h(params.fetch(:field, "").strip.downcase)
-  puts field
   @user = User.find_user(field)
 
   if @user.authentication && @user.authentication.login(params)

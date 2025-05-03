@@ -2,10 +2,10 @@
 <html lang="en" class="profilePage">
 
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8"/>
   <title>Profile</title>
   <meta name="author" content="Team 17">
-  <link rel="stylesheet" href="/css/styles.css" />
+  <link rel="stylesheet" href="/css/styles.css"/>
   <link rel="icon" href="/images/UniConnectLogo.png" type="image/x-icon">
 </head>
 
@@ -15,9 +15,10 @@
 <body>
 <section class="content">
   <%# For the below, only admins can edit someone's year of study or account type %>
-  <h3><%= @edited_user.username.capitalize %>'s Profile</h3>
-  <div class="content-box centerer">
-    <form method="post" action="/profile/edit?id=<%= params[:id] %>" enctype="multipart/form-data">
+  <div class="centerer">
+    <h3>Edit <%= @edited_user.username.capitalize %>'s Profile</h3>
+    <div class="content-box centerer">
+      <form method="post" action="/profile/edit?id=<%= params[:id] %>" enctype="multipart/form-data">
         <div class="row">
           <div class="row">
             <input type="file" id="profile_pic" name="profile_pic" accept="image/*">
@@ -37,94 +38,95 @@
           <input type="text" id="last_name" name="last_name" value="<%= @edited_user.profile.last_name %>" required>
         </div>
 
-      <div class="info row">
-        <label for="email">University Email:</label>
-        <input type="text" id="email" name="email" value="<%= @edited_user.email %>" required>
-      </div>
+        <div class="info row">
+          <label for="email">University Email:</label>
+          <input type="text" id="email" name="email" value="<%= @edited_user.email %>" required>
+        </div>
 
-      <div class="info row languages" id="languages-container">
-        <% @edited_user.user_languages.each do |user_lang| %>
-          <div class="language-select-wrapper">
-            <select class="language-select" name="user_languages[]">
-              <% @languages.each do |lang| %>
-                <option value="<%= lang.id %>" <%= 'selected' if lang.id == user_lang.language_id %>>
-                  <%= lang.language_name %>
-                </option>
-              <% end %>
-            </select>
-            <button type="button" class="remove-language">Remove</button>
-          </div>
-        <% end %>
-      </div>
-
-      <button type="button" id="add-language">Add Language</button>
-
-      <script>const languagesData = <%= @languages.to_json %>;</script>
-      <script src="/js/languages.js"></script>
-
-      <div class="info row">
-        <label for="date_of_birth"></label>
-        <input type="date" id="date_of_birth" name="date_of_birth" value="<%= @edited_user.profile.date_of_birth %>" required>
-      </div>
-
-      <div class="info row">
-        <label for="role">Role: </label>
-        <% if session[:user].admin? %>
-          <select id="role" name="role" required>
-            <option value="mentee" <%= 'selected' if @edited_user.mentee? %>>Mentee</option>
-            <option value="mentor" <%= 'selected' if @edited_user.mentor? %>>Mentor</option>
-            <option value="admin" <%= 'selected' if @edited_user.admin? %>>Admin</option>
-          </select>
-        <% else %>
-          <%= @edited_user.role.capitalize %>
-        <% end %>
-      </div>
-
-      <div class="info row">
-        <label for="nationality">Nationality:</label>
-        <select id="nationality" name="nationality" required>
-          <% Nationality.each do |country| %>
-            <option value="<%= country.id %>" <%= 'selected' if Nationality.first(id: @edited_user.profile.nationality_id) == country %>><%= country.country_name %></option>
+        <div class="info row languages" id="languages-container">
+          <% @edited_user.user_languages.each do |user_lang| %>
+            <div class="language-select-wrapper">
+              <select class="language-select" name="user_languages[]">
+                <% @languages.each do |lang| %>
+                  <option value="<%= lang.id %>" <%= 'selected' if lang.id == user_lang.language_id %>>
+                    <%= lang.language_name %>
+                  </option>
+                <% end %>
+              </select>
+              <button type="button" class="remove-language">Remove</button>
+            </div>
           <% end %>
-        </select>
-      </div>
+        </div>
 
-      <div class="info row">
-        <label for="year_of_study">Year of Study:</label>
+        <button type="button" id="add-language">Add Language</button>
 
-        <% if session[:user].admin? %>
-          <select id="year_of_study" name="year_of_study" required>
-            <% # If user already has a year of study, preselect it %>
-            <% if @edited_user.mentor_profile %>
-              <% (1..5).each do |year| %>
-                <option value="Year <%= year %>" <%= 'selected' if @edited_user.mentor_profile.year_of_study == year %>>Year <%= year %></option>
-              <% end %>
+        <script>const languagesData = <%= @languages.to_json %>;</script>
+        <script src="/js/languages.js"></script>
+
+        <div class="info row">
+          <label for="date_of_birth"></label>
+          <input type="date" id="date_of_birth" name="date_of_birth" value="<%= @edited_user.profile.date_of_birth %>" required>
+        </div>
+
+        <div class="info row">
+          <label for="role">Role: </label>
+          <% if session[:user].admin? %>
+            <select id="role" name="role" required>
+              <option value="mentee" <%= 'selected' if @edited_user.mentee? %>>Mentee</option>
+              <option value="mentor" <%= 'selected' if @edited_user.mentor? %>>Mentor</option>
+              <option value="admin" <%= 'selected' if @edited_user.admin? %>>Admin</option>
+            </select>
+          <% else %>
+            <%= @edited_user.role.capitalize %>
+          <% end %>
+        </div>
+
+        <div class="info row">
+          <label for="nationality">Nationality:</label>
+          <select id="nationality" name="nationality" required>
+            <% Nationality.each do |country| %>
+              <option value="<%= country.id %>" <%= 'selected' if Nationality.first(id: @edited_user.profile.nationality_id) == country %>><%= country.country_name %></option>
             <% end %>
           </select>
-        <% else %>
-          <%= @edited_user.mentor? ? "Year #{@edited_user.mentor_profile.year_of_study}" : "Year 1" %>
-        <% end %>
-      </div>
+        </div>
 
-      <div id="bio_brief" class="info row">
-        <div class="row">
-          <label for="description">Describe yourself briefly:</label>
-        </div>
-        <div class="row">
-          <textarea id="description" name="bio_brief" rows="5" cols="50"><%= @edited_user.profile.bio_brief %></textarea>
-        </div>
-      </div>
-      <div id="bio_detailed" class="info row">
-        <div class="row">
-          <label for="description2">Describe yourself in detail:</label>
-        </div>
-        <div class="row">
-          <textarea id="description2" name="bio_detailed" rows="20" cols="50"><%= @edited_user.profile.bio_detailed %></textarea>
-        </div>
-      </div>
+        <div class="info row">
+          <label for="year_of_study">Year of Study:</label>
 
-      <button type="submit">Save</button>
-    </form>
+          <% if session[:user].admin? %>
+            <select id="year_of_study" name="year_of_study" required>
+              <% # If user already has a year of study, preselect it %>
+              <% if @edited_user.mentor_profile %>
+                <% (1..5).each do |year| %>
+                  <option value="Year <%= year %>" <%= 'selected' if @edited_user.mentor_profile.year_of_study == year %>>Year <%= year %></option>
+                <% end %>
+              <% end %>
+            </select>
+          <% else %>
+            <%= @edited_user.mentor? ? "Year #{@edited_user.mentor_profile.year_of_study}" : "Year 1" %>
+          <% end %>
+        </div>
+
+        <div id="bio_brief" class="info row">
+          <div class="row">
+            <label for="description">Describe yourself briefly:</label>
+          </div>
+          <div class="row">
+            <textarea id="description" name="bio_brief" rows="5" cols="50"><%= @edited_user.profile.bio_brief %></textarea>
+          </div>
+        </div>
+        <div id="bio_detailed" class="info row">
+          <div class="row">
+            <label for="description2">Describe yourself in detail:</label>
+          </div>
+          <div class="row">
+            <textarea id="description2" name="bio_detailed" rows="20" cols="50"><%= @edited_user.profile.bio_detailed %></textarea>
+          </div>
+        </div>
+
+        <button type="submit">Save</button>
+      </form>
+    </div>
   </div>
 </section>
 </body>
