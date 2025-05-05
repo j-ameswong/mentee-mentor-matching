@@ -1,6 +1,12 @@
 get "/approvals" do
   redirect "/" unless session[:logged_in] && session[:user].admin?
-  @unapproved = Authentication.where(approved: false).all
+  role = params[:role]
+
+  if role && !role.empty?
+    @unapproved = Authentication.where(approved: false).select { |auth| auth.user.role.downcase == role.downcase }
+  else
+    @unapproved = Authentication.where(approved: false).all
+end
 
   erb :approvals
 end

@@ -1,8 +1,35 @@
 <div class="content">
     <h1 id="welcome" class="centerer">Mentees</h1>
     <div id="mentee-list" class="content-box">
+        <div id="mentee-applicants">
         <h2>Mentee applications</h2>
-
+            <% "@menteeApplicants".each do |row| %>
+                <div class="row">
+                    
         <h2>Other Mentees</h2>
+        <div id="mentee-others">
+        <% @mentees.each do |row| %>
+            <% if row.availability %>
+                <div class="row">
+                    <div class="column">
+                        <%="Year " + row.year_of_study.to_s %>
+                    </div>
+                    <div class="column">
+                        <%= row.user.user_expertises.each {|skill| skill} %>
+                    </div>asdw 
+                    <div class="column">
+                        <%= row.user.profile.age %>
+                    </div>
+                        <%= row.user.profile.bio_brief %>
+                    <div class="column">
+                        <%= Nationality.first(id: row.user.profile.nationality_id).country_name %>
+                    </div>
+                </div>
+
+                <div class="matching-wrapper" id="<%= row.user.id %>-wrapper">
+                    <button type="button" class="apply-mentor" id="<%= row.user.id %>-apply">Apply</button>
+                </div>
+            <% end %>
+        <% end %>
     </div>
 </div>

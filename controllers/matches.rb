@@ -1,5 +1,4 @@
 get "/matches" do
-  @mentors = User.where(acc_type: "mentor")
   redirect "/login" unless session[:logged_in]
   redirect "/matches/mentee" if session[:user].mentee?
   redirect "/matches/mentor" if session[:user].mentor?
@@ -7,6 +6,8 @@ end
 
 get "/matches/mentee" do
   redirect "/login" unless session[:logged_in]
+
+  @mentors = User.where(role: "mentor")
   erb :menteeMatching
 end
 
@@ -25,5 +26,8 @@ get "/matches/mentor" do
   redirect "/login" unless session[:logged_in]
   redirect "/matches/mentee" if session[:user].mentee?
 
+  mentor_id = session[:user].id
+  @menteeApplicants = Match.where(mentor_id: mentor_id, status: 'pending')
+  @mentees = User.where(role: "mentee")
   erb :mentorMatching
 end
