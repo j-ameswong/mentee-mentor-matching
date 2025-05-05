@@ -14,7 +14,7 @@
 
 <body>
 <section class="content">
-  <%# For the below, only admins can edit someone's year of study or account type %>
+  <%# For the below, only admins can edit someone's year of study, email or account type %>
   <div class="centerer">
     <h3>Edit <%= @edited_user.username.capitalize %>'s Profile</h3>
     <div class="content-box centerer">
@@ -40,7 +40,12 @@
 
         <div class="info row">
           <label for="email">University Email:</label>
-          <input type="text" id="email" name="email" value="<%= @edited_user.email %>" required>
+          <% if session[:user].admin? %>
+            <input type="text" id="email" name="email" value="<%= @edited_user.email %>" required>
+          <% else %>
+            <%= @edited_user.email %>
+            <input name="email" value="<%= @edited_user.email %>" type="hidden">
+          <% end %>
         </div>
 
         <div class="info row languages" id="languages-container">

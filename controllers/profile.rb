@@ -1,8 +1,8 @@
 require "csv"
 
 post "/profile/edit" do
+  # TODO: Only matched pairs can view each other's details, unless admin or themself
   redirect "/" unless session[:logged_in]
-  # DEBUG: puts params
   @edited_user = User.first(id: params[:id].to_i)
   redirect "/profile" if @edited_user.nil?
 
@@ -19,15 +19,15 @@ post "/profile/edit" do
 
   # Checking all fields for invalid characters
   @all_good = true
-  @fname_bad = params[:first_name].match(/\A[a-zA-Z0-9]*\z/).nil?
+  @fname_bad = params[:first_name].match?(/\A[a-zA-Z0-9]*\z/).nil?
   puts @fname_bad
-  @lname_bad = params[:last_name].match(/\A[a-zA-Z0-9]*\z/).nil?
+  @lname_bad = params[:last_name].match?(/\A[a-zA-Z0-9]*\z/).nil?
   puts @lname_bad
-  @email_bad = params[:email].match(/\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i).nil?
+  @email_bad = params[:email].match?(/\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i).nil?
   puts @email_bad
-  @brief_bad = params[:bio_brief].match(/\A[-a-zA-Z0-9 "'!?;:,+@()]*\z/).nil?
+  @brief_bad = params[:bio_brief].match?(/\A[-a-zA-Z0-9 "'!?;:,+@()]*\z/).nil?
   puts @brief_bad
-  @bio_bad = params[:bio_detailed].match(/\A[-a-zA-Z0-9 "'!?;:,+@()]*\z/).nil?
+  @bio_bad = params[:bio_detailed].match?(/\A[-a-zA-Z0-9 "'!?;:,+@()]*\z/).nil?
   puts @bio_bad
 
   if @fname_bad || @lname_bad || @email_bad || @brief_bad || @bio_bad
@@ -64,6 +64,8 @@ end
 
 post "/profile" do
   redirect "/" unless session[:logged_in]
+
+  # TODO: Only matched pairs can view each other's details, unless admin or themself
   redirect "/profile/edit?id=#{params[:id]}"
 end
 
