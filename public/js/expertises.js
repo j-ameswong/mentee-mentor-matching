@@ -1,21 +1,21 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const container = document.getElementById('languages-container');
-    const addButton = document.getElementById('add-language');
+    const container = document.getElementById('expertises-container');
+    const addButton = document.getElementById('add-expertise');
 
-    function createLanguageSelect(selectedId = null) {
+    function createExpertiseSelect(selectedId = null) {
         const wrapper = document.createElement('div');
-        wrapper.className = 'language-select-wrapper';
+        wrapper.className = 'expertise-select-wrapper';
 
         const select = document.createElement('select');
-        select.className = 'language-select';
-        select.name = 'user_languages[]';
+        select.className = 'expertise-select';
+        select.name = 'user_expertises[]';
 
         // from @languages
-        languagesData.forEach(lang => {
+        expertisesData.forEach(row => {
             const option = document.createElement('option');
-            option.value = lang.id;
-            option.textContent = lang.language_name;
-            if (selectedId && lang.id === selectedId) {
+            option.value = row.id;
+            option.textContent = row.category + ' - ' + row.skill;
+            if (selectedId && row.id === selectedId) {
                 option.selected = true;
             }
             select.appendChild(option);
@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const removeBtn = document.createElement('button');
         removeBtn.type = 'button';
         removeBtn.textContent = 'Remove';
-        removeBtn.className = 'remove-language';
+        removeBtn.className = 'remove-expertise';
         removeBtn.addEventListener('click', () => wrapper.remove());
 
         wrapper.appendChild(select);
@@ -35,8 +35,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // So that removing works on both new array of lang and also the embedded ruby list
     container.addEventListener('click', function(e) {
-        if (e.target.classList.contains('remove-language')) {
-            e.target.closest('.language-select-wrapper').remove();
+        if (e.target.classList.contains('remove-expertise')) {
+            e.target.closest('.expertise-select-wrapper').remove();
             if (container.children.length === 0) {
                 container.appendChild(createLanguageSelect());
             }
@@ -45,11 +45,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // add new language
     addButton.addEventListener('click', function() {
-        container.appendChild(createLanguageSelect());
+        container.appendChild(createExpertiseSelect());
     });
 
     // start with at least one select if empty
     if (container.children.length === 0) {
-        container.appendChild(createLanguageSelect());
+        container.appendChild(createExpertiseSelect());
     }
 });
