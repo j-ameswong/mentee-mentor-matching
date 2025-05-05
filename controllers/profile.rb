@@ -88,6 +88,7 @@ end
 get "/profile/edit" do
   redirect "/" unless session[:logged_in]
   @languages = Language.all
+  @expertises = Expertise.all
 
   @edited_user = User.first(id: params[:id].to_i) unless params[:id].nil?
   @edited_user = session[:user] if @edited_user.nil?

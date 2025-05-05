@@ -63,6 +63,21 @@
           <% end %>
         </div>
 
+        <div class="info row expertises" id="expertises-container">
+        <% @edited_user.user_expertises.each do |expertise| %>
+          <div class="category-select-wrapper">
+            <select class="category-select" name="expertise_categories[]">
+              <% @languages.each do |lang| %>
+                <option value="<%= lang.id %>" <%= 'selected' if lang.id == user_lang.language_id %>>
+                  <%= lang.language_name %>
+                </option>
+              <% end %>
+            </select>
+            <button type="button" class="remove-language">Remove</button>
+          </div>
+        <% end %>
+      </div>
+
         <button type="button" id="add-language">Add Language</button>
 
         <script>const languagesData = <%= @languages.to_json %>;</script>
