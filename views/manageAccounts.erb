@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <% @title = "Accounts Management" %>
+  <title><%= @title %></title>
+  <meta name="author" content="Team 17">
+  <link rel="stylesheet" href="/css/styles.css" />
+  <link rel="icon" href="/images/UniConnectLogo.png" type="image/x-icon">
+</head>
+
+<body>
+<%= erb :"common/header" %>
+<section class="content centerer">
+
+  <h3>Accounts Management</h3>
+
+  <div class="content-box centerer">
+    <h3>Search for account by username:</h3>
+    <form action="/accounts" method="post">
+
+      <label for="username" class="row centerer">Filter by Username:</label>
+      <input type="text" name="username" placeholder="Enter username">
+
+      <div class="column">
+        <br>
+        <label for="role" class="row">Filter by Account Type:</label>
+        <select name="role" id="role" class="row">
+          <option value="" selected>Select an account type</option>
+          <option value="admin">Admin</option>
+          <option value="mentee">Mentee</option>
+          <option value="mentor">Mentor</option>
+        </select>
+        <br>
+
+        <input type="submit" value="Update Filters" class="row centerer">
+      </div>
+    </form>
+  </div>
+
+  <div class="content-box centerer">
+    <h3>Search Results: </h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Username</th>
+          <th>Account Type</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @users.each do |user| %>
+          <tr>
+            <td><%= user.username %></td>
+            <td><%= user.role %></td>
+            <td>
+              <form action="/accounts/delete" method="post">
+                <input type="hidden" name="user_id" value="<%= user.id %>">
+                <input type="submit" value="Delete">
+              </form>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</section>
+</body>
+
+
+</html>

@@ -52,6 +52,7 @@
           <% @edited_user.user_languages.each do |user_lang| %>
             <div class="language-select-wrapper">
               <select class="language-select" name="user_languages[]">
+                <% @languages = Language.find_all %>
                 <% @languages.each do |lang| %>
                   <option value="<%= lang.id %>" <%= 'selected' if lang.id == user_lang.language_id %>>
                     <%= lang.language_name %>
