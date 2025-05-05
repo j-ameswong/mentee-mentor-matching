@@ -8,15 +8,16 @@
   <title>Support</title>
   <meta name="author" content="Team 17">
   <link rel="stylesheet" href="/css/styles.css" />
+  <link rel="icon" href="/images/UniConnectLogo.png" type="image/x-icon">
 </head>
 
 <% @title = "Support" %>
 <%= erb :"common/header" %>
 
 <body>
-  <div class = "content">
-    <h2>HELP AND SUPPORT</h2>
-    <div class = "row centerer">
+  <div class="content centerer">
+    <h2>Help and Support</h2>
+    <div class="content-box centerer">
       <form action = "/support" method = "post">
         <label for="help-request-type">What do you need help with?:</label>
         <select id = "help-category">
