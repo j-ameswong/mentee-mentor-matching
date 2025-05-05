@@ -7,7 +7,7 @@ end
 get "/matches/mentee" do
   redirect "/login" unless session[:logged_in]
 
-  @mentors = User.where(role: "mentor")
+  @mentors = MentorProfile.where(availability: true)
   erb :menteeMatching
 end
 
@@ -28,6 +28,6 @@ get "/matches/mentor" do
 
   mentor_id = session[:user].id
   @menteeApplicants = Match.where(mentor_id: mentor_id, status: 'pending')
-  @mentees = User.where(role: "mentee")
+  @mentees = MenteeProfile.where(availability: true)
   erb :mentorMatching
 end

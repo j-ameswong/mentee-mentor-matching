@@ -13,7 +13,7 @@
   <div class="content">
     <section class="matching row centerer">
         <div class="column centerer">
-          <% MentorProfile.each do |row| %>
+          <% MentorProfile.all.each do |row| %>
             <% if row.availability %>
               <div class="row">
                 <div class="column">

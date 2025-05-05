@@ -94,7 +94,7 @@ class MentorProfile < Sequel::Model
     errors.add(:user_id, "must belong to a mentor") unless @role.nil? || @role == "mentor"
   end
 
-  def available
+  def available?
     num_matches < max_matches
   end
 
