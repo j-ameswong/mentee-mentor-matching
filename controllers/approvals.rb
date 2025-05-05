@@ -23,7 +23,7 @@ get "/approvals/approve" do
 end
 
 get "/approvals/deny" do
-  redirect "/" unless session[:logged_in] && session[:user].role.downcase == "admin"
+  redirect "/" unless session[:logged_in] && session[:user].admin?
   @user = User.first(id: params.fetch(:to_deny, ""))
 
   if @user.nil?
