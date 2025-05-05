@@ -15,16 +15,21 @@
 <body>
   <div class="content">
 		<div id="filter">
-			<label id="filter-label">Filter by:</label>
+			<form action="/approvals/filter" method="post" id="filter-form">
+			<label for="account-filter" id="filter-label">Filter by:</label>
 			<select name="filter-accounts" id="account-filter">
-				<option value="All">All</option>
-				<option value="Admin">Admins</option>
-				<option value="Mentor">Mentors</option>
-				<option value="Mentee">Mentees</option>
+				<option <%= "selected" if @filter == "all" %> value="all">All</option>
+				<option <%= "selected" if @filter == "admin" %> value="admin">Admins</option>
+				<option <%= "selected" if @filter == "mentor" %> value="mentor">Mentors</option>
+				<option <%= "selected" if @filter == "mentee" %> value="mentee">Mentees</option>
 			</select>
+			</form>
 		</div>
+
     <section class="row centerer">
       <% @unapproved.each do |auth| %>
+				<% if @filter == "all" || auth.user.role == @filter %>
+
         <div class="column centerer content-box approvals">
 					<p id="role-text"> <%= auth.user.role.capitalize %> </p>
           <p id="email-text"><%= auth.user.email %> </p>
@@ -53,8 +58,12 @@
             </div>
           <% end %>
 				</div>
+				<% end %>
     	<% end %>
 		</section>
+	</div>
+
+	<script src="/js/approvalFilter.js"></script>
 </body>
 
 </html>

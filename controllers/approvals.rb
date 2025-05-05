@@ -1,6 +1,8 @@
 get "/approvals" do
   redirect "/" unless session[:logged_in] && session[:user].admin?
   @unapproved = Authentication.where(approved: false).all
+  @filter = !params[:filter].nil? ? params[:filter] : "all"
+  puts "Filter is: " + @filter
 
   erb :approvals
 end
@@ -53,4 +55,11 @@ post "/approvals" do
 
   @unapproved = Authentication.where(approved: false).all
   erb :approvals
+end
+
+post "/approvals/filter" do
+  redirect "/" unless session[:logged_in] && session[:user].admin?
+
+  puts params
+  redirect "/approvals?filter=#{params["filter-accounts"]}"
 end
