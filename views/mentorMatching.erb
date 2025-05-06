@@ -17,26 +17,29 @@
             <% @menteeApplicants.each do |row| %>
                 <div class="profile-box">
                     <% mentee = row.mentee %>
-                    <div class="profile_pic">
-                        <% if mentee.profile_picture %> 
-                            <img id="profile-menu" src="<%= "/images/user/#{mentee.profile_picture}" %>" alt="Profile Picture">
-                        <% else %>
-                            <img id="profile-menu" src="blackProfilePicture.webp" alt="Profile Picture">
-                        <% end %>
+                    <div class="basic-info">
+                        <span class="profile_pic">
+                            <% if mentee.profile_picture %> 
+                                <img id="profile-menu" src="<%= "/images/user/#{mentee.profile_picture}" %>" alt="Profile Picture">
+                            <% else %>
+                                <img id="profile-menu" src="blackProfilePicture.webp" alt="Profile Picture">
+                            <% end %>
+                        </span>
+                        <span class="profile-name">
+                            <p><%= mentee.first_name %> <%= mentee.last_name %></p>
+                        </span>
                     </div>
-                     <div class="row profile-dob">
-                        <p><%= mentee.date_of_birth %></p>
+                    <div detailed-info>
+                        <span class="profile-dob">
+                            <p><%= mentee.date_of_birth %></p>
+                        </span>
+                        <span class="row profile-nationality">
+                            <p><%= Nationality.first(id: mentee.nationality_id).country_name %></p>
+                        </span>
+                        <span class="row profile-bio-detailed">
+                            <p><%= mentee.bio_detailed %></p>
+                        </span>
                     </div>
-                    <div class="row profile-nationality">
-                        <p><%= Nationality.first(id: mentee.nationality_id).country_name %></p>
-                    </div>
-                    <div class="row profile-bio-detailed">
-                        <p><%= mentee.bio_detailed %></p>
-                    </div>
-                    <div class="row">
-                        <p><%= mentee.user.first_name %> <%= mentee.user.last_name %></p>
-                    </div>
-                </div>
             <% end %>
         </div>
         <div id="mentee-others">
@@ -44,26 +47,22 @@
             <% @mentees.all.each do |row| %>
                 <div class="profile-box">
                     <% mentee = row.user.profile %>
-                    <div class="profile_pic">
-                        <% if mentee.profile_picture %> 
-                            <img id="profile-menu" src="<%= "/images/user/#{mentee.profile_picture}" %>" alt="Profile Picture">
-                        <% else %>
-                            <img id="profile-menu" src="blackProfilePicture.webp" alt="Profile Picture">
-                        <% end %>
+                    <div class="basic-info centerer">
+                        <div class="profile_pic">
+                            <% if mentee.profile_picture %> 
+                                <img id="profile-menu" src="<%= "/images/user/#{mentee.profile_picture}" %>" alt="Profile Picture">
+                            <% else %>
+                                <img id="profile-menu" src="blackProfilePicture.webp" alt="Profile Picture">
+                            <% end %>
+                        </div>
+                        <p class="profile-name"><%= mentee.first_name %> <%= mentee.last_name %></p>
                     </div>
-                    <div class="row profile-name">
-                        <p><%= mentee.first_name %> <%= mentee.last_name %></p>
+                    <div class="detailed-info">
+                        <p class="detailed-info-content">Age: <%= mentee.age %></p>
+                        <p class="detailed-info-content">Nationality: <%= Nationality.first(id: mentee.nationality_id).country_name %></p>
                     </div>
-                    <div class="row profile-dob">
-                        <p><%= mentee.date_of_birth %></p>
-                    </div>
-                    <div class="row profile-nationality">
-                        <p><%= Nationality.first(id: mentee.nationality_id).country_name %></p>
-                    </div>
-                    <div class="row profile-bio-detailed">
-                        <p><%= mentee.bio_detailed %></p>
-                    </div>
-                    <div class="row">
+                    <div class="bio-and-accept">
+                        <p class="profile-bio-detailed">Bio: <%= mentee.bio_detailed %></p>
                         <div class="matching-wrapper" id="<%= row.user.id %>-wrapper">
                             <button type="button" class="apply-mentor" id="<%= row.user.id %>-apply">Apply</button>
                         </div>
