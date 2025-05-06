@@ -17,20 +17,10 @@ post "/profile/edit" do
   params[:bio_brief] = h(params[:bio_brief].strip) if params[:bio_brief]
   params[:bio_detailed] = params[:bio_detailed].strip if params[:bio_detailed]
 
-  # Checking all fields for invalid characters
   @all_good = true
-  @fname_bad = params[:first_name].match?(/\A[a-zA-Z0-9]*\z/).nil?
-  puts @fname_bad
-  @lname_bad = params[:last_name].match?(/\A[a-zA-Z0-9]*\z/).nil?
-  puts @lname_bad
-  @email_bad = params[:email].match?(/\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i).nil?
-  puts @email_bad
-  @brief_bad = params[:bio_brief].match?(/\A[-a-zA-Z0-9 "'!?;:,+@()]*\z/).nil?
-  puts @brief_bad
-  @bio_bad = params[:bio_detailed].match?(/\A[-a-zA-Z0-9 "'!?;:,+@()]*\z/).nil?
-  puts @bio_bad
 
-  if @fname_bad || @lname_bad || @email_bad || @brief_bad || @bio_bad
+  # Checking all fields are valid characters
+  if !valid_input?(params[:first_name]) || !valid_input?(params[:last_name]) || !valid_email?(params[:email]) || html_unsafe?(params[:bio_brief]) || html_unsafe?(params[:bio_detailed])
     @all_good = false
   end
 
@@ -41,11 +31,11 @@ post "/profile/edit" do
   if @all_good
     @edited_user.profile.update!(params)
   else
-    @edited_user.errors.add(:first_name, "Invalid first name") if @fname_bad
-    @edited_user.errors.add(:last_name, "Invalid last name") if @lname_bad
-    @edited_user.errors.add(:email, "Invalid email") if @email_bad
-    @edited_user.errors.add(:bio_brief, "Invalid bio brief") if @brief_bad
-    @edited_user.errors.add(:bio_detailed, "Invalid bio detailed") if @bio_bad
+    @edited_user.errors.add(:first_name, "Invalid first name") unless valid_input?(params[:first_name])
+    @edited_user.errors.add(:last_name, "Invalid last name") unless valid_input?(params[:last_name])
+    @edited_user.errors.add(:email, "Invalid email") unless valid_email?(params[:email])
+    @edited_user.errors.add(:bio_brief, "Invalid bio brief") if html_unsafe?(params[:bio_brief])
+    @edited_user.errors.add(:bio_detailed, "Invalid bio detailed") if html_unsafe?(params[:bio_detailed])
   end
   @edited_user.mentor_profile.update!(params) if @edited_user.mentor?
   # DEBUG: params[:user_languages].each {|x| puts x}

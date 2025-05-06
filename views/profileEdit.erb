@@ -52,6 +52,7 @@
           <% @edited_user.user_languages.each do |user_lang| %>
             <div class="language-select-wrapper">
               <select class="language-select" name="user_languages[]">
+                <% @languages = Language.find_all %>
                 <% @languages.each do |lang| %>
                   <option value="<%= lang.id %>" <%= 'selected' if lang.id == user_lang.language_id %>>
                     <%= lang.language_name %>
@@ -149,6 +150,12 @@
             <textarea id="description2" name="bio_detailed" rows="20" cols="50"><%= @edited_user.profile.bio_detailed %></textarea>
           </div>
         </div>
+
+        <% unless @edited_user.errors.count == 0 %>
+          <h4>Error:
+                <%=  @edited_user.errors  %>
+          </h4>
+        <% end %>
 
         <button type="submit">Save</button>
       </form>
