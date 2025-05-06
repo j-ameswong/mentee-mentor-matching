@@ -7,6 +7,7 @@ class UserExpertise < Sequel::Model
   many_to_one :expertise, key: :id
 
   def self.create!(params)
+    return unless params[:user_expertises]
     UserExpertise.where(user_id: params[:user_id]).each { |row| row.delete }
     params[:user_expertises].each do |expertise|
       expertise = Expertise.first(id: expertise)
