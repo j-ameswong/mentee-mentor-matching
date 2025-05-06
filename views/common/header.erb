@@ -9,7 +9,7 @@
         <% @option2 = "New Users Approval" %>
         <% @link2 = "/approvals" %>
         <% @option3 = "Manage Accounts" %>
-        <% @link3 = "/" %>
+        <% @link3 = "/accounts" %>
         <% @option4 = "Flagging & Deletion" %>
         <% @link4 = "/flagging" %>
     <% elsif @accountType == "mentee" %>
@@ -34,6 +34,7 @@
 <%= erb :"common/sidebar" %>
 
 <%= erb :"common/logo" %>
+
 <%if !(@user.nil?)%>
     <%= erb :"common/dropdown" %>
 <%end%>

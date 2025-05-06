@@ -1,12 +1,9 @@
-<% if params[:profile_pic].nil? then %>
-    <% @pfp = "/images/blankProfilePicture.webp" %>
-<% else %>
-    <% @user.profile_pic = params.fetch("profile_pic") %>
-    <% @pfp = @user.profile_pic %>
-<% end %>
 <div class="dropdown">
 
-    <img id="profile-menu" src=<%= @pfp %>>
+    <a id="pfp-link" href="/profile">
+        <img id="profile-menu" src="/images/user/<%= @user.profile.profile_picture %>" alt="Not Found"
+             onerror="this.src='/images/blankProfilePicture.webp'">
+    </a>
 
     <div class="dropdown-content centerer">
         <a class="dropdown-link centerer" href="/profile">Profile</a>
