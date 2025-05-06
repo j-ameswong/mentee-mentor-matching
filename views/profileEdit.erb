@@ -66,8 +66,29 @@
 
         <button type="button" id="add-language">Add Language</button>
 
+        <% if @edited_user.mentor? %>
+          <div class="info row expertises" id="expertises-container">
+          <% @edited_user.user_expertises.each do |user_expertise| %>
+            <div class="expertise-select-wrapper">
+              <select class="expertise-select" name="user_expertises[]">
+                <% @expertises.each do |row| %>
+                  <option value="<%= row.id %>" <%= 'selected' if row.id == user_expertise.expertise_id %>>
+                    <%= row.category + " - " + row.skill %>
+                  </option>
+                <% end %>
+              </select>
+              <button type="button" class="remove-expertise">Remove</button>
+            </div>
+          <% end %>
+          </div>
+
+          <button type="button" id="add-expertise">Add Skill</button>
+        <% end %>
+
         <script>const languagesData = <%= @languages.to_json %>;</script>
+        <script>const expertisesData = <%= @expertises.to_json %>;</script>
         <script src="/js/languages.js"></script>
+        <script src="/js/expertises.js"></script>
 
         <div class="info row">
           <label for="date_of_birth"></label>
