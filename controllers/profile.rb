@@ -90,6 +90,8 @@ get "/profile/edit" do
   @languages = Language.all
   @expertises = Expertise.all
 
+  # @expertises.each { |e| puts e.category }
+
   @edited_user = User.first(id: params[:id].to_i) unless params[:id].nil?
   @edited_user = session[:user] if @edited_user.nil?
 

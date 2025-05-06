@@ -63,6 +63,8 @@
           <% end %>
         </div>
 
+        <button type="button" id="add-language">Add Language</button>
+
         <div class="info row expertises" id="expertises-container">
         <% @edited_user.user_expertises.each do |user_expertise| %>
           <div class="expertise-select-wrapper">
@@ -76,13 +78,14 @@
             <button type="button" class="remove-expertise">Remove</button>
           </div>
         <% end %>
-      </div>
+        </div>
 
-        <button type="button" id="add-language">Add Language</button>
+        <button type="button" id="add-expertise">Add Skill</button>
 
         <script>const languagesData = <%= @languages.to_json %>;</script>
         <script>const expertisesData = <%= @expertises.to_json %>;</script>
         <script src="/js/languages.js"></script>
+        <script src="/js/expertises.js"></script>
 
         <div class="info row">
           <label for="date_of_birth"></label>
