@@ -43,6 +43,18 @@
             <% end %>
           </ul>
         </div>
+
+        <div class="info row expertises">
+        <p>Expertises: </p>
+        <ul>
+          <% unless @viewed_user.user_expertises.nil?%>
+            <% @viewed_user.user_expertises.each do |expertise|%>
+              <% found_expertise = Expertise.first(id: expertise.expertise_id) %>
+              <li><%= found_expertise.category + ' - ' + found_expertise.skill %></li>
+            <% end %>
+          <% end %>
+        </ul>
+      </div>
         
         <div class="info row">
           <p>Age: <%= @viewed_user.profile.age %></p>

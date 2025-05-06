@@ -50,6 +50,7 @@ post "/profile/edit" do
   @edited_user.mentor_profile.update!(params) if @edited_user.mentor?
   # DEBUG: params[:user_languages].each {|x| puts x}
   UserLanguage.create!(params)
+  UserExpertise.create!(params)
 
   if @edited_user.errors.empty?
     @edited_user.save
