@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Flagging & Deletion</title>
+  <meta name="author" content="Team 17">
+  <link rel="stylesheet" href="/css/styles.css"/>
+</head>
+
+<% @title = "Flagging & Deletion" %>
+<%= erb :"common/header" %>
+<% @userCount = 0 %>
+
+<body>
+  <div class="content">
+		<div id="filter">
+			<label id="filter-label">Filter by:</label>
+			<select name="filter-accounts" id="account-filter">
+				<option value="All">All</option>
+				<option value="Admin">Admins</option>
+				<option value="Mentor">Mentors</option>
+				<option value="Mentee">Mentees</option>
+			</select>
+		</div>
+    <section class="row centerer">
+        <% @unflagged.each do |display| %>
+        <div class="column centerer content-box approvals">
+            <p id="role-text"> <%= display.user.role.capitalize %> </p>
+            <p id="email-text"><%= display.user.email %> </p>
+        </div>
+    	<% end %>
+    </section>
+</body>
+
+</html>

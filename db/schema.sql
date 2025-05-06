@@ -132,3 +132,12 @@ CREATE TABLE "languages" (
     "native_name" TEXT,
     "language_code" TEXT
 )
+
+-- List of all flagged accounts
+CREATE TABLE "flagged_accounts" (
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "user_id" TEXT,
+    "flag_reasoning" TEXT,
+    "flagged_at" DateTime
+);
+CREATE INDEX "user_id_flag_index" ON "flagged_accounts" ("user_id");
