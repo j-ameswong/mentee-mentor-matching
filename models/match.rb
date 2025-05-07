@@ -7,8 +7,8 @@ require_relative "../db/db"
 class Match < Sequel::Model
   plugin :timestamps, update_on_create: true
 
-  many_to_many :mentor_id, class: :users
-  many_to_many :mentee_id, class: :users
+  many_to_one :mentor_id, class: :users
+  many_to_one :mentee_id, class: :users
 
   STATUSES = %w[pending active completed cancelled]
 
