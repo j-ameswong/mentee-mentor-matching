@@ -26,6 +26,7 @@ post "/profile/edit" do
 
   puts "@all_good: #{@all_good}"
   @edited_user.role = params[:role] if params[:role]
+<<<<<<< HEAD
 
   # Only update the profile if params are valid
   if @all_good
@@ -38,6 +39,10 @@ post "/profile/edit" do
     @edited_user.errors.add(:bio_detailed, "Invalid bio detailed") if html_unsafe?(params[:bio_detailed])
   end
   @edited_user.mentor_profile.update!(params) if @edited_user.mentor?
+=======
+  @edited_user.profile.update!(params)
+  @edited_user.mentor_profile.update!(params.merge!(:availability => true)) if @edited_user.mentor?
+>>>>>>> 27-matching
   # DEBUG: params[:user_languages].each {|x| puts x}
   UserLanguage.create!(params)
   UserExpertise.create!(params)

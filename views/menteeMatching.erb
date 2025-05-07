@@ -1,10 +1,46 @@
-<%# TODO: if mentee is matched, show mentor profile, else show available mentors %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Matches</title>
+  <meta name="author" content="Team 17">
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<% @title = "Matching" %>
+<%= erb :"common/header" %>
 
-<% if @user.mentee_profile.availability %>
-    
+<body>
+  <div class="content">
+    <section class="matching row centerer">
+        <div class="column centerer">
+          <% MentorProfile.all.each do |row| %>
+            <% if row.availability %>
+              <div class="row">
+                <div class="column">
+                    <%="Year " + row.year_of_study.to_s %>
+                </div>
+                <div class="column">
+                  <%= row.user.user_expertises.each {|skill| skill} %>
+                </div>
+                <div class="column">
+                  <%= row.user.profile.age %>
+                </div>
+                  <%= row.user.profile.bio_brief %>
+                <div class="column">
+                  <%= Nationality.first(id: row.user.profile.nationality_id).country_name %>
+                </div>
+              </div>
 
-<% else %>
-    <% @mentor_id = @user.matches.mentor_id %>
-    <% @mentor = User.first(id: @mentor_id) %>
+              <div class="matching-wrapper" id="<%= row.user.id %>-wrapper">
+                <button type="button" class="apply-mentor" id="<%= row.user.id %>-apply">Apply</button>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
+      </section>
 
-<% end %>
+    <script src="/js/menteeMatching.js"></script>
+  </div>
+</body>
+
+</html>

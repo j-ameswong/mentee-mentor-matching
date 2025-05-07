@@ -14,11 +14,18 @@
 
 <body>
 <section class="content">
+<<<<<<< HEAD
   <%# For the below, only admins can edit someone's year of study, email or account type %>
   <div class="centerer">
     <h3>Edit <%= @edited_user.username.capitalize %>'s Profile</h3>
     <div class="content-box centerer">
       <form method="post" action="/profile/edit?id=<%= params[:id] %>" enctype="multipart/form-data">
+=======
+  <%# For the below, only admins can edit someone's year of study or account type %>
+  <h3><%= @edited_user.username.capitalize %>'s Profile</h3>
+  <form method="post" action="/profile/edit?id=<%= params[:id] %>" enctype="multipart/form-data">
+      <div class="row">
+>>>>>>> 27-matching
         <div class="row">
           <div class="row">
             <input type="file" id="profile_pic" name="profile_pic" accept="image/*">
