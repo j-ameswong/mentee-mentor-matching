@@ -1,7 +1,7 @@
 <div class="dropdown">
 
     <a id="pfp-link" href="/profile">
-        <img id="profile-menu" src="/images/user/<%= @user.profile.profile_picture %>" alt="Not Found"
+        <img id="profile-menu" src="/images/user/<%= begin @user.profile.profile_picture rescue "" end %>" alt="Not Found"
              onerror="this.src='/images/blankProfilePicture.webp'">
     </a>
 

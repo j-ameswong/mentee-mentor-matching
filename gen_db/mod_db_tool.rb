@@ -1,10 +1,10 @@
 require 'sequel'
 require_relative '../models/user.rb'
+require_relative '../db/db.rb'
 
-DB.alter_table :expertises do
-  drop_column :expertise_name
-  add_column :category, String
-  add_column :skill, String
+
+DB.alter_table :authentication do
+  add_column :flagged, :boolean, default: false
 end
 
 # users = User.where(email: "admin4@sheffield.ac.uk")
