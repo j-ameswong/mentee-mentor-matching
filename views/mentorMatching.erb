@@ -16,30 +16,33 @@
             <h2>Mentee applications</h2>
             <% @menteeApplicants.each do |row| %>
                 <div class="profile-box">
-                    <% mentee = row.mentee %>
-                    <div class="basic-info">
-                        <span class="profile_pic">
+                    <% mentee = row.user.profile %>
+                    <div class="basic-info centerer">
+                        <div class="profile_pic">
                             <% if mentee.profile_picture %> 
                                 <img id="profile-menu" src="<%= "/images/user/#{mentee.profile_picture}" %>" alt="Profile Picture">
                             <% else %>
-                                <img id="profile-menu" src="blankProfilePicture.webp" alt="Profile Picture">
+                                <img id="profile-menu" src="/images/blankProfilePicture.webp" alt="Profile Picture">
                             <% end %>
-                        </span>
-                        <span class="profile-name">
-                            <p><%= mentee.first_name %> <%= mentee.last_name %></p>
-                        </span>
+                        </div>
+                        <p class="profile-name"><%= mentee.first_name %> <%= mentee.last_name %></p>
                     </div>
-                    <div detailed-info>
-                        <span class="profile-dob">
-                            <p><%= mentee.date_of_birth %></p>
-                        </span>
-                        <span class="row profile-nationality">
-                            <p><%= Nationality.first(id: mentee.nationality_id).country_name %></p>
-                        </span>
-                        <span class="row profile-bio-detailed">
-                            <p><%= mentee.bio_detailed %></p>
-                        </span>
+                    <div class="detailed-info">
+                        <p class="detailed-info-content">Age: <%= mentee.age %></p>
+                        <p class="detailed-info-content">Languages: 
+                            <% UserLanguage.where(user_id: row.user.id).each do |ulanguage| %>
+                                <%= ulanguage.language.language_name %>
+                            <% end %>
+                        </p>
+                        <p class="detailed-info-content">Nationality: <%= Nationality.first(id: mentee.nationality_id).country_name %></p>
                     </div>
+                    <div class="bio-and-accept">
+                        <p class="profile-bio-detailed">Bio: <%= mentee.bio_detailed %></p>
+                        <div class="matching-wrapper" id="<%= row.user.id %>-wrapper">
+                            <button type="button" class="apply-mentor" id="<%= row.user.id %>-apply">Apply</button>
+                        </div>
+                    </div>
+                </div>
             <% end %>
         </div>
         <div id="mentee-others">
@@ -49,17 +52,21 @@
                     <% mentee = row.user.profile %>
                     <div class="basic-info centerer">
                         <div class="profile_pic">
-                            <% if mentee.profile_picture %> 
+                            <% if mentee.profile_picture%> 
                                 <img id="profile-menu" src="<%= "/images/user/#{mentee.profile_picture}" %>" alt="Profile Picture">
                             <% else %>
-                                <img id="profile-menu" src="blankProfilePicture.webp" alt="Profile Picture">
+                                <img id="profile-menu" src="/images/blankProfilePicture.webp" alt="Profile Picture">
                             <% end %>
                         </div>
                         <p class="profile-name"><%= mentee.first_name %> <%= mentee.last_name %></p>
                     </div>
                     <div class="detailed-info">
                         <p class="detailed-info-content">Age: <%= mentee.age %></p>
-                        <p class="detailed-info-content">Nationality: <%= Nationality.first(id: mentee.nationality_id).country_name %></p>
+                        <p class="detailed-info-content">Languages: 
+                            <% UserLanguage.where(user_id: row.user.id).each do |ulanguage| %>
+                                <%= ulanguage.language.language_name %>
+                            <% end %>
+                        </p>
                     </div>
                     <div class="bio-and-accept">
                         <p class="profile-bio-detailed">Bio: <%= mentee.bio_detailed %></p>

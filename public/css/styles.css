@@ -568,20 +568,9 @@ body {
   max-width: none;
 }
 
-<<<<<<< HEAD
-#profile-box {
-  width: 40vw;
-  padding-left: 5vw;
-  padding-right: 5vw;
-}
-
-h4 {
-  color: darkred;
-  font-size: 1em;
-  margin: 0;
-=======
 .profile-box {
   display: flex;
+  margin-top: 1%;
 }
 
 .basic-info {
@@ -627,5 +616,4 @@ h4 {
 
 .matching-wrapper {
   text-align: right;
->>>>>>> 27-matching
 }
