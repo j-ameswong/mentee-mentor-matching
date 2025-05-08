@@ -12,30 +12,34 @@
 <body>
   <div class="content">
     <section class="matching row centerer">
-        <div class="column centerer">
-            Mentors
-          <% MentorProfile.all.each do |row| %>
-            <% if row.available? %>
-                <div class="row">
-                    <div class="column">
-                        <%="Year " + row.year_of_study.to_s %>
+        <div id="mentee-others">
+          <h2>Mentors</h2>
+          <% MentorProfile.each do |row| %>
+            <div class="profile-box">
+                <% mentor = row.user.profile %>
+                <div class="basic-info centerer">
+                    <div class="profile_pic">
+                        <% if mentor.profile_picture%> 
+                            <img id="profile-menu" src="<%= "/images/user/#{mentee.profile_picture}" %>" alt="Profile Picture">
+                        <% else %>
+                            <img id="profile-menu" src="/images/blankProfilePicture.webp" alt="Profile Picture">
+                        <% end %>
                     </div>
-                    <div class="column">
-                    <%= row.user.user_expertises.each {|skill| skill} %>
-                    </div>
-                    <div class="column">
-                    <%= row.user.profile.age %>
-                    </div>
-                    <%= row.user.profile.bio_brief %>
-                    <div class="column">
-                    <%= Nationality.first(id: row.user.profile.nationality_id).country_name %>
-                    </div>
+                    <p class="profile-name"><%= mentor.first_name %> <%= mentor.last_name %></p>
                 </div>
-
+                <div class="detailed-info">
+                    <p class="detailed-info-content"><%="Year " + row.year_of_study.to_s %></p>
+                    <p class="detailed-info-content">Age: <%= mentor.age %></p>
+                    <p class="detailed-info-content">Languages: 
+                        <% UserLanguage.where(user_id: row.user.id).each do |ulanguage| %>
+                            <%= ulanguage.language.language_name %>
+                        <% end %>
+                    </p>
+                    <p><%= row.user.user_expertises.each {|skill| skill} %></p>
+                </div>
                 <div class="matching-wrapper" id="<%= row.user.id %>-wrapper">
                     <button type="button" class="apply-mentor" id="<%= row.user.id %>-apply">Apply</button>
                 </div>
-            <% end %>
           <% end %>
         </div>
       </section>

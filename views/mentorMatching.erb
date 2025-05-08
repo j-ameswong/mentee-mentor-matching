@@ -38,6 +38,7 @@
                     </div>
                     <div class="bio-and-accept">
                         <p class="profile-bio-detailed">Bio: <%= mentee.bio_detailed %></p>
+                        <p class="application-msg">Message: <%= @menteeApplicants.application_message %>
                         <div class="matching-wrapper" id="<%= row.user.id %>-wrapper">
                             <button type="button" class="apply-mentor" id="<%= row.user.id %>-apply">Apply</button>
                         </div>
@@ -47,7 +48,7 @@
         </div>
         <div id="mentee-others">
             <h2>Other Mentees</h2>
-            <% @mentees.all.each do |row| %>
+            <% @mentees.each do |row| %>
                 <div class="profile-box">
                     <% mentee = row.user.profile %>
                     <div class="basic-info centerer">
@@ -67,6 +68,7 @@
                                 <%= ulanguage.language.language_name %>
                             <% end %>
                         </p>
+                        <p class="detailed-info-content">Nationality: <%= Nationality.first(id: mentee.nationality_id).country_name %></p>
                     </div>
                     <div class="bio-and-accept">
                         <p class="profile-bio-detailed">Bio: <%= mentee.bio_detailed %></p>
