@@ -4,16 +4,11 @@ module Validation
     return false unless str1 && str2
     str1 == str2
   end
-  def valid_email_address?(str)
-    return false if str.nil?
-
-    str.match?(/\A\S+@\S+\Z/)
-  end
 
   def valid_email?(str)
     return false if str.nil?
 
-    str.include?(".ac.uk")
+    str.match?(/\A\S+@\S+\Z/) && str.include?(".ac.uk")
   end
 
   def valid_input?(str)
@@ -63,4 +58,11 @@ module Validation
 
     false
   end
+
+  def html_unsafe?(str)
+    return false if str.nil?
+
+    !!(str =~ /[<>&"'\/]/)
+  end
+
 end

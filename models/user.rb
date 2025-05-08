@@ -27,18 +27,17 @@ class User < Sequel::Model(DB)
     errors.add(:role, "must be valid") unless ROLES.include?(role)
     if @params
       if email.nil? || email.empty?
-        errors.add(:email, "must be filled in")
+        errors.add(:email, ": must be filled in")
       else
-        errors.add(:email, "already taken") unless User.first(email: email).nil?
-        errors.add(:email, "is in invalid format") unless valid_email_address?(email)
-        errors.add(:email, "must be your university email") unless valid_email?(email)
+        errors.add(:email, ": already taken") unless User.first(email: email).nil?
+        errors.add(:email, ": is in invalid format, or is not a University of Sheffield email address") unless valid_email?(email)
       end
 
-      errors.add(:username, "cannot be empty") if username.empty?
-      errors.add(:username, "must be valid") unless valid_input?(username)
-      errors.add(:username, "already exists") unless User.first(username: username).nil?
+      errors.add(:username, ": cannot be empty") if username.empty?
+      errors.add(:username, ": must be valid") unless valid_input?(username)
+      errors.add(:username, ": already exists") unless User.first(username: username).nil?
 
-      errors.add(:terms, "must be accepted") if @terms.nil? || @terms.empty?
+      errors.add(:terms, ": must be accepted") if @terms.nil? || @terms.empty?
     end
   end
 
@@ -56,7 +55,7 @@ class User < Sequel::Model(DB)
 
   def self.find_user(field)
     # either lookup users table by email or username
-    valid_email_address?(field) ? user = self.first(email: field) : user = self.first(username: field)
+    valid_email?(field) ? user = self.first(email: field) : user = self.first(username: field)
 
     # basically, if no user found create a user instance, appears in controllers/login.rb
     if user.nil?

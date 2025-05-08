@@ -6,7 +6,7 @@ end
 # redirects should only happen if successful login, to preserve @user instance and its errors
 post "/login" do
   # input field, could be username or email
-  field = params.fetch(:field, "").strip.downcase
+  field = h(params.fetch(:field, "").strip.downcase)
   @user = User.find_user(field)
 
   if @user.authentication && @user.authentication.login(params)
@@ -29,7 +29,7 @@ post "/login" do
     temp_auth.user_id = @user.id
     temp_auth.login(params)
     @user.errors.merge!(temp_auth.errors)
-    @user.errors.add(:field, "user doesn't exist") unless @user.username
+    @user.errors.add(:field, ", or user doesn't exist") unless @user.username
   end
 
   erb :login
