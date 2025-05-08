@@ -286,14 +286,17 @@ input {
 }
 
 input[type="submit" i] {
-  width: 10vw;
+  width: 8vw;
   border-radius: 25px;
-  outline: none;
-  border: none;
   background-color: var(--lgrey);
   color: var(--grey);
   font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
     "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+}
+
+input[type="submit" i]:hover {
+  background-color: var(--grey);
+  color: white;
 }
 
 input[type="password" i] {
@@ -366,9 +369,8 @@ label input[type="checkbox" i]:checked + span:before {
 }
 
 select {
-  border-radius: 25px;
+  border-radius: 0px;
   outline: none;
-  border: none;
   background-color: var(--lgrey);
   color: var(--grey);
   font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
@@ -517,8 +519,10 @@ body {
 #help-request {
   width: 50vw;
   height: 15vw;
+  border-radius: 25px;
   vertical-align: top;
   font-family: inherit;
+  padding: 10px;
 }
 
 #filter {
