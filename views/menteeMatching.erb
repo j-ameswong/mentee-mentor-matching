@@ -22,7 +22,7 @@
                     <%="Year " + row.year_of_study.to_s %>
                 </div>
                 <div class="column">
-                  <%= row.user.user_expertises.each {|skill| skill} %>
+                  <%= row.user.user_expertises.each {|expert| expert.expertise.skill} %>
                 </div>
                 <div class="column">
                   <%= row.user.profile.age %>

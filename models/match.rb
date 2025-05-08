@@ -14,11 +14,11 @@ class Match < Sequel::Model
 
   def validate
     super
-    # errors.add(:mentor_id, "cannot be empty") if mentor_id.nil?
-    # errors.add(:mentee_id, "cannot be empty") if mentee_id.nil?
-    # errors.add(:status, "must be valid") unless STATUSES.include?(status)
-    # errors.add(:mentor_id, "must belong to a mentor") unless mentor && mentor.mentor?
-    # errors.add(:mentee_id, "must belong to a mentee") unless mentee && mentee.mentee?
+    errors.add(:mentor_id, "cannot be empty") if mentor_id.nil?
+    errors.add(:mentee_id, "cannot be empty") if mentee_id.nil?
+    errors.add(:status, "must be valid") unless STATUSES.include?(status)
+    errors.add(:mentor_id, "must belong to a mentor") unless mentor && mentor.mentor?
+    errors.add(:mentee_id, "must belong to a mentee") unless mentee && mentee.mentee?
   end
 
   def active?
