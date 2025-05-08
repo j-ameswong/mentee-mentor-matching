@@ -7,8 +7,8 @@ require_relative "../db/db"
 class Match < Sequel::Model
   plugin :timestamps, update_on_create: true
 
-  many_to_one :mentor_id, class: :users
-  many_to_one :mentee_id, class: :users
+  many_to_many :mentor_id, class: :users
+  many_to_many :mentee_id, class: :users
 
   STATUSES = %w[pending active completed cancelled]
 
@@ -37,14 +37,20 @@ class Match < Sequel::Model
     status == "cancelled"
   end
 
-  def generate(params)
-    self.status = "pending"
-    self.mentor_id = params[:mentor_id]
-    self.mentee_id = params[:mentee_id]
-    self.application_message = params[:message]
+  def self.exists?(mentee_id, mentor_id)
+    true if Match.first(mentee_id: mentee_id, mentor_id: mentor_id)
+  end
 
-    puts self.inspect
-    self.save
+  def self.generate!(params)
+    match = Match.new
+
+    match.status = "pending"
+    match.mentor_id = params[:mentor_id]
+    match.mentee_id = params[:mentee_id]
+    match.application_message = params[:message]
+
+    puts match.inspect
+    match.save
   end
 
   def activate

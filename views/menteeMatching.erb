@@ -12,9 +12,11 @@
 <body>
   <div class="content">
     <section class="matching row centerer">
+      <% # mentees should only see this page if they are not matched, should only see available
+         # mentors that they haven't already applied to %>
         <div class="column centerer">
           <% MentorProfile.all.each do |row| %>
-            <% if row.availability %>
+            <% if row.available? && !Match.exists?(session[:user].id, row.user.id) %>
               <div class="row">
                 <div class="column">
                     <%="Year " + row.year_of_study.to_s %>
@@ -27,11 +29,11 @@
                 </div>
                   <%= row.user.profile.bio_brief %>
                 <div class="column">
-                  <%= Nationality.first(id: row.user.profile.nationality_id).country_name %>
+                  <%= Nationality.first(id: row.user.profile.nationality_id).country_name if row.user.profile.nationality_id %>
                 </div>
               </div>
 
-              <div class="matching-wrapper" id="<%= row.user.id %>-wrapper">
+              <div class="matching-wrapper" id="<%= row.user.id %>">
                 <button type="button" class="apply-mentor" id="<%= row.user.id %>-apply">Apply</button>
               </div>
             <% end %>

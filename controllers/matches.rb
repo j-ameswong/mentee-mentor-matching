@@ -14,8 +14,7 @@ post "/matches/mentee" do
   redirect "/login" unless session[:logged_in]
   redirect "/matches/mentor" if session[:user].mentor?
 
-  match = Match.new
-  match.generate(params.merge(:mentee_id => session[:user].id))
+  Match.generate!(params.merge(:mentee_id => session[:user].id))
   puts "Match application created by #{session[:user].id} to #{params[:mentor_id]}"
 
   redirect "/matches/mentee"
