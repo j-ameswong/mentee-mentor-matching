@@ -10,7 +10,13 @@ gem "require_all"
 gem "rackup", "~> 2.2"
 gem "puma", "~> 6.6"
 gem "time_difference"
+<<<<<<< HEAD
 gem "sintra/activerecord"
 gem "rake"
 gem "activerecord"
+=======
+gem "rspec"
+gem "capybara"
+gem "simplecov"
+>>>>>>> master
 # gem "sqlite3"

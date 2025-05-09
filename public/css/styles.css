@@ -564,6 +564,22 @@ body {
   max-width: none;
 }
 
+<<<<<<< HEAD
+=======
+
+#profile-box {
+  width: 40vw;
+  padding-left: 5vw;
+  padding-right: 5vw;
+}
+
+h4 {
+  color: darkred;
+  font-size: 1em;
+  margin: 0;
+}
+
+>>>>>>> master
 .profile-box {
   display: flex;
 }
