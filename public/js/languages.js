@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
         select.className = 'language-select';
         select.name = 'user_languages[]';
 
-        // from @languages
+        // from @expertises
         languagesData.forEach(lang => {
             const option = document.createElement('option');
             option.value = lang.id;

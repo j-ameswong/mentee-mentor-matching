@@ -14,11 +14,18 @@
 
 <body>
 <section class="content">
+<<<<<<< HEAD
   <%# For the below, only admins can edit someone's year of study, email or account type %>
   <div class="centerer">
     <h3>Edit <%= @edited_user.username.capitalize %>'s Profile</h3>
     <div class="content-box centerer">
       <form method="post" action="/profile/edit?id=<%= params[:id] %>" enctype="multipart/form-data">
+=======
+  <%# For the below, only admins can edit someone's year of study or account type %>
+  <h3><%= @edited_user.username.capitalize %>'s Profile</h3>
+  <form method="post" action="/profile/edit?id=<%= params[:id] %>" enctype="multipart/form-data">
+      <div class="row">
+>>>>>>> 27-matching
         <div class="row">
           <div class="row">
             <input type="file" id="profile_pic" name="profile_pic" accept="image/*">
@@ -66,8 +73,29 @@
 
         <button type="button" id="add-language">Add Language</button>
 
+        <% if @edited_user.mentor? %>
+          <div class="info row expertises" id="expertises-container">
+          <% @edited_user.user_expertises.each do |user_expertise| %>
+            <div class="expertise-select-wrapper">
+              <select class="expertise-select" name="user_expertises[]">
+                <% @expertises.each do |row| %>
+                  <option value="<%= row.id %>" <%= 'selected' if row.id == user_expertise.expertise_id %>>
+                    <%= row.category + " - " + row.skill %>
+                  </option>
+                <% end %>
+              </select>
+              <button type="button" class="remove-expertise">Remove</button>
+            </div>
+          <% end %>
+          </div>
+
+          <button type="button" id="add-expertise">Add Skill</button>
+        <% end %>
+
         <script>const languagesData = <%= @languages.to_json %>;</script>
+        <script>const expertisesData = <%= @expertises.to_json %>;</script>
         <script src="/js/languages.js"></script>
+        <script src="/js/expertises.js"></script>
 
         <div class="info row">
           <label for="date_of_birth"></label>
