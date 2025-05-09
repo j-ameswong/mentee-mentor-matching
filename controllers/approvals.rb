@@ -1,18 +1,8 @@
 get "/approvals" do
   redirect "/" unless session[:logged_in] && session[:user].admin?
-<<<<<<< HEAD
   @unapproved = Authentication.where(approved: false).all
   @filter = !params[:filter].nil? ? params[:filter] : "all"
   puts "Filter is: " + @filter
-=======
-  role = params[:role]
-
-  if role && !role.empty?
-    @unapproved = Authentication.where(approved: false).select { |auth| auth.user.role.downcase == role.downcase }
-  else
-    @unapproved = Authentication.where(approved: false).all
-end
->>>>>>> 27-matching
 
   erb :approvals
 end
