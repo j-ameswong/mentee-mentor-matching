@@ -80,7 +80,7 @@ class MentorProfile < Sequel::Model
     self.num_matches = params[:num_matches] if params.key?(:num_matches)
     self.max_matches = 3 if self.max_matches.nil?
     self.max_matches = params[:max_matches] if params.key?(:max_matches)
-    params.key?(:availability) ? self.availability = params[:availability] : self.availability = false
+    params.key?(:availability) ? (self.availability = params[:availability]) : self.availability = false
     self.availability = false if self.num_matches >= self.max_matches
   end
 
