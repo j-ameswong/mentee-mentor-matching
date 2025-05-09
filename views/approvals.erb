@@ -29,7 +29,7 @@
         <section class="row centerer">
             <% @unapproved.each do |auth| %>
                 <% if @filter == "all" || auth.user.role == @filter %>
-                    <div class="column centerer content-box approvals">
+                    <div class="column centerer content-box approvals <%= "admin-approval" if auth.user.role == "admin" %>">
                         <p id="role-text"> <%= auth.user.role.capitalize %> </p>
                         <p id="email-text"><%= auth.user.email %> </p>
                         <% if !auth.user.admin? %>
