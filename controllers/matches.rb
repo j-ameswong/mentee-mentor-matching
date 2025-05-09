@@ -32,13 +32,25 @@ get "/matches/mentor" do
   erb :mentorMatching
 end
 
-post "/matches/mentor/accept" do
+post "/matches/mentor" do
   redirect "/login" unless session[:logged_in]
-  redirect "/matches/mentee" unless session[:user].mentor?
+  redirect "/matches/mentee" unless session[:user].mentor? || session[:user].admin?
 
-  if params[:mentee_id]
-    match = Match.first(mentee_id: params[:mentee_id], mentor_id: session[:user].id, status: 'pending')
-    match.activate
+  match = Match.first(mentee_id: params[:mentee_id], mentor_id: session[:user].id, status: "pending")
+  if params[:accept]
+    if match.nil?
+      @error = "Match has already been accepted by another mentor"
+      erb :mentorMatching
+    else
+      # Delete all other applications the mentee made
+      Match.where(mentee_id: params[:mentee_id]).exclude(mentor_id: session[:user].id).delete
+      match.activate
+    end
+  elsif params[:decline]
+    match.nil? ? puts("Do nothing, mentee is already matched") : match.decline
+  elsif params[:report]
+    # TODO: report profile
   end
+
   redirect "/matches/mentor"
 end

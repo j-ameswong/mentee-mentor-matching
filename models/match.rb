@@ -10,7 +10,7 @@ class Match < Sequel::Model
   many_to_one :mentor, class: :User
   many_to_one :mentee, class: :User
 
-  STATUSES = %w[pending active completed cancelled]
+  STATUSES = %w[pending active completed cancelled declined]
 
   def validate
     super
@@ -37,6 +37,10 @@ class Match < Sequel::Model
     status == "cancelled"
   end
 
+  def declined?
+    status == "declined"
+  end
+
   def self.exists?(mentee_id, mentor_id)
     true if Match.first(mentee_id: mentee_id, mentor_id: mentor_id)
   end
@@ -56,11 +60,19 @@ class Match < Sequel::Model
   def activate
     self.status = "active"
     self.start_date = Date.today
+    puts "Match activated for mentor #{self.mentor_id} and mentee #{self.mentee_id}"
+    save
+  end
+
+  def decline
+    self.status = "declined"
+    puts "Match declined for mentor #{self.mentor_id} and mentee #{self.mentee_id}"
     save
   end
 
   def end
     self.status = "completed"
+    # TODO: set end_date to global variable semester end date
     self.end_date = Date.today
     save
   end

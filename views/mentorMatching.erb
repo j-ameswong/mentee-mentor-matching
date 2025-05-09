@@ -34,9 +34,11 @@
             <div class="bio-and-accept">
               <p class="profile-bio-detailed">Bio: <%= mentee.bio_detailed %></p>
               <div class="matching-wrapper" id="<%= row.mentee.id %>-wrapper">
-                <form method="post" action="/matches/mentor/accept">
+                <form method="post" action="/matches/mentor">
                   <input type="hidden" name="mentee_id" value="<%= row.mentee.id %>">
-                  <button type="submit" class="apply-mentor" id="<%= row.mentee.id %>-apply">Accept</button>
+                  <button type="submit" class="apply-mentor" name="accept" id="<%= row.user.id %>-apply">Accept</button>
+                  <button type="submit" class="apply-mentor" name="decline" id="<%= row.user.id %>-apply">Decline</button>
+                  <button type="submit" class="apply-mentor" name="report" id="<%= row.user.id %>-apply">Report</button>
                 </form>
               </div>
             </div>
@@ -65,9 +67,11 @@
                     <div class="bio-and-accept">
                         <p class="profile-bio-detailed">Bio: <%= mentee.bio_detailed %></p>
                         <div class="matching-wrapper" id="<%= row.user.id %>-wrapper">
-                          <form method="post" action="/matches/mentor/accept">
+                          <form method="post" action="/matches/mentor">
                             <input type="hidden" name="mentee_id" value="<%= row.user.id %>">
-                            <button type="submit" class="apply-mentor" id="<%= row.user.id %>-apply">Accept</button>
+                            <button type="submit" class="apply-mentor" name="accept" id="<%= row.user.id %>-apply">Accept</button>
+                            <button type="submit" class="apply-mentor" name="decline" id="<%= row.user.id %>-apply">Decline</button>
+                            <button type="submit" class="apply-mentor" name="report" id="<%= row.user.id %>-apply">Report</button>
                           </form>
                         </div>
                     </div>
