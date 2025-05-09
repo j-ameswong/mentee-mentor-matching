@@ -31,11 +31,13 @@ post "/profile/edit" do
   if @all_good
     @edited_user.profile.update!(params)
   else
-    @edited_user.errors.add(:first_name, "Invalid first name") unless valid_input?(params[:first_name])
-    @edited_user.errors.add(:last_name, "Invalid last name") unless valid_input?(params[:last_name])
-    @edited_user.errors.add(:email, "Invalid email") unless valid_email?(params[:email])
-    @edited_user.errors.add(:bio_brief, "Invalid bio brief") if html_unsafe?(params[:bio_brief])
-    @edited_user.errors.add(:bio_detailed, "Invalid bio detailed") if html_unsafe?(params[:bio_detailed])
+    inv = "is invalid"
+    @edited_user.errors.add(:first_name, inv) unless valid_input?(params[:first_name])
+    @edited_user.errors.add(:last_name, inv) unless valid_input?(params[:last_name])
+    @edited_user.errors.add(:email, inv) unless valid_email?(params[:email])
+    @edited_user.errors.add(:bio_brief, inv) if html_unsafe?(params[:bio_brief])
+    @edited_user.errors.add(:bio_detailed, inv) if html_unsafe?(params[:bio_detailed])
+    puts @edited_user.errors.inspect.tr(':{"[]}', '')
   end
   @edited_user.mentor_profile.update!(params) if @edited_user.mentor?
   # DEBUG: params[:user_languages].each {|x| puts x}
@@ -47,9 +49,9 @@ post "/profile/edit" do
     @edited_user.mentor_profile.save if @edited_user.mentor?
 
     redirect "/profile?id=#{@edited_user.id}"
-  else
-    erb :profileEdit
   end
+
+  erb :profileEdit
 end
 
 post "/profile" do

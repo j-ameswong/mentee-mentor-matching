@@ -120,6 +120,11 @@
           <div class="row">
             <textarea id="description" name="bio_brief" rows="5" cols="50"><%= @edited_user.profile.bio_brief %></textarea>
           </div>
+          <% if @user && @user.errors[:bio_brief] %>
+            <% @user.errors[:bio_brief].each do |error| %>
+              <p class="error"><%= "Brief bio" + error.tr(':', '') %></p>
+            <% end %>
+          <% end %>
         </div>
         <div id="bio_detailed" class="info row">
           <div class="row">
@@ -129,6 +134,8 @@
             <textarea id="description2" name="bio_detailed" rows="20" cols="50"><%= @edited_user.profile.bio_detailed %></textarea>
           </div>
         </div>
+
+        <p class="error"><%= @edited_user.errors.inspect.tr(':{"[]}', '') %></p>
 
         <button type="submit">Save</button>
       </form>
