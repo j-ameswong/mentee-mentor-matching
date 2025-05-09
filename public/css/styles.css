@@ -117,10 +117,11 @@ header {
 }
 
 #profile-menu {
-  max-width: 8vw;
-  max-height: 9.5vh;
+  max-width: 6vw;
+  height: 9vh;
 
   border-radius: 50%;
+  margin-top: 0.5vh
 }
 
 .dropdown-content {
