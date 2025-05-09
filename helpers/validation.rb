@@ -65,4 +65,13 @@ module Validation
     !!(str =~ /[<>&"'\/]/)
   end
 
+  def valid_pic?(pic_data)
+    return false if pic_data.nil?
+
+    file_ext = pic_data[:filename].split(".").last if pic_data && pic_data[:filename]
+    return false unless file_ext
+
+    valid_extensions = %w[jpg jpeg png]
+    valid_extensions.include?(file_ext.downcase)
+  end
 end
