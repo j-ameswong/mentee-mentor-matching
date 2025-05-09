@@ -4,7 +4,7 @@ require_relative '../db/db.rb'
 
 
 DB.alter_table :authentication do
-  add_column :flagged, :boolean, default: false
+  add_column :flag_reasoning, :text
 end
 
 # users = User.where(email: "admin4@sheffield.ac.uk")

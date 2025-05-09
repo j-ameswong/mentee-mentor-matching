@@ -145,8 +145,6 @@ class User < Sequel::Model(DB)
 
     @terms = params.fetch(:terms, "").strip
 
-    # Looks like the memory is referencing the actual hash, and it's rewritten when checking with .valid?
-    # Below is to save the values up to a certain point and then re-appending them
     all_other_errors = self.errors.clone
     if self.valid? && (self.errors.nil? || self.errors.empty?)
       puts "Attempting to save new user with UID: #{self.id}"
@@ -169,5 +167,48 @@ class User < Sequel::Model(DB)
       false
     end
   end
+
+  def flag(reasoning)
+    auth = Authentication.first(user_id: self.id)
+    if auth
+      DB.transaction do
+        auth.update(flagged: true, flag_reasoning: reasoning)
+        
+        DB[:flagged_accounts].insert(
+          user_id: self.id,
+          flag_reasoning: reasoning,
+          flagged_at: Time.now
+        )
+      end
+      true
+    else
+      false
+    end
+  end
+  
+  def unflag
+    auth = Authentication.first(user_id: self.id)
+    if auth
+      DB.transaction do
+        auth.update(flagged: false, flag_reasoning: nil)
+        
+        DB[:flagged_accounts].where(user_id: self.id).delete
+      end
+      true
+    else
+      false
+    end
+  end
+  
+  def flagged?
+    auth = Authentication.first(user_id: self.id)
+    auth && auth.flagged
+  end
+  
+  def flag_reasoning
+    auth = Authentication.first(user_id: self.id)
+    auth && auth.flagged ? auth.flag_reasoning : nil
+  end
+
 end
 

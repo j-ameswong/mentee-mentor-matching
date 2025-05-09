@@ -1,8 +1,6 @@
 # Gems
 require "require_all"
 require "sinatra"
-require "sinatra/active_record"
-require "sinatra/active_record/rake"
 require "./app"
 
 # Set up public folder
@@ -27,5 +25,3 @@ require_if_exist "controllers"
 
 # Sessions
 enable :sessions
-
-set :database {adapter: "sqlite3", database: "db/db.sqlite3"}
