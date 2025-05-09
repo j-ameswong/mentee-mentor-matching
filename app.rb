@@ -1,6 +1,7 @@
 # Gems
 require "require_all"
 require "sinatra"
+require "./app"
 
 # Set up public folder
 set :public_folder, __dir__ + '/public'
