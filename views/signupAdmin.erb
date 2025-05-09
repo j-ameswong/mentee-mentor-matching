@@ -25,7 +25,7 @@
           <input id="email" name="email" type="email" placeholder="University Email Address" autocomplete="on" />
           <% if @user && @user.errors[:email] %>
             <% @user.errors[:email].each do |error| %>
-              <p class="error"><%= error %></p>
+              <p class="error"><%= "Email" + error.tr(':', '') %></p>
             <% end %>
           <% end %>
         </div>
@@ -39,6 +39,11 @@
             <span></span>
             By signing up, you agree to our <a target="_blank" href="/terms">Terms & Conditions</a>
           </label>
+          <% if @user && @user.errors[:terms] %>
+            <% @user.errors[:terms].each do |error| %>
+              <p class="error"><%= "Terms and Conditions" + error.tr(':', '') %></p>
+            <% end %>
+          <% end %>
         </div>
         <br>
 

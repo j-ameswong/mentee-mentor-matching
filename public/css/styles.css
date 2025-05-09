@@ -286,17 +286,14 @@ input {
 }
 
 input[type="submit" i] {
-  width: 8vw;
+  width: 10vw;
   border-radius: 25px;
+  outline: none;
+  border: none;
   background-color: var(--lgrey);
   color: var(--grey);
   font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
     "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
-}
-
-input[type="submit" i]:hover {
-  background-color: var(--grey);
-  color: white;
 }
 
 input[type="password" i] {
@@ -369,8 +366,9 @@ label input[type="checkbox" i]:checked + span:before {
 }
 
 select {
-  border-radius: 0px;
+  border-radius: 25px;
   outline: none;
+  border: none;
   background-color: var(--lgrey);
   color: var(--grey);
   font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
@@ -519,10 +517,8 @@ body {
 #help-request {
   width: 50vw;
   height: 15vw;
-  border-radius: 25px;
   vertical-align: top;
   font-family: inherit;
-  padding: 10px;
 }
 
 #filter {
@@ -568,9 +564,24 @@ body {
   max-width: none;
 }
 
+.mentor-list{
+  max-width: none;
+}
+
+#profile-box {
+  width: 40vw;
+  padding-left: 5vw;
+  padding-right: 5vw;
+}
+
+h4 {
+  color: darkred;
+  font-size: 1em;
+  margin: 0;
+}
+
 .profile-box {
   display: flex;
-  margin-top: 1%;
 }
 
 .basic-info {

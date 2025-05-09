@@ -159,6 +159,8 @@
           </h4>
         <% end %>
 
+        <p class="error"><%= @edited_user.errors.inspect.tr(':{"[]}', '') %></p>
+
         <button type="submit">Save</button>
       </form>
     </div>
