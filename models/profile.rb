@@ -78,8 +78,10 @@ class MentorProfile < Sequel::Model
     self.year_of_study = params[:year_of_study] if params.key?(:year_of_study)
     self.num_matches = 0 if self.num_matches.nil?
     self.num_matches = params[:num_matches] if params.key?(:num_matches)
-    self.max_matches = 0 if self.max_matches.nil?
+    self.max_matches = 3 if self.max_matches.nil?
     self.max_matches = params[:max_matches] if params.key?(:max_matches)
+    params.key?(:availability) ? self.availability = params[:availability] : self.availability = false
+    self.availability = false if self.num_matches >= self.max_matches
   end
 
   def validate
@@ -92,7 +94,7 @@ class MentorProfile < Sequel::Model
     errors.add(:user_id, "must belong to a mentor") unless @role.nil? || @role == "mentor"
   end
 
-  def available
+  def available?
     num_matches < max_matches
   end
 
