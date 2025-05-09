@@ -37,9 +37,9 @@
                 <div class="matching-wrapper" id="<%= row.mentee.id %>-wrapper">
                   <form method="post" action="/matches/mentor">
                     <input type="hidden" name="mentee_id" value="<%= row.mentee.id %>">
-                    <button type="submit" class="apply-mentor" name="accept" id="<%= row.user.id %>-apply">Accept</button>
-                    <button type="submit" class="apply-mentor" name="decline" id="<%= row.user.id %>-apply">Decline</button>
-                    <button type="submit" class="apply-mentor" name="report" id="<%= row.user.id %>-apply">Report</button>
+                    <button type="submit" class="apply-mentor" name="accept">Accept</button>
+                    <button type="submit" class="apply-mentor" name="decline">Decline</button>
+                    <button type="submit" class="apply-mentor" name="report">Report</button>
                   </form>
                 </div>
               </div>
@@ -73,8 +73,8 @@
                             <form method="post" action="/matches/mentor">
                               <input type="hidden" name="mentee_id" value="<%= row.user.id %>">
                               <input type="hidden" name="waitlisted_mentee">
-                              <button type="submit" class="apply-mentor" name="accept" id="<%= row.user.id %>-apply">Accept</button>
-                              <button type="submit" class="apply-mentor" name="report" id="<%= row.user.id %>-apply">Report</button>
+                              <button type="submit" class="apply-mentor" name="accept">Accept</button>
+                              <button type="submit" class="apply-mentor" name="report">Report</button>
                             </form>
                           </div>
                       </div>
