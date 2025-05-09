@@ -9,12 +9,8 @@
 
   <% unless @accountType == "admin" %>
     <a id="pfp-link" href="/profile">
-<<<<<<< HEAD
         <img id="profile-menu" src="/images/user/<%= begin @user.profile.profile_picture rescue "" end %>" alt="Not Found"
              onerror="this.src='/images/blankProfilePicture.webp'">
-=======
-        <img id="profile-menu" src=<%= @pfp %>>
->>>>>>> master
     </a>
   <% else %>
     <img id="profile-menu" src=<%= @pfp %>>

@@ -564,8 +564,6 @@ body {
   max-width: none;
 }
 
-<<<<<<< HEAD
-=======
 
 #profile-box {
   width: 40vw;
@@ -579,7 +577,6 @@ h4 {
   margin: 0;
 }
 
->>>>>>> master
 .profile-box {
   display: flex;
 }
