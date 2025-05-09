@@ -1,29 +1,269 @@
-# 1.1. A user can sign up for a mentee/mentor account using a username, email, and password.
-# Mentor, Mentee
-  # 1. Users can choose to sign up as a mentee (only for the 1st-year students) or mentor (only for 2nd/3rd/4th-year students).
-  # 2. Users must create an account with a unique username, email, and password.
-  # 3. The system validates all required fields and displays errors for missing fields.
-  # 4. The email address must be in a valid format; otherwise, an error message will appear.
-  # 5. The system ensures username uniqueness, displaying an error message if it already exists.
-  # 6. Upon successful account creation, users are redirected to the profile creation page.
-  # 7. Mentor/mentee accounts require admin verification before login and start creating their profiles.
-#
-# 1.2. Users must acknowledge Terms & Conditions during signup.
-# Mentor, Mentee
-  # 1. A Terms & Conditions page appears during the signup process.
-  # 2. Users must check a box confirming they have read and agreed to the T&C.
-  # 3. The system prevents users from proceeding without checking the confirmation box.
-  # 4. Upon submission, users can complete the signup process.
-#
-# 1.3. Admin can create an account through a separate webpage.
-# Admin
-  # 1. A prospective admin requests the creation of a new admin account with a preferred email.
-  # 2. An existing admin creates a new admin account with the received email and a temporary password.
-  # 3. The new admin email/password is securely shared with a new admin offline (to avoid sending emails in Codio).
-  # 4. The new admin can change their password upon the first successful login.
-#
-# 1.4. Once an account is approved, users can log in using their credentials.
-  # Mentor, Mentee, Admin
-  # 1. Users can log in as mentees, mentors, or admins.
-  # 2. The system validates credentials, displaying relevant error messages for incorrect inputs.
-  # 3. After successful login, users are directed to their respective a dashboard.
+require "rspec"
+
+RSpec.describe "Account creation" do
+
+  context "when signing up as a mentee" do
+    it "allows the user to create an account with valid credentials" do
+      visit "/"
+      expect(page).to have_content("Sign up instead")
+
+      click_link "Sign up instead"
+      fill_in "Username", with: "menteeUser"
+
+      fill_in "first_name", with: "Mentee"
+      fill_in "last_name", with: "User"
+
+      fill_in "Email", with: "menteemail@sheffield.ac.uk"
+      fill_in "DoB", with: Date.new(2001, 02, 03) \
+
+        select "Mentee", from: "role"
+      select "Year 1", from: "year_of_study"
+
+      fill_in "password", with: "password123"
+      fill_in "confirm_password", with: "password123"
+
+      check "terms"
+      click_button "Register"
+
+      expect(page).to have_content("Sign up instead")
+
+      fill_in "Username/University Email Address:", with: "admin"
+      fill_in "Password:", with: "admin"
+      click_button "Log in"
+
+      expect(page).to have_content("Welcome to UniConnect!")
+
+      visit "/approvals"
+
+      expect(page).to have_content("menteemail@sheffield.ac.uk")
+    end
+
+    it "requires an admin to approve the account" do
+      visit "/"
+
+      expect(page).to have_content("Sign up instead")
+
+      fill_in "Username/University Email Address:", with: "admin"
+      fill_in "Password:", with: "admin"
+      click_button "Log in"
+
+      expect(page).to have_content("Welcome to UniConnect!")
+
+      visit "/approvals"
+
+      expect(page).to have_content("menteemail@sheffield.ac.uk")
+
+      click_link "Approve"
+
+      expect(page).not_to have_content("menteemail@sheffield.ac.uk")
+    end
+  end
+
+  context "when signing up as a mentor" do
+    it "allows the user to create an account with valid credentials" do
+      visit "/"
+      expect(page).to have_content("Sign up instead")
+
+      click_link "Sign up instead"
+      fill_in "Username", with: "mentorUser"
+
+      fill_in "first_name", with: "Mentor"
+      fill_in "last_name", with: "User"
+
+      fill_in "Email", with: "mentormail@sheffield.ac.uk"
+      fill_in "DoB", with: Date.new(2001, 02, 03)
+
+      select "Mentor", from: "role"
+      select "Year 2", from: "year_of_study"
+
+      fill_in "password", with: "password123"
+      fill_in "confirm_password", with: "password123"
+
+      check "terms"
+      click_button "Register"
+
+      expect(page).to have_content("Sign up instead")
+
+      fill_in "Username/University Email Address:", with: "admin"
+      fill_in "Password:", with: "admin"
+      click_button "Log in"
+
+      expect(page).to have_content("Welcome to UniConnect!")
+
+      visit "/approvals"
+
+      expect(page).to have_content("mentormail@sheffield.ac.uk")
+    end
+
+    it "requires an admin to approve the account" do
+      visit "/"
+
+      expect(page).to have_content("Sign up instead")
+
+      fill_in "Username/University Email Address:", with: "admin"
+      fill_in "Password:", with: "admin"
+      click_button "Log in"
+
+      expect(page).to have_content("Welcome to UniConnect!")
+
+      visit "/approvals"
+
+      expect(page).to have_content("mentormail@sheffield.ac.uk")
+
+      click_link "Approve"
+
+      expect(page).not_to have_content("mentormail@sheffield.ac.uk")
+    end
+  end
+
+  context "when signing up with an existing username" do
+    it "displays an error message" do
+      visit "/"
+      expect(page).to have_content("Sign up instead")
+
+      click_link "Sign up instead"
+      fill_in "Username", with: "mentorUser"
+
+      fill_in "first_name", with: "Mentor"
+      fill_in "last_name", with: "User"
+
+      fill_in "Email", with: "secondmentormail@sheffield.ac.uk"
+      fill_in "DoB", with: Date.new(2001, 02, 03)
+
+      select "Mentor", from: "role"
+      select "Year 2", from: "year_of_study"
+
+      fill_in "password", with: "password123"
+      fill_in "confirm_password", with: "password123"
+
+      check "terms"
+      click_button "Register"
+
+      expect(page).to have_content("already exists")
+    end
+  end
+
+  context "when logging in as a mentee for the first time" do
+    it "redirects the user to fill out profile details" do
+      visit "/"
+      expect(page).to have_content("Sign up instead")
+
+      fill_in "Username", with: "menteeUser"
+      fill_in "Password", with: "password123"
+
+      click_button "Log in"
+
+      expect(page).to have_content("Edit Menteeuser's Profile")
+    end
+  end
+
+  context "when signing up without accepting T&C" do
+    it "displays an error message" do
+      visit "/"
+      expect(page).to have_content("Sign up instead")
+
+      click_link "Sign up instead"
+      fill_in "Username", with: "newMenteeUser"
+      fill_in "first_name", with: "Mentee"
+      fill_in "last_name", with: "User"
+      fill_in "Email", with: "newmenteemail@sheffield.ac.uk"
+      fill_in "DoB", with: Date.new(2001, 02, 03)
+      select "Mentee", from: "role"
+      select "Year 1", from: "year_of_study"
+      fill_in "password", with: "password123"
+      fill_in "confirm_password", with: "password123"
+      # Do not check the terms and conditions box
+      click_button "Register"
+
+      expect(page).to have_content("Terms and Conditions must be accepted")
+    end
+  end
+
+  context "when signing up" do
+    it "allows user to read Ts&Cs" do
+      visit "/"
+      expect(page).to have_content("Sign up instead")
+
+      click_link "Sign up instead"
+
+      expect(page).to have_content("By signing up, you agree to our Terms & Conditions")
+
+      click_link "By signing up, you agree to our Terms & Conditions"
+
+      expect(page).to have_content("TERMS AND CONDITIONS")
+    end
+  end
+
+  context "when signing up as an admin" do
+    it "allows the user to request to create an account with valid credentials" do
+      visit "/signup/admin"
+      expect(page).to have_content("Sign up for new admin account")
+
+      fill_in "University Email:", with: "adminUser"
+
+      fill_in "Email", with: "adminmail@sheffield.ac.uk"
+
+      check "terms"
+
+      click_button "Register"
+
+      expect(page).to have_content("Sign up instead")
+
+      fill_in "Username/University Email Address:", with: "admin"
+      fill_in "Password:", with: "admin"
+      click_button "Log in"
+      expect(page).to have_content("Welcome to UniConnect!")
+      visit "/approvals"
+
+      expect(page).to have_content("adminmail@sheffield.ac.uk")
+    end
+
+    it "requires an admin to approve the account" do
+      visit "/"
+
+      expect(page).to have_content("Sign up instead")
+
+      fill_in "Username/University Email Address:", with: "admin"
+      fill_in "Password:", with: "admin"
+      click_button "Log in"
+
+      expect(page).to have_content("Welcome to UniConnect!")
+
+      visit "/approvals"
+
+      expect(page).to have_content("adminmail@sheffield.ac.uk")
+
+      fill_in "Temporary Password", with: "temporarypassword"
+      fill_in "Confirm Temporary Password", with: "temporarypassword"
+
+      select "Approve", from: "approved"
+      click_button "Submit"
+    end
+  end
+
+  context "Once account has been approved" do
+    it "allows mentees to log in with valid credentials" do
+      visit "/"
+
+      expect(page).to have_content("Sign up instead")
+
+      fill_in "Username/University Email Address:", with: "menteeUser"
+      fill_in "Password:", with: "password123"
+      click_button "Log in"
+
+      expect(page).to have_content("Welcome to UniConnect!")
+    end
+
+    it "allows mentors to log in with valid credentials" do
+      visit "/"
+
+      expect(page).to have_content("Sign up instead")
+
+      fill_in "Username/University Email Address:", with: "mentorUser"
+      fill_in "Password:", with: "password123"
+      click_button "Log in"
+
+      expect(page).to have_content("Home")
+    end
+  end
+end

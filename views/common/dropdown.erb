@@ -4,15 +4,22 @@
     <% @user.profile_pic = params.fetch("profile_pic") %>
     <% @pfp = @user.profile_pic %>
 <% end %>
+
 <div class="dropdown">
 
+  <% unless @accountType == "admin" %>
     <a id="pfp-link" href="/profile">
         <img id="profile-menu" src=<%= @pfp %>>
     </a>
+  <% else %>
+    <img id="profile-menu" src=<%= @pfp %>>
+  <% end %>
 
     <div class="dropdown-content centerer">
+      <% unless @accountType == "admin" %>
         <a class="dropdown-link centerer" href="/profile">Profile</a>
         <a class="dropdown-link centerer" href="/support">Help & Support</a>
+      <% end %>
         <a class="dropdown-link centerer" href="/statements">Accessibility & Copyright</a>
         <a class="dropdown-link centerer logout-btn" href="/logout">Log Out</a>
     </div>

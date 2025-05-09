@@ -27,8 +27,8 @@ RSpec.configure do |config|
   config.include Capybara::DSL
   config.include Rack::Test::Methods
 
-  # before each test is run, delete all records in the Player table
-  config.before do
+  # before each suite of tests, run the spec_before function to clear the database
+  config.before(:suite) do
     spec_before
   end
 end

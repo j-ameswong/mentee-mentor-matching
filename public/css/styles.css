@@ -569,3 +569,8 @@ body {
   padding-left: 5vw;
   padding-right: 5vw;
 }
+
+.error {
+    color: red;
+    font-size: 0.8em;
+}

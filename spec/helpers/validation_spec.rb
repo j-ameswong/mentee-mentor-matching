@@ -4,7 +4,7 @@ RSpec.describe Validation do
   describe "#str_email_address?" do
     context "when str is an email address" do
       it "returns true" do
-        expect(str_email_address?("p.mcminn@sheffield.ac.uk")).to be(true)
+        expect(valid_email?("p.mcminn@sheffield.ac.uk")).to be(true)
       end
     end
 
