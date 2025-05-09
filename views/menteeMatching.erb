@@ -9,12 +9,13 @@
 <% @title = "Matching" %>
 <%= erb :"common/header" %>
 
-<body>
-  <div class="content">
-    <section class="matching row centerer">
-        <div id="mentors-list" class="content-box">
-          <h2>Mentors</h2>
-          <% MentorProfile.each do |row| %>
+
+<div class="content">
+    <h2 id="welcome" class="centerer">Mentors</h2>
+    <div id="mentee-list" class="content-box">
+        <div id="mentor-applicants">
+            <h2>Available Mentors</h2>
+            <% MentorProfile.each do |row| %>
               <div class="profile-box">
                 <% mentor = row.user.profile %>
                 <div class="basic-info centerer">
@@ -37,16 +38,17 @@
                     </p>
                     <p><%= row.user.user_expertises.each {|skill| skill} %></p>
                 </div>
-                <div class="matching-wrapper" id="<%= row.user.id %>-wrapper">
-                    <button type="button" class="apply-mentor" id="<%= row.user.id %>-apply">Apply</button>
+                <div class="bio-and-accept">
+                  <p class="profile-bio-detailed">Bio: <%= mentor.bio_detailed %></p>
+                  <div class="matching-wrapper" id="<%= row.user.id %>-wrapper">
+                      <button type="button" class="apply-mentor" id="<%= row.user.id %>-apply">Apply</button>
+                  </div>
                 </div>
               </div>
           <% end %>
         </div>
-      </section>
-
     <script src="/js/menteeMatching.js"></script>
-  </div>
-</body>
+</div>
+
 
 </html>
