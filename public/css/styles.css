@@ -628,3 +628,7 @@ h4 {
 .matching-wrapper {
   text-align: right;
 }
+
+.admin-approval {
+  height: 20vh;
+}
