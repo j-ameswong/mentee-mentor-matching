@@ -12,10 +12,10 @@
 <body>
   <div class="content">
     <section class="matching row centerer">
-        <div id="mentee-others">
+        <div id="mentors-list" class="content-box">
           <h2>Mentors</h2>
           <% MentorProfile.each do |row| %>
-            <div class="profile-box">
+              <div class="profile-box">
                 <% mentor = row.user.profile %>
                 <div class="basic-info centerer">
                     <div class="profile_pic">
@@ -40,6 +40,7 @@
                 <div class="matching-wrapper" id="<%= row.user.id %>-wrapper">
                     <button type="button" class="apply-mentor" id="<%= row.user.id %>-apply">Apply</button>
                 </div>
+              </div>
           <% end %>
         </div>
       </section>
