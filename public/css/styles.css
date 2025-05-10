@@ -563,13 +563,13 @@ body {
 
 #mentee-list {
   max-width: none;
+  padding-left: 1vw;
+  padding-right: 1vw;
 }
 
-
-#profile-box {
-  width: 40vw;
-  padding-left: 5vw;
-  padding-right: 5vw;
+#mentor-list{
+  max-width: none;
+  padding: 0;
 }
 
 h4 {

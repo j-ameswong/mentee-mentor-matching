@@ -26,7 +26,12 @@
           <div class="column">
             <label style="font-size: small" for="profile_pic">Upload Profile Picture</label>
           </div>
+          <div class="row">
+            <input type="file" id="profile_pic" name="profile_pic" accept="image/*">
+          </div>
         </div>
+
+        <br>
 
         <div class="info row">
           <label for="first_name">First Name:</label>
@@ -39,7 +44,7 @@
         </div>
 
         <div class="info row">
-          <label for="email">University Email:</label>
+          <label for="email">University Email: </label>
           <% if session[:user].admin? %>
             <input type="text" id="email" name="email" value="<%= @edited_user.email %>" required>
           <% else %>

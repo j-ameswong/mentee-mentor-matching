@@ -10,7 +10,7 @@
 <%= erb :"common/header" %>
 
 <div class="content">
-    <h1 id="welcome" class="centerer">Mentees</h1>
+    <h2 id="welcome" class="centerer">Mentees</h2>
     <div id="mentee-list" class="content-box">
       <div id="mentee-applicants">
         <h2>Mentee Applications</h2>
@@ -30,6 +30,11 @@
               </div>
               <div class="detailed-info">
                 <p class="detailed-info-content">Age: <%= mentee.age %></p>
+                <p class="detailed-info-content">Languages: 
+                    <% UserLanguage.where(user_id: row.user.id).each do |ulanguage| %>
+                        <%= ulanguage.language.language_name %>
+                    <% end %>
+                </p>
                 <p class="detailed-info-content">Nationality: <%= Nationality.first(id: mentee.nationality_id).country_name %></p>
                 <p class="detailed-info-content">Languages: 
                     <% UserLanguage.where(user_id: row.user.id).each do |ulanguage| %>
