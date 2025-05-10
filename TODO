@@ -1,0 +1,2 @@
+write setup script, create table based on schema and populate initial accounts user, user1 and admin,
+as well as 1 pending account of each type for testing on the approval page.
