@@ -31,6 +31,11 @@
               <div class="detailed-info">
                 <p class="detailed-info-content">Age: <%= mentee.age %></p>
                 <p class="detailed-info-content">Nationality: <%= Nationality.first(id: mentee.nationality_id).country_name %></p>
+                <p class="detailed-info-content">Languages: 
+                    <% UserLanguage.where(user_id: row.user.id).each do |ulanguage| %>
+                        <%= ulanguage.language.language_name %>
+                    <% end %>
+                </p>
               </div>
               <div class="bio-and-accept">
                 <p class="profile-bio-detailed">Bio: <%= mentee.bio_detailed %></p>
@@ -64,8 +69,13 @@
                           <p class="profile-name"><%= mentee.first_name %> <%= mentee.last_name %></p>
                       </div>
                       <div class="detailed-info">
-                          <p class="detailed-info-content">Age: <%= mentee.age %></p>
-                          <p class="detailed-info-content">Nationality: <%= Nationality.first(id: mentee.nationality_id).country_name %></p>
+                            <p class="detailed-info-content">Age: <%= mentee.age %></p>
+                            <p class="detailed-info-content">Nationality: <%= Nationality.first(id: mentee.nationality_id).country_name %></p>
+                            <p class="detailed-info-content">Languages: 
+                                <% UserLanguage.where(user_id: row.user.id).each do |ulanguage| %>
+                                    <%= ulanguage.language.language_name %>,
+                                <% end %>
+                            </p>
                       </div>
                       <div class="bio-and-accept">
                           <p class="profile-bio-detailed">Bio: <%= mentee.bio_detailed %></p>

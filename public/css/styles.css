@@ -580,6 +580,7 @@ h4 {
 
 .profile-box {
   display: flex;
+  margin-bottom: 1%;
 }
 
 .basic-info {
@@ -629,4 +630,11 @@ h4 {
 
 .admin-approval {
   height: 20vh;
+}
+
+.expertise-tag {
+    background-color: #b073fa;
+    font-size: 0.70em;
+    padding: 1%;
+    border-radius: 10px;
 }
