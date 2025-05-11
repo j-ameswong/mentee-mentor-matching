@@ -22,7 +22,9 @@
                     <%="Year " + row.year_of_study.to_s %>
                 </div>
                 <div class="column">
-                  <%= row.user.user_expertises.each {|expert| expert.expertise.skill} %>
+                  <% row.user.user_expertises.each do |expert| %>
+                    <%= expert.expertise.category + " - " + expert.expertise.skill %>
+                  <% end %>
                 </div>
                 <div class="column">
                   <%= row.user.profile.age %>
@@ -33,8 +35,9 @@
                 </div>
               </div>
 
-              <div class="matching-wrapper" id="<%= row.user.id %>-wrapper">
+              <div class="matching-wrapper" id="<%= row.user.id %>">
                 <button type="button" class="apply-mentor" id="<%= row.user.id %>-apply">Apply</button>
+                <button type="button" class="report-mentor" id="<%= row.user.id %>-report">Report</button>
               </div>
             <% end %>
           <% end %>
