@@ -301,7 +301,7 @@ input[type="password" i] {
     width: 30vw;
     padding-left: 2%;
     border-radius: 25px;
-    outline: none;
+    outline: var(--grey);
     border: none;
     background-color: var(--lgrey);
     color: var(--grey);
@@ -313,7 +313,7 @@ input[type="text" i] {
     width: 30vw;
     padding-left: 2%;
     border-radius: 25px;
-    outline: none;
+    outline: var(--grey);
     border: none;
     background-color: var(--lgrey);
     color: var(--grey);
@@ -325,7 +325,7 @@ input[type="email" i] {
     width: 30vw;
     padding-left: 2%;
     border-radius: 25px;
-    outline: none;
+    outline: var(--grey);
     border: none;
     background-color: var(--lgrey);
     color: var(--grey);
@@ -333,7 +333,7 @@ input[type="email" i] {
 
 input[type="date" i] {
     border-radius: 25px;
-    outline: none;
+    outline: var(--grey);
     border: none;
     background-color: var(--lgrey);
     color: var(--grey);
@@ -638,4 +638,35 @@ table {
     width: 100%;
     border-collapse: separate;
     border-spacing: 3em 1em;
+}
+
+#mentee-match-table {
+    width: auto;
+    max-width: 70vw;
+}
+
+button {
+    width: auto;
+    border-radius: 25px;
+    outline: none;
+    border: none;
+    background-color: var(--lgrey);
+    color: var(--grey);
+    font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+}
+
+textarea {
+    width: auto;
+    max-height: 10vh;
+    max-width: 30vw;
+    padding-left: 5%;
+    padding-right: 5%;
+    border-radius: 10px;
+    outline: var(--grey);
+    border: none;
+    background-color: var(--lgrey);
+    color: var(--grey);
+    font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
 }

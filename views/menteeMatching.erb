@@ -1,51 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8"/>
   <title>Matches</title>
   <meta name="author" content="Team 17">
-  <link rel="stylesheet" href="/css/styles.css" />
+  <link rel="stylesheet" href="/css/styles.css"/>
 </head>
 <% @title = "Matching" %>
 <%= erb :"common/header" %>
 
 <body>
-  <div class="content">
-    <section class="matching row centerer">
-      <% # mentees should only see this page if they are not matched, should only see available
-         # mentors that they haven't already applied to %>
-        <div class="column centerer">
-          <% MentorProfile.all.each do |row| %>
-            <% if row.available? && !Match.exists?(session[:user].id, row.user.id) %>
-              <div class="row">
-                <div class="column">
-                    <%="Year " + row.year_of_study.to_s %>
+<div class="content">
+  <section class="row centerer">
+    <% # mentees should only see this page if they are not matched, should only see available
+       # mentors that they haven't already applied to %>
+    <div id="mentee-match-table" class="content-box row centerer">
+      <table>
+        <thead>
+        <tr>
+          <th>First Name</th>
+          <th>Year of Study</th>
+          <th>Expertises</th>
+          <th>Age</th>
+          <th>Bio</th>
+          <th>Nationality</th>
+          <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% MentorProfile.all.each do |row| %>
+          <% if row.available? && !Match.exists?(session[:user].id, row.user.id) %>
+            <tr>
+              <td><%= Profile.where(user_id: row.user.id).pluck(:first_name).to_s.tr(':{"[]}', '') %></td>
+              <td><%= "Year " + row.year_of_study.to_s %></td>
+              <td>
+                <% row.user.user_expertises.each do |expert| %>
+                  <%= expert.expertise.category + " - " + expert.expertise.skill %>
+                <% end %>
+              </td>
+              <td><%= row.user.profile.age %></td>
+              <td><%= row.user.profile.bio_brief %></td>
+              <td><%= Nationality.first(id: row.user.profile.nationality_id).country_name if row.user.profile.nationality_id %></td>
+              <td>
+                <div class="matching-wrapper" id="<%= row.user.id %>">
+                  <button type="button" class="apply-mentor" id="<%= row.user.id %>-apply">Apply</button>
+                  <button type="button" class="report-mentor" id="<%= row.user.id %>-report">Report</button>
                 </div>
-                <div class="column">
-                  <% row.user.user_expertises.each do |expert| %>
-                    <%= expert.expertise.category + " - " + expert.expertise.skill %>
-                  <% end %>
-                </div>
-                <div class="column">
-                  <%= row.user.profile.age %>
-                </div>
-                  <%= row.user.profile.bio_brief %>
-                <div class="column">
-                  <%= Nationality.first(id: row.user.profile.nationality_id).country_name if row.user.profile.nationality_id %>
-                </div>
-              </div>
-
-              <div class="matching-wrapper" id="<%= row.user.id %>">
-                <button type="button" class="apply-mentor" id="<%= row.user.id %>-apply">Apply</button>
-                <button type="button" class="report-mentor" id="<%= row.user.id %>-report">Report</button>
-              </div>
-            <% end %>
+              </td>
+            </tr>
           <% end %>
-        </div>
-      </section>
+        <% end %>
+        </tbody>
+      </table>
+    </div>
+  </section>
 
-    <script src="/js/menteeMatching.js"></script>
-  </div>
+  <script src="/js/menteeMatching.js"></script>
+</div>
 </body>
 
 </html>
