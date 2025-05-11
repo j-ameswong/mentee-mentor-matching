@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8"/>
   <title>Approvals</title>
   <meta name="author" content="Team 17">
   <link rel="stylesheet" href="/css/styles.css"/>
@@ -14,52 +14,73 @@
 <% @userCount = 0 %>
 
 <body>
-    <div class="content">
-		<div id="filter">
-			<form action="/approvals/filter" method="post" id="filter-form">
-			<label for="account-filter" id="filter-label">Filter by:</label>
-			<select name="filter-accounts" id="account-filter">
-				<option <%= "selected" if @filter == "all" %> value="all">All</option>
-				<option <%= "selected" if @filter == "admin" %> value="admin">Admins</option>
-				<option <%= "selected" if @filter == "mentor" %> value="mentor">Mentors</option>
-				<option <%= "selected" if @filter == "mentee" %> value="mentee">Mentees</option>
-			</select>
-			</form>
-		</div>
-        <section class="row centerer">
-            <% @unapproved.each do |auth| %>
-                <% if @filter == "all" || auth.user.role == @filter %>
-                    <div class="column centerer content-box approvals <%= "admin-approval" if auth.user.role == "admin" %>">
-                        <p id="role-text"> <%= auth.user.role.capitalize %> </p>
-                        <p id="email-text"><%= auth.user.email %> </p>
-                        <% if !auth.user.admin? %>
-                            <div class="approval-decision">
-                                <a class="approval-btn" href="<%= "/approvals/approve?to_approve=#{auth.user.id}"%>">Approve</a>
-                                <a class="deny-btn" href="<%= "/approvals/deny?to_deny=#{auth.user.id}"%>">Deny</a>
-                            </div>
-                        <% else %>
-                            <div class="centerer">
-															<form method="post" action="/approvals">
-																	<input type="hidden" name="id" value="<%= auth.user.id %>">
-																	<input id="password" type="password" name="password">
-																	<label for="password">Temporary Password</label>
+<div class="content">
+  <div id="filter">
+    <form action="/approvals/filter" method="post" id="filter-form">
+      <label for="account-filter" id="filter-label">Filter by:</label>
+      <select name="filter-accounts" id="account-filter">
+        <option <%= "selected" if @filter == "all" %> value="all">All</option>
+        <option <%= "selected" if @filter == "admin" %> value="admin">Admins</option>
+        <option <%= "selected" if @filter == "mentor" %> value="mentor">Mentors</option>
+        <option <%= "selected" if @filter == "mentee" %> value="mentee">Mentees</option>
+      </select>
+    </form>
+  </div>
+  <section class="row centerer">
+    <% @unapproved.each do |auth| %>
+      <% if @filter == "all" || auth.user.role == @filter %>
+        <div class="column centerer content-box approvals <%= "admin-approval" if auth.user.role == "admin" %>">
+          <div class="row centerer">
+            <p id="role-text"> <%= auth.user.role.capitalize %> </p>
+          </div>
+          <div class="row centerer">
+            <p id="email-text"><%= auth.user.email %> </p>
+          </div>
+          <% if !auth.user.admin? %>
+            <div class="approval-decision">
+              <a class="approval-btn" href="<%= "/approvals/approve?to_approve=#{auth.user.id}" %>">Approve</a>
+              <a class="deny-btn" href="<%= "/approvals/deny?to_deny=#{auth.user.id}" %>">Deny</a>
+            </div>
+          <% else %>
+            <div class="column centerer">
+              <form method="post" action="/approvals">
+                <input type="hidden" name="id" value="<%= auth.user.id %>">
 
-																	<input id="confirm_password" type="password" name="confirm_password">
-																	<label for="confirm_password">Confirm Temporary Password</label>
+                <div class="row centerer">
+                  <label for="password">Temporary Password</label>
+                </div>
 
-																	<select name="approved" class="approval-decision">
-																	<option class="approval-btn" value="approve">Approve</option>
-																	<option class="deny-btn" value="deny">Deny</option>
-																	</select>
-                            </form>
-														</div>
-                        <% end %>
-                    </div>
-                <% end %>
-            <% end %>
-        </section>
-    </div>
-	<script src="/js/approvalFilter.js"></script>
+                <div class="row centerer">
+                  <input id="password" type="password" name="password">
+                </div>
+
+                <div class="row centerer">
+                  <label for="confirm_password">Confirm Temporary Password</label>
+                </div>
+                <div class="row centerer">
+                  <input id="confirm_password" type="password" name="confirm_password">
+                </div>
+
+                <div class="row centerer">
+                  <select name="approved" class="approval-decision">
+                    <option class="approval-btn" value="approve">Approve</option>
+                    <option class="deny-btn" value="deny">Deny</option>
+                    <br>
+                  </select>
+                </div>
+                <div class="row centerer">
+                  <br>
+                  <input type="submit" class="approval-btn" value="Submit">
+                </div>
+              </form>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    <% end %>
+  </section>
+</div>
+<script src="/js/approvalFilter.js"></script>
 </body>
 
 </html>

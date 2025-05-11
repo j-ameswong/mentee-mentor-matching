@@ -1,68 +1,124 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8"/>
   <% @title = "Accounts Management" %>
   <title><%= @title %></title>
   <meta name="author" content="Team 17">
-  <link rel="stylesheet" href="/css/styles.css" />
+  <link rel="stylesheet" href="/css/styles.css"/>
   <link rel="icon" href="/images/UniConnectLogo.png" type="image/x-icon">
 </head>
 
 <body>
 <%= erb :"common/header" %>
-<section class="content centerer">
+<section class="content">
 
   <h3>Accounts Management</h3>
 
-  <div class="content-box centerer">
-    <h3>Search for account by username:</h3>
-    <form action="/accounts" method="post">
-
-      <label for="username" class="row centerer">Filter by Username:</label>
-      <input type="text" name="username" placeholder="Enter username">
-
-      <div class="column">
+  <div class="row centerer">
+    <div class="content-box centerer">
+      <h3>Edit Max. Matches</h3>
+      <p>Change the maximum number of matches that mentors can have globally.</p>
+      <form action="/no-of-matches" method="post">
+        <label for="max_matches" class="row centerer">Max Matches:</label>
+        <input type="number" name="max_matches" min="1" max="10" value="<%= @max_matches %>" class="row centerer">
         <br>
-        <label for="role" class="row">Filter by Account Type:</label>
-        <select name="role" id="role" class="row">
-          <option value="" selected>Select an account type</option>
-          <option value="admin">Admin</option>
-          <option value="mentee">Mentee</option>
-          <option value="mentor">Mentor</option>
-        </select>
-        <br>
-
-        <input type="submit" value="Update Filters" class="row centerer">
-      </div>
-    </form>
+        <input type="submit" value="Update Max Matches" class="row centerer">
+      </form>
+    </div>
   </div>
 
-  <div class="content-box centerer">
-    <h3>Search Results: </h3>
-    <table>
-      <thead>
+  <div class="row centerer">
+    <div class="content-box column centerer">
+      <h3>Search for accounts by filters:</h3>
+      <p>Use the filters below to filter the display of current accounts in the table below. Empty the filters and press update to reset.</p>
+      <form action="/accounts" method="post">
+        <div class="column centerer">
+          <label for="username" class="row centerer">Filter by Username:</label>
+          <input type="text" name="username" placeholder="Enter username">
+
+          <br>
+          <label for="email" class="row centerer">Filter by Email:</label>
+          <input type="text" name="email" placeholder="Enter email address">
+          <br>
+          <label for="role" class="row centerer">Filter by Account Type:</label>
+          <select name="role" id="role" class="row">
+            <option value="" selected>Select an account type</option>
+            <option value="admin">Admin</option>
+            <option value="mentee">Mentee</option>
+            <option value="mentor">Mentor</option>
+          </select>
+          <br>
+          <!--          <label for="action" class="row centerer">Filter by Available Action:</label>-->
+          <!--          <select name="action" id="action" class="row">-->
+          <!--            <option value="" selected>Select an action</option>-->
+          <!--            <option value="delete">Delete</option>-->
+          <!--            <option value="reassign">Re-Assign</option>-->
+          <!--            <option value="badges">Badges</option>-->
+          <!--          </select>-->
+          <!--          <br>-->
+          <input type="submit" value="Update Filters" class="row centerer">
+        </div>
+      </form>
+    </div>
+
+    <div class="content-box column centerer">
+      <h3>Search Results: </h3>
+      <table>
+        <thead>
         <tr>
           <th>Username</th>
           <th>Account Type</th>
           <th>Actions</th>
         </tr>
-      </thead>
-      <tbody>
-        <% @users.each do |user| %>
+        </thead>
+        <tbody>
+        <% i = 0 %>
+        <% @users.each { |user| %>
           <tr>
             <td><%= user.username %></td>
             <td><%= user.role %></td>
             <td>
-              <form action="/accounts/delete" method="post">
+              <form action="/accounts/action" method="post">
                 <input type="hidden" name="user_id" value="<%= user.id %>">
-                <input type="submit" value="Delete">
+                <div class="row centerer">
+                  <select name="action" id="action">
+                    <option value="" selected>Select an action</option>
+                    <% (0..@actions[i].length - 1).each { |j| %>
+                      <option value=<%= @actions[i][j] %>><%= @actions[i][j].capitalize %></option>
+                    <% } %>
+                  </select>
+                </div>
+                <div class="row centerer">
+                  <input type="submit" value="Submit" class="row centerer">
+                </div>
               </form>
             </td>
           </tr>
+          <% i += 1 %>
+        <% } %>
+        </tbody>
+      </table>
+      <% if @users.count == 0 %>
+        <p class="row centerer">No results found for chosen filters</p>
+      <% end %>
+      <div class="row centerer">
+        <% if @offset > 0 %>
+          <div class="column centerer">
+            <form action="/accounts/prev" method="post">
+              <input type="submit" value="Previous Page" class="row centerer">
+            </form>
+          </div>
         <% end %>
-      </tbody>
-    </table>
+        <% if @num_pages > 1 %>
+          <div class="column centerer">
+            <form action="/accounts/next" method="post">
+              <input type="submit" value="Next Page" class="row centerer">
+            </form>
+          </div>
+        <% end %>
+      </div>
+    </div>
   </div>
 </section>
 </body>
