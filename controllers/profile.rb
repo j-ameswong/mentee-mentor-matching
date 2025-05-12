@@ -40,6 +40,8 @@ post "/profile/edit" do
     puts @edited_user.errors.inspect.tr(':{"[]}', '')
   end
   @edited_user.mentor_profile.update!(params) if @edited_user.mentor?
+  # after editing profile for the first time, mentee is now open to matching
+  @edited_user.mentee_profile.update!(:availability => true) if @edited_user.mentee?
   # DEBUG: params[:user_languages].each {|x| puts x}
   UserLanguage.create!(params)
   UserExpertise.create!(params)
