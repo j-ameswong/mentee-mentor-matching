@@ -101,8 +101,6 @@ class MentorProfile < Sequel::Model
   def experience
     # return current date - date of first match created, fetch from matches table
   end
-
-
 end
 
 class MenteeProfile < Sequel::Model
@@ -115,7 +113,9 @@ class MenteeProfile < Sequel::Model
     params.key?(:year_of_study) ? @year_of_study = params[:year_of_study] : @year_of_study = 1
 
     self.user_id = params[:user_id] if params.key?(:user_id)
-    params.key?(:availability) ? params[:availability] : self.availability = true
+    params.key?(:availability) ? self.availability = params[:availability] : self.availability = false
+
+    save
   end
 
   def validate
@@ -129,5 +129,16 @@ class MenteeProfile < Sequel::Model
 
   def available?
     availability
+  end
+
+  def waitlisted?
+    # waitlisted if over 7 days
+    waitlisted = available? && TimeDifference.between(self.created_at, DateTime.now).in_days >= 7
+    if waitlisted
+      # TODO: Create entry in messages db if not already exists, with content: you have been added to waitlist
+      puts "Found #{self.user_id} in waitlist" # TODO: remove, only notification to mentee is required
+    end
+
+    waitlisted
   end
 end

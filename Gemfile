@@ -3,6 +3,9 @@
 source "https://rubygems.org"
 
 # gem "rails"
+gem "mutex_m"
+gem "csv"
+gem "sqlite3"
 gem "sinatra"
 gem "sequel"
 gem "openssl"
