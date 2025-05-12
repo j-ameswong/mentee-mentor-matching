@@ -504,8 +504,13 @@ footer {
     max-width: none;
     align-items: flex-start;
     margin: 1% 0 0 0;
-    /*padding: 1%;*/
+    padding: 1%;
     height: 12vh;
+}
+
+.admin-approval {
+    height: auto;
+    padding: 2%;
 }
 
 html,
@@ -530,20 +535,26 @@ body {
     font-weight: bold;
 }
 
+
 .approval-decision {
-    display: inline-flex;
-    gap: 10%;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.vertical-margin {
+    margin-bottom: 1%;
 }
 
 .approval-btn,
 .deny-btn {
-    flex: 1;
+    background-color: var(--lgrey);
     text-decoration: none;
     color: var(--grey);
-    /*padding: 2% 4% 2% 4%;*/
     border: 1px solid var(--grey);
-    border-radius: 25px;
-
+    border-radius: 10px;
+    display: inline-block;
+    padding: 2% 4%;
     width: fit-content;
     max-width: 10vw;
 }
@@ -569,6 +580,15 @@ body {
   padding-left: 1vw;
   padding-right: 1vw;
 }
+
+#current-mentor-box {
+  background-color: var(--lgrey);
+  box-shadow: 1px 1px 5px;
+  max-width: none;
+  padding-left: 1vw;
+  padding-right: 1vw;
+}
+
 .apply-mentor, .report-mentor {
     outline: black solid 1px;
 }
@@ -632,10 +652,6 @@ h4 {
 
 .matching-wrapper, .application-wrapper {
     text-align: right;
-}
-
-.admin-approval {
-  height: 20vh;
 }
 
 .expertise-tag {

@@ -6,8 +6,32 @@ end
 
 get "/matches/mentee" do
   redirect "/login" unless session[:logged_in]
-  erb :menteeMatching
+
+  if session[:user].role == 'mentee'
+    user = User.first(id: session[:user].id)  
+    mentee_profile = MenteeProfile.first(user_id: user.id) 
+    
+    if mentee_profile && mentee_profile.availability
+      match = Match.first(mentee_id: user.id, status: "active")
+      
+      if match
+        mentor_id = match.mentor_id
+        @currentMentor = MentorProfile.first(user_id: mentor_id)
+      else
+        @currentMentor = nil
+      end
+    else
+      @currentMentor = nil
+    end
+
+    erb :menteeMatching
+  else
+    # If the user is not a mentee, redirect them to the mentor page
+    redirect "/matches/mentor"
+  end
 end
+
+
 
 post "/matches/mentee" do
   redirect "/login" unless session[:logged_in]
