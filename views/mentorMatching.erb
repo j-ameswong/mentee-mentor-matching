@@ -61,6 +61,7 @@
             <h2>Waitlisted Mentees</h2>
             <% unless @mentees.nil? %>
               <% @mentees.all.each do |row| %>
+                <% if row.waitlisted? %>
                   <div class="profile-box">
                       <% mentee = row.user.profile %>
                       <div class="basic-info centerer">
@@ -75,7 +76,8 @@
                       </div>
                       <div class="detailed-info">
                             <p class="detailed-info-content">Age: <%= mentee.age %></p>
-                            <p class="detailed-info-content">Nationality: <%= Nationality.first(id: mentee.nationality_id).country_name %></p>
+                            <p class="detailed-info-content">Nationality:
+                              <%= Nationality.first(id: mentee.nationality_id).country_name unless mentee.nationality_id.nil? %></p>
                             <p class="detailed-info-content">Languages: 
                                 <% UserLanguage.where(user_id: row.user.id).each do |ulanguage| %>
                                     <%= ulanguage.language.language_name %>,
@@ -88,12 +90,13 @@
                             <form method="post" action="/matches/mentor">
                               <input type="hidden" name="mentee_id" value="<%= row.user.id %>">
                               <input type="hidden" name="waitlisted_mentee">
-                              <button type="submit" class="apply-mentor" name="accept">Accept</button>
+                              <button type="submit" class="apply-mentor" name="accept">Match</button>
                               <button type="submit" class="apply-mentor" name="report">Report</button>
                             </form>
                           </div>
                       </div>
                   </div>
+                <% end %>
               <% end %>
             <% end %>
         </div>
