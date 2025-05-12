@@ -61,6 +61,7 @@
             <h2>Waitlisted Mentees</h2>
             <% unless @mentees.nil? %>
               <% @mentees.all.each do |row| %>
+                <% if row.waitlisted? %>
                   <div class="profile-box">
                       <% mentee = row.user.profile %>
                       <div class="basic-info centerer">
@@ -95,6 +96,7 @@
                           </div>
                       </div>
                   </div>
+                <% end %>
               <% end %>
             <% end %>
         </div>

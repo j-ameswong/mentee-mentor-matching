@@ -101,8 +101,6 @@ class MentorProfile < Sequel::Model
   def experience
     # return current date - date of first match created, fetch from matches table
   end
-
-
 end
 
 class MenteeProfile < Sequel::Model
@@ -129,5 +127,14 @@ class MenteeProfile < Sequel::Model
 
   def available?
     availability
+  end
+
+  def waitlisted?
+    # waitlisted if over 7 days
+    waitlisted = available? && TimeDifference.between(self.created_at, DateTime.now).in_days >= 7
+    if waitlisted
+      # TODO: Create entry in messages db if not already exists, with content: you have been added to waitlist
+      puts "Added #{self.user_id} to waitlist"
+    end
   end
 end
