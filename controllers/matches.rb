@@ -4,10 +4,38 @@ get "/matches" do
   redirect "/matches/mentor" if session[:user].mentor?
 end
 
+get "/matches/matched" do
+  if session[:user].mentor?
+    redirect "/matches/matched/mentor"
+  else
+    redirect "/"
+  end
+end
+  
 get "/matches/mentee" do
   redirect "/login" unless session[:logged_in]
-  @mentors = MentorProfile.where(availability: true)
-  erb :menteeMatching
+
+  if session[:user].role == 'mentee'
+    user = User.first(id: session[:user].id)  
+    mentee_profile = MenteeProfile.first(user_id: user.id) 
+    
+    if mentee_profile && mentee_profile.availability
+      match = Match.first(mentee_id: user.id, status: "active")
+      
+      if match
+        mentor_id = match.mentor_id
+        @currentMentor = MentorProfile.first(user_id: mentor_id)
+      else
+        @currentMentor = nil
+      end
+    else
+      @currentMentor = nil
+    end
+
+    erb :menteeMatching
+  else
+    redirect "/matches/mentor"
+  end
 end
 
 post "/matches/mentee" do
@@ -30,6 +58,15 @@ get "/matches/mentor" do
   @menteeApplicants = Match.where(mentor_id: mentor_id, status: 'pending')
   @mentees = MenteeProfile.where(availability: true)
   erb :mentorMatching
+end
+
+get "/matches/matched/mentor" do 
+  redirect "/login" unless session[:logged_in]
+  redirect "/matches/mentee" if session[:user].mentee?
+
+  mentor_id = session[:user].id
+  @mentees = Match.where(mentor_id: mentor_id, status: 'active')
+  erb :mentorMatchingMatches
 end
 
 post "/matches/mentor" do

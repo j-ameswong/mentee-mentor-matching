@@ -11,14 +11,14 @@
 
 <div class="content">
     <h2 id="welcome" class="centerer">Mentees</h2>
-    <div id="mentee-list" class="content-box">
+    <div id="matching-list" class="content-box">
       <div id="mentee-applicants">
         <h2>Mentee Applications</h2>
         <% unless @menteeApplicants.nil? %>
           <% @menteeApplicants.all.each do |row| %>
-            <div class="profile-box">
+            <div class="profile-box applicant">
               <% mentee = row.mentee.profile %>
-              <div class="basic-info centerer">
+              <div id="applicant-basic-info" class="basic-info centerer">
                 <div class="profile_pic">
                   <% if mentee.profile_picture %>
                     <img id="profile-menu" src="<%= "/images/user/#{mentee.profile_picture}" %>" alt="Profile Picture">
@@ -28,22 +28,18 @@
                 </div>
                 <p class="profile-name"><%= mentee.first_name %> <%= mentee.last_name %></p>
               </div>
-              <div class="detailed-info">
+              <div id="applicant-detailed-info" class="detailed-info">
                 <p class="detailed-info-content">Age: <%= mentee.age %></p>
-                <p class="detailed-info-content">Languages: 
-                    <% UserLanguage.where(user_id: row.user.id).each do |ulanguage| %>
-                        <%= ulanguage.language.language_name %>
-                    <% end %>
-                </p>
                 <p class="detailed-info-content">Nationality: <%= Nationality.first(id: mentee.nationality_id).country_name %></p>
                 <p class="detailed-info-content">Languages: 
-                    <% UserLanguage.where(user_id: row.user.id).each do |ulanguage| %>
+                    <% UserLanguage.where(user_id: row.mentee_id).each do |ulanguage| %>
                         <%= ulanguage.language.language_name %>
                     <% end %>
                 </p>
               </div>
               <div class="bio-and-accept">
-                <p class="profile-bio-detailed">Bio: <%= mentee.bio_detailed %></p>
+                <p class="applicant-bio profile-bio-detailed">Bio: <%= mentee.bio_brief %></p>
+                <p class="applicant-bio profile-bio-detailed">Application Message: <%= row.application_message %></p>
                 <div class="matching-wrapper" id="<%= row.mentee.id %>-wrapper">
                   <form method="post" action="/matches/mentor">
                     <input type="hidden" name="mentee_id" value="<%= row.mentee.id %>">
@@ -69,7 +65,7 @@
                               <% if mentee.profile_picture %>
                                   <img id="profile-menu" src="<%= "/images/user/#{mentee.profile_picture}" %>" alt="Profile Picture">
                               <% else %>
-                                  <img id="profile-menu" src="blankProfilePicture.webp" alt="Profile Picture">
+                                  <img id="profile-menu" src="/images/blankProfilePicture.webp" alt="Profile Picture">
                               <% end %>
                           </div>
                           <p class="profile-name"><%= mentee.first_name %> <%= mentee.last_name %></p>
@@ -85,7 +81,7 @@
                             </p>
                       </div>
                       <div class="bio-and-accept">
-                          <p class="profile-bio-detailed">Bio: <%= mentee.bio_detailed %></p>
+                          <p class="profile-bio-detailed">Bio: <%= mentee.bio_brief %></p>
                           <div class="matching-wrapper" id="<%= row.user.id %>-wrapper">
                             <form method="post" action="/matches/mentor">
                               <input type="hidden" name="mentee_id" value="<%= row.user.id %>">
