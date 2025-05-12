@@ -618,13 +618,13 @@ h4 {
 }
 
 .detailed-info {
-    width: 40%;
     padding: 1%;
     text-align: left;
     background-color: var(--lgrey);
 }
 
 .detailed-info-content {
+    flex: 0 0 auto;
     margin: 0;
     padding: 1%;
 }
@@ -637,11 +637,14 @@ h4 {
 }
 
 .bio-and-accept {
-    width: 100%;
+    flex: 1;
     background-color: var(--lgrey);
     padding: 1%;
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .accept-reject {
@@ -723,6 +726,12 @@ textarea {
 .popup-no-style {
     background-color: var(--lgrey);
     border: none;
+}
+
+.applicant-bio {
+    flex: 1; /* main content */
+    margin-bottom: 1%;
+    overflow: auto;
 }
 
 .application-message {

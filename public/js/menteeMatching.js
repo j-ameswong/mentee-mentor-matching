@@ -13,9 +13,10 @@
         form.appendChild(textArea);
 
         const mentorInfo = document.createElement('input');
+        const mentorId = wrapper.dataset.mentorId;
         mentorInfo.name = 'mentor_id';
         mentorInfo.style.display = 'none';
-        mentorInfo.value = wrapper.id;
+        mentorInfo.value = mentorId;
         form.appendChild(mentorInfo);
 
         const submitButton = document.createElement('button');

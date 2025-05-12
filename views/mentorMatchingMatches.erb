@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Matches</title>
+  <meta name="author" content="Team 17">
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<% @title = "Matching" %>
+<%= erb :"common/header" %>
+
+<body>
+    <div class="content">
+        <h2 id="welcome" class="centerer">Mentees</h2>
+        <div id="matching-list" class="content-box">
+            <div id="mentee-applicants">
+                <h2>Matched Mentees</h2>
+                <% unless @mentees.nil? %>
+                    <% @mentees.all.each do |row| %>
+                        <div class="profile-box">
+                            <% mentee = row.mentee.profile %>
+                            <div class="basic-info centerer">
+                                <div class="profile_pic">
+                                <% if mentee.profile_picture %>
+                                    <img id="profile-menu" src="<%= "/images/user/#{mentee.profile_picture}" %>" alt="Profile Picture">
+                                <% else %>
+                                    <img id="profile-menu" src="/images/blankProfilePicture.webp" alt="Profile Picture">
+                                <% end %>
+                                </div>
+                                <p class="profile-name"><%= mentee.first_name %> <%= mentee.last_name %></p>
+                            </div>
+                            <div class="detailed-info">
+                                <p class="detailed-info-content">Age: <%= mentee.age %></p>
+                                <p class="detailed-info-content">Nationality: <%= Nationality.first(id: mentee.nationality_id).country_name %></p>
+                                <p class="detailed-info-content">Languages: 
+                                    <% UserLanguage.where(user_id: row.mentee_id).each do |ulanguage| %>
+                                        <%= ulanguage.language.language_name %>
+                                    <% end %>
+                                </p>
+                            </div>
+                            <p class="profile-bio-detailed">Bio: <%= mentee.bio_detailed %></p>
+                        </div>
+                    <% end %>
+                <% end %>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
