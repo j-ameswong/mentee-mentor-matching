@@ -29,7 +29,7 @@
   <section class="row centerer">
     <% @unapproved.each do |auth| %>
       <% if @filter == "all" || auth.user.role == @filter %>
-        <div class="column centerer content-box approvals <%= "admin-approval" if auth.user.role == "admin" %>">
+        <div class="centerer content-box approvals <%= "admin-approval" if auth.user.role == "admin" %>">
           <div class="row centerer">
             <p id="role-text"> <%= auth.user.role.capitalize %> </p>
           </div>
@@ -37,7 +37,7 @@
             <p id="email-text"><%= auth.user.email %> </p>
           </div>
           <% if !auth.user.admin? %>
-            <div class="approval-decision">
+            <div class="approval-decision centerer">
               <a class="approval-btn" href="<%= "/approvals/approve?to_approve=#{auth.user.id}" %>">Approve</a>
               <a class="deny-btn" href="<%= "/approvals/deny?to_deny=#{auth.user.id}" %>">Deny</a>
             </div>

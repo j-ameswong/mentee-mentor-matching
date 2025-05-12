@@ -11,7 +11,7 @@
 
 <div class="content">
     <h2 id="welcome" class="centerer">Mentees</h2>
-    <div id="mentee-list" class="content-box">
+    <div id="matching-list" class="content-box">
       <div id="mentee-applicants">
         <h2>Mentee Applications</h2>
         <% unless @menteeApplicants.nil? %>
@@ -43,7 +43,7 @@
                 </p>
               </div>
               <div class="bio-and-accept">
-                <p class="profile-bio-detailed">Bio: <%= mentee.bio_detailed %></p>
+                <p class="profile-bio-detailed">Bio: <%= mentee.bio_brief %></p>
                 <div class="matching-wrapper" id="<%= row.mentee.id %>-wrapper">
                   <form method="post" action="/matches/mentor">
                     <input type="hidden" name="mentee_id" value="<%= row.mentee.id %>">

@@ -11,10 +11,12 @@
 
 <div class="content">
     <h2 id="welcome" class="centerer">Mentors</h2>
-    <div id="mentee-list" class="content-box">
+    <div id="matching-list" class="content-box">
+        <div id="current-mentor">
         <div id="mentor-applicants">
             <h2>Available Mentors</h2>
             <% MentorProfile.each do |row| %>
+              <% if row %>
               <div class="profile-box">
                 <% mentor = row.user.profile %>
                 <div class="basic-info centerer">
@@ -35,7 +37,7 @@
                             <%= ulanguage.language.language_name %>
                         <% end %>
                     </p>
-                    <p>Expertise:
+                    <p class="detailed-info-content" >Expertise:
                         <% row.user.user_expertises.each do |skill| %>
                             <% expertise = skill.expertise %>
                             <% if expertise %>
@@ -45,13 +47,50 @@
                     </p>
                 </div>
                 <div class="bio-and-accept">
-                  <p class="profile-bio-detailed">Bio: <%= mentor.bio_detailed %></p>
-                  <div class="matching-wrapper" id="<%= row.user.id %>-wrapper">
-                      <button type="button" class="apply-mentor" id="<%= row.user.id %>-apply">Apply</button>
-                      <button type="button" class="report-mentor" id="<%= row.user.id %>-report">Report</button>
-                  </div>
+                    <p class="profile-bio-detailed">Bio: <%= mentor.bio_brief %></p>
+                    <div class="matching-wrapper" id="<%= row.user.id %>-wrapper">
+                        <button type="button" class="apply-mentor" id="<%= row.user.id %>-application" onclick="openMatching('<%= row.user.id %>')">Apply</button>
+                        <button type="button" class="report-mentor" id="<%= row.user.id %>-report">Report</button>
+                    </div>
+                </div>
+                <div id="matchPopup<%= row.user.id %>" class="match-popup">
+                    <div class="match-popup-content">
+                        <div class="inline-wrapper">
+                            <div class="basic-info centerer popup-no-style">
+                                <div class="profile_pic">
+                                    <% if mentor.profile_picture%> 
+                                        <img id="profile-menu" src="<%= "/images/user/#{mentee.profile_picture}" %>" alt="Profile Picture">
+                                    <% else %>
+                                        <img id="profile-menu" src="/images/blankProfilePicture.webp" alt="Profile Picture">
+                                    <% end %>
+                                </div>
+                                <p class="profile-name"><%= mentor.first_name %> <%= mentor.last_name %></p>
+                            </div>
+                            <div class="detailed-info popup-no-style popup-info">
+                                <p class="detailed-info-content"><%="Year " + row.year_of_study.to_s %></p>
+                                <p class="detailed-info-content">Age: <%= mentor.age %></p>
+                                <p class="detailed-info-content">Languages: 
+                                    <% UserLanguage.where(user_id: row.user.id).each do |ulanguage| %>
+                                        <%= ulanguage.language.language_name %>
+                                    <% end %>
+                                </p>
+                                <p class="detailed-info-content">Expertise:
+                                    <% row.user.user_expertises.each do |skill| %>
+                                        <% expertise = skill.expertise %>
+                                        <% if expertise %>
+                                            <span class="expertise-tag"><%= expertise.skill %></span>
+                                        <% end %>
+                                    <% end %>
+                                </p>
+                            </div>
+                        </div>
+                        <p class="profile-bio-detailed popup-bio">Bio: <%= mentor.bio_detailed %></p>
+                        <div class="application-wrapper" id="<%= row.user.id %>-application-wrapper">
+                        </div>
+                    </div>
                 </div>
               </div>
+              <% end %>
           <% end %>
         </div>
     </div>

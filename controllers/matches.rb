@@ -6,7 +6,6 @@ end
 
 get "/matches/mentee" do
   redirect "/login" unless session[:logged_in]
-  @mentors = MentorProfile.where(availability: true)
   erb :menteeMatching
 end
 
