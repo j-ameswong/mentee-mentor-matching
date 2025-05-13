@@ -18,7 +18,7 @@
     <form id="max-mentees-form" action="/matches/mentor/set-max" method="post">
       <label for="mentor-max-mentees">Pick maximum mentees</label>
       <select name="mentor_max_mentees" id="mentor-max-mentees">
-        <% ([@mentor.num_matches, 1].max..GlobalVariable.MAX_MATCHES).each do |i| %>
+        <% ([@mentor.num_matches+1, 1].max..GlobalVariable.MAX_MATCHES).each do |i| %>
           <option value=<%= i %> <%= "selected" if @mentor.max_matches == i%>><%=i%></option>
         <% end %>
       </select>

@@ -73,6 +73,8 @@ post "/matches/mentor" do
   redirect "/login" unless session[:logged_in]
   redirect "/matches/mentee" unless session[:user].mentor? || session[:user].admin?
   #puts params
+  @menteeApplicants = Match.where(mentor_id: session[:user].id, status: 'pending')
+  @mentees = MenteeProfile.where(availability: true)
 
   # if is a waitlist mentee, create new match
   if params[:waitlisted_mentee] && session[:user].mentor_profile.below_limit? && User.first(id: params[:mentee_id]).mentee_profile.available?
@@ -103,10 +105,10 @@ post "/matches/mentor" do
     end
   else
      @error = "Match has already been accepted by another mentor or mentee limit exceeded"
-     erb :mentorMatching
   end
 
   redirect "/matches/mentor" unless @error
+  erb :mentorMatching if @error
 end
 
 post "/matches/mentor/set-max" do
@@ -116,6 +118,6 @@ post "/matches/mentor/set-max" do
   session[:user].mentor_profile.update(:max_matches => params[:mentor_max_mentees])
   session[:user].mentor_profile.save
 
-  puts session[:user].mentor_profile.inspect
+  #puts session[:user].mentor_profile.inspect
   redirect "/matches/mentor"
 end
