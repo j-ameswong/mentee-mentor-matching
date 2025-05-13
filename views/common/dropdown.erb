@@ -11,7 +11,7 @@
     <img id="profile-menu" src=<%= @pfp %>>
   <% else %>
     <a id="pfp-link" href="/profile">
-      <img id="profile-menu" src="<%= @pfp %>" alt="Not Found" erroroner="this.src='/images/blankProfilePicture.webp'"/>
+      <img id="profile-menu" src="<%= @pfp %>" alt="Not Found" onerror="this.src='/images/blankProfilePicture.webp'"/>
     </a>
   <% end %>
 
