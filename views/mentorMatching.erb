@@ -11,6 +11,13 @@
 
 <div class="content">
     <h2 id="welcome" class="centerer">Mentees</h2>
+    <label for="mentor-max-mentees">Pick maximum mentees</label>
+    <select name="mentor-max-mentees" id="mentor-max-mentees">
+      <% for i in 1..5 do %>
+        <option value="number"><%=i%></option>
+      <% end %>
+
+    </select>
     <div id="matching-list" class="content-box">
       <div id="mentee-applicants">
         <h2>Mentee Applications</h2>
