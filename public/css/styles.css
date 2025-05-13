@@ -186,6 +186,12 @@ p {
     size: 1rem;
 }
 
+.admin-pg-btn {
+    color: var(--grey);
+    background-color: var(--lgrey);
+    outline: var(--grey);
+}
+
 .content-box {
     flex-direction: column;
 
@@ -514,7 +520,7 @@ footer {
 
 .approvals {
     font-weight: bold;
-    width: 100%;
+    width: 50%;
     max-width: none;
     align-items: flex-start;
     margin: 1% 0 0 0;
@@ -771,6 +777,10 @@ textarea {
     border-radius: 10px;
 }
 
+.approvals-wrapper {
+    width: 100%;
+}
+
 .popup-bio {
     background-color: var(--lgrey);
     padding: 5%;
@@ -778,8 +788,21 @@ textarea {
     border-radius: 10px;
 }
 
+.view-profile {
+    text-align: right;
+}
+
 .error {
     color: darkred;
     font-size: 1em;
     margin: 0;
+}
+
+.flagging-table {
+    overflow-x: auto; 
+    max-height: 30vh;
+}
+
+.manage-acc-table {
+    min-width: 50%;
 }

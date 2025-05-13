@@ -15,6 +15,7 @@
 
 <body>
 <div class="content">
+  <h3>Account Approvals</h3>
   <div id="filter">
     <form action="/approvals/filter" method="post" id="filter-form">
       <label for="account-filter" id="filter-label">Filter by:</label>
@@ -26,7 +27,7 @@
       </select>
     </form>
   </div>
-  <section class="row centerer">
+  <section class="row centerer approvals-wrapper">
     <% @unapproved.each do |auth| %>
       <% if @filter == "all" || auth.user.role == @filter %>
         <div class="centerer content-box approvals <%= "admin-approval" if auth.user.role == "admin" %>">
