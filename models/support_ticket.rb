@@ -6,5 +6,13 @@ class SupportTicket < Sequel::Model
   many_to_one :sent_by, class: :User
   many_to_one :target_id, class: :User
   many_to_one :type, class: :TicketType
+
+  def self.create!(params)
+    ticket = SupportTicket.new
+    case params[:type]
+    when 'withdrawal'
+    end
+    # etc...
+  end
 end
 
