@@ -28,7 +28,10 @@ post "/profile/edit" do
       f.write(params[:profile_pic][:tempfile].read)
       puts "File saved to #{path}"
       # update the profile picture in the database
-      @edited_user.update(:profile_pic => "#{@edited_user.id}.#{file_ext}")
+      @profile = Profile.where(:user_id => @edited_user.id).first
+      @profile.profile_picture = "#{@edited_user.id}.#{file_ext}"
+      @profile.save
+      puts @profile.inspect
     end
   end
 

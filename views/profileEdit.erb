@@ -19,7 +19,7 @@
     <h3>Edit <%= @edited_user.username.capitalize %>'s Profile</h3>
     <div class="content-box centerer">
       <form method="post" action="/profile/edit?id=<%= params[:id] %>" enctype="multipart/form-data">
-        <div class="row">
+        <div class="row centerer">
           <div class="column">
             <input type="file" id="profile_pic" name="profile_pic" accept="image/*">
           </div>
@@ -27,6 +27,9 @@
             <label style="font-size: small" for="profile_pic">Upload Profile Picture</label>
           </div>
         </div>
+        <p class="row centerer">
+          You may need log out and then log back in again to see the changes in your profile picture.
+        </p>
 
         <br>
 

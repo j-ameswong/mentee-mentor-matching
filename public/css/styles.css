@@ -117,7 +117,7 @@ header {
 }
 
 #profile-menu {
-    max-width: 6vw;
+    max-width: 9vh;
     height: 9vh;
 
     border-radius: 50%;
@@ -155,7 +155,7 @@ header {
 
 #profile-menu:hover {
     outline-style: solid;
-    outline-width: 2%;
+    outline-width: thin;
     outline-color: var(--lblu);
 }
 
@@ -492,6 +492,13 @@ footer {
 .profile_pic {
     text-align: left;
     justify-content: center;
+
+    width: 20vw;
+    height: 20vw;
+    border-radius: 50%;
+    outline-style: solid;
+    outline-width: medium;
+    outline-color: var(--purple);
 }
 
 #statements {
