@@ -35,6 +35,15 @@ elsif choice == "4"
   puts lang.id
 end
 
-Profile.where(last_name: "Freeborn").each do |heretic|
-  heretic.delete
+MenteeProfile.all.each do |profile|
+  if profile.available?
+    puts "Before: #{profile.inspect}"
+
+    profile.created_at = profile.created_at - 8.days
+    profile.update(:user_id => profile.user.id, :availability => true)
+    profile.save
+
+    puts "After: #{profile.inspect}"
+  end
 end
+

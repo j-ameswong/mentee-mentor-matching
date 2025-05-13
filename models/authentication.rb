@@ -5,8 +5,9 @@ class Authentication < Sequel::Model(:authentication)
 
   many_to_one :user
 
-  def update!(params)
-    @params = params
+  def update(params)
+    @params = params if params[:role] == "admin"
+    # puts params
     self.user_id = params.fetch(:user_id) if params.key?(:user_id)
     params.key?(:role) ? @role = params[:role] : @role = self.user.role
 
@@ -14,10 +15,9 @@ class Authentication < Sequel::Model(:authentication)
     # ok, so basically, later at signup/admin, need to make sure params[:role] is admin,
     # then when approving by admin, do not have params role
     unless params[:role] == "admin"
-      @password = params.fetch(:password, "").strip
-      @confirm_password = params.fetch(:confirm_password, "").strip
-
       if params.key?(:password) && params.key?(:confirm_password)
+        @password = params.fetch(:password, "").strip
+        @confirm_password = params.fetch(:confirm_password, "").strip
         aes = OpenSSL::Cipher.new("AES-128-CBC").encrypt
         self.iv = Sequel.blob(aes.random_iv)
         self.salt = Sequel.blob(OpenSSL::Random.random_bytes(16))
@@ -77,7 +77,7 @@ class Authentication < Sequel::Model(:authentication)
       errors.add(:data_crypt, "cannot be empty") if data_crypt.nil?
     end
 
-    if @params && @params.key?(:password)
+    if @params && @params.key?(:password) && @role != "admin"
       if @password.nil? || @password.empty?
         errors.add(:password, "cannot be blank")
       else
@@ -85,7 +85,7 @@ class Authentication < Sequel::Model(:authentication)
       end
     end
 
-    if @params && @params.key?(:confirm_password)
+    if @params && @params.key?(:confirm_password) && @role != "admin"
       if @confirm_password.nil? || @confirm_password.empty?
         errors.add(:confirm_password, "cannot be blank")
       else

@@ -6,7 +6,7 @@ end
 post "/signup" do
   @user = User.new
   @params = params
-  puts @params
+  #puts @params
 
   # @user.signup returns true if signup successful,
   # else load page and display errors

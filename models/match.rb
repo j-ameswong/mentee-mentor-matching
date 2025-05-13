@@ -60,7 +60,7 @@ class Match < Sequel::Model
   def activate
     self.status = "active"
     self.start_date = Date.today
-    self.mentee.mentee_profile.update!(:availability => false)
+    self.mentee.mentee_profile.update(:availability => false)
     puts "Match activated for mentor #{self.mentor_id} and mentee #{self.mentee_id}"
     save
   end

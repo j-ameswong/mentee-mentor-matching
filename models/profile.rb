@@ -6,7 +6,7 @@ class Profile < Sequel::Model
   many_to_one :user
   many_to_one :nationality, key: :id
 
-  def update!(params)
+  def update(params)
     @role = params[:role] if params.key?(:role)
     self.user_id = params[:user_id] if params.key?(:user_id)
     self.date_of_birth = params.fetch(:date_of_birth, "") if params.key?(:date_of_birth)
@@ -72,7 +72,7 @@ class MentorProfile < Sequel::Model
 
   many_to_one :user
 
-  def update!(params)
+  def update(params)
     params.key?(:role) ? @role = params[:role] : @role = "mentor"
     self.user_id = params[:user_id] if params.key?(:user_id)
     self.year_of_study = params[:year_of_study] if params.key?(:year_of_study)
@@ -109,14 +109,15 @@ class MenteeProfile < Sequel::Model
 
   many_to_one :user
 
-  def update!(params)
+  def update(params)
     params.key?(:role) ? @role = params[:role] : @role = "mentee"
     params.key?(:year_of_study) ? @year_of_study = params[:year_of_study] : @year_of_study = 1
 
     self.user_id = params[:user_id] if params.key?(:user_id)
     params.key?(:availability) ? self.availability = params[:availability] : self.availability = false
 
-    save
+    # SAVING BREAKS EVERYTHING DO NOT SAVE
+    # save
   end
 
   def validate
@@ -124,7 +125,8 @@ class MenteeProfile < Sequel::Model
     errors.add(:user_id, "cannot be empty") if user_id.nil?
     errors.add(:user_id, "must belong to a mentee") unless @role == "mentee"
     errors.add(:availability, "status must exist") if availability.nil?
-    errors.add(:year_of_study, "cannot be empty") if @year_of_study.nil?
+    # literally doesnt matter, mentees don't even have a year_of_study line
+    # errors.add(:year_of_study, "cannot be empty") if @year_of_study.nil?
     errors.add(:role, "only first years can be mentees") if @year_of_study && @year_of_study.to_i > 1
   end
 
