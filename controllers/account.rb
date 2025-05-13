@@ -6,7 +6,7 @@ end
 get "/account/changePassword" do
   redirect "/login" unless session[:logged_in]
 
-  session[:user].authentication.update!(:first_time_login => false)
+  session[:user].authentication.update(:first_time_login => false)
   session[:user].authentication.save
   erb :changePassword
 end
@@ -17,7 +17,7 @@ post "/account/changePassword" do
   @user.errors.clear
 
   if @user.authentication.login({ :password => params[:old_password] })
-    @user.authentication.update!(params.merge!(:password => params[:new_password]))
+    @user.authentication.update(params.merge!(:password => params[:new_password]))
 
     if @user.authentication.valid?
       @user.authentication.save

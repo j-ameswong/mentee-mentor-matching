@@ -8,5 +8,10 @@ rm ./db/db_test.sqlite3
 sqlite3 ./db/db_test.sqlite3 < ./db/schema.sql
 echo "Schema successfully applied to DB!"
 
-ruby ./gen_db/gen_db.rb
-echo "Database populated with initial users!"
+ruby ./gen_db/csv_to_table_expertises.rb
+ruby ./gen_db/csv_to_table_languages.rb
+ruby ./gen_db/csv_to_table_nationalities.rb
+
+ruby setup.rb
+
+#echo "Database populated with initial users!"

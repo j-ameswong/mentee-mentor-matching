@@ -29,7 +29,7 @@ post "/profile/edit" do
 
   # Only update the profile if params are valid
   if @all_good
-    @edited_user.profile.update!(params)
+    @edited_user.profile.update(params)
   else
     inv = "is invalid"
     @edited_user.errors.add(:first_name, inv) unless valid_input?(params[:first_name])
@@ -39,9 +39,9 @@ post "/profile/edit" do
     @edited_user.errors.add(:bio_detailed, inv) if html_unsafe?(params[:bio_detailed])
     puts @edited_user.errors.inspect.tr(':{"[]}', '')
   end
-  @edited_user.mentor_profile.update!(params) if @edited_user.mentor?
+  @edited_user.mentor_profile.update(params.merge(:availability => true)) if @edited_user.mentor?
   # after editing profile for the first time, mentee is now open to matching
-  @edited_user.mentee_profile.update!(:availability => true) if @edited_user.mentee?
+  @edited_user.mentee_profile.update(:availability => true) if @edited_user.mentee?
   # DEBUG: params[:user_languages].each {|x| puts x}
   UserLanguage.create!(params)
   UserExpertise.create!(params)
@@ -50,6 +50,8 @@ post "/profile/edit" do
     @edited_user.save
     @edited_user.profile.save
     @edited_user.mentor_profile.save if @edited_user.mentor?
+    @edited_user.mentee_profile.save if @edited_user.mentee?
+    puts params
 
     redirect "/profile?id=#{@edited_user.id}"
   end
@@ -90,7 +92,7 @@ get "/profile/edit" do
   @edited_user = User.first(id: params[:id].to_i) unless params[:id].nil?
   @edited_user = session[:user] if @edited_user.nil?
 
-  @edited_user.authentication.update!(:first_time_login => false)
+  @edited_user.authentication.update(:first_time_login => false)
   @edited_user.authentication.save
 
   erb :profileEdit

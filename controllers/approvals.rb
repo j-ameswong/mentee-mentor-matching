@@ -2,7 +2,7 @@ get "/approvals" do
   redirect "/" unless session[:logged_in] && session[:user].admin?
   @unapproved = Authentication.where(approved: false).all
   @filter = !params[:filter].nil? ? params[:filter] : "all"
-  puts "Filter is: " + @filter
+  # puts "Filter is: " + @filter
 
   erb :approvals
 end
@@ -14,7 +14,7 @@ get "/approvals/approve" do
   if @user.nil?
     redirect "/approvals"
   else
-    @user.authentication.update!(:approved => true)
+    @user.authentication.update(:approved => true)
     @user.authentication.save
     puts "User #{@user.id} has been approved"
   end
@@ -45,7 +45,7 @@ post "/approvals" do
   if @user.nil?
     redirect "/approvals"
   elsif params[:approved]
-    @user.authentication.update!(params)
+    @user.authentication.update(params)
     @user.authentication.save
     puts "Admin #{@user.id} has been approved"
   else

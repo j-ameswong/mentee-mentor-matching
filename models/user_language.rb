@@ -14,7 +14,7 @@ class UserLanguage < Sequel::Model
       user = UserLanguage.new
       user.user_id = params[:user_id]
       user.language_id = lang.id
-      puts user.inspect
+      # puts user.inspect
       user.save
     end
   end

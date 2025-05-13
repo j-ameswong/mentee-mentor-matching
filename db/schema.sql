@@ -105,7 +105,8 @@ CREATE TABLE "user_expertises" (
     FOREIGN KEY ("user_id") REFERENCES "users" ("id"),
     FOREIGN KEY ("expertise_id") REFERENCES "expertises" ("id")
 );
-CREATE INDEX "user_id_user_expertises_index" ON "user_expertises" ("user_id")
+CREATE INDEX "user_id_user_expertises_index" ON "user_expertises" ("user_id");
+
 -- List of all possible expertises
 CREATE TABLE "expertises" (
     "id" INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -132,7 +133,7 @@ CREATE TABLE "languages" (
     "language_name" TEXT,
     "native_name" TEXT,
     "language_code" TEXT
-)
+);
 
 -- List of all flagged accounts
 CREATE TABLE "flagged_accounts" (
