@@ -23,7 +23,7 @@
                   <% if mentee.profile_picture %>
                     <img id="profile-menu" src="<%= "/images/user/#{mentee.profile_picture}" %>" alt="Profile Picture">
                   <% else %>
-                    <img id="profile-menu" src="blankProfilePicture.webp" alt="Profile Picture">
+                    <img id="profile-menu" src="/images/blankProfilePicture.webp" alt="Profile Picture">
                   <% end %>
                 </div>
                 <p class="profile-name"><%= mentee.first_name %> <%= mentee.last_name %></p>

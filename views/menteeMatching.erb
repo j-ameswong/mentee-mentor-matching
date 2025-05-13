@@ -91,7 +91,7 @@
                                         </div>
                                     </div>
                                     <p class="profile-bio-detailed popup-bio">Bio: <%= mentor.bio_detailed %></p>
-                                    <div class="application-wrapper" id="<%= row.user.id %>-application-wrapper" data-mentor-id="204738680">
+                                    <div class="application-wrapper" id="<%= row.user.id %>-application-wrapper" data-mentor-id=<%= row.user.id %>>
                                     </div>
                                 </div>
                             </div>
@@ -101,7 +101,8 @@
             </div>
     <% end %>
     <script src="/js/menteeMatching.js/?"></script>
-</div>
+    </div>
+  </div>
 </body>
 
 </html>

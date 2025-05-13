@@ -142,7 +142,7 @@ class MenteeProfile < Sequel::Model
     waitlisted = available? && TimeDifference.between(self.created_at, DateTime.now).in_days >= 7
     if waitlisted
       # TODO: Create entry in messages db if not already exists, with content: you have been added to waitlist
-      puts "Found #{self.user_id} in waitlist" # TODO: remove, only notification to mentee is required
+      # puts "Found #{self.user_id} in waitlist" # TODO: remove, only notification to mentee is required
     end
 
     waitlisted

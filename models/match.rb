@@ -17,7 +17,9 @@ class Match < Sequel::Model
     errors.add(:mentor_id, "cannot be empty") if mentor_id.nil?
     errors.add(:mentee_id, "cannot be empty") if mentee_id.nil?
     errors.add(:status, "must be valid") unless STATUSES.include?(status)
+    mentor = User.first(id: self.mentor_id)
     errors.add(:mentor_id, "must belong to a mentor") unless mentor && mentor.mentor?
+    mentee = User.first(id: self.mentee_id)
     errors.add(:mentee_id, "must belong to a mentee") unless mentee && mentee.mentee?
   end
 
@@ -49,11 +51,11 @@ class Match < Sequel::Model
     match = Match.new
 
     match.status = "pending"
-    match.mentor_id = params[:mentor_id]
-    match.mentee_id = params[:mentee_id]
+    match.mentor_id = params[:mentor_id].to_i
+    match.mentee_id = params[:mentee_id].to_i
     match.application_message = params[:message]
 
-    #puts match.inspect
+    puts match.inspect
     match.save
   end
 
