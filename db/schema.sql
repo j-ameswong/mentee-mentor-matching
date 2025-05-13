@@ -152,7 +152,7 @@ CREATE TABLE "user_messages" (
     "message_id" INTEGER,
     "read_status" Boolean,
     "created_at" DateTime,
-    FOREIGN KEY ("message_id") REFERENCES "messages" ("id"),
+    FOREIGN KEY ("message_id") REFERENCES "messages" ("id")
 );
 CREATE INDEX "user_id_message_index" ON "user_messages" ("message_id");
 
@@ -160,8 +160,9 @@ CREATE INDEX "user_id_message_index" ON "user_messages" ("message_id");
 CREATE TABLE "messages" (
     "id" INTEGER PRIMARY KEY AUTOINCREMENT,
     "message_type" TEXT,
-    "message_description" TEXT,
+    "message_description" TEXT
 );
+
 -- Global variables
 CREATE TABLE "global_variables" (
     "id" INTEGER PRIMARY KEY AUTOINCREMENT,
