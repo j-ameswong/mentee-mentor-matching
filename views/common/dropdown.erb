@@ -1,19 +1,18 @@
-<% if params[:profile_pic].nil? then %>
-    <% @pfp = "/images/blankProfilePicture.webp" %>
-<% else %>
-    <% @user.profile_pic = params.fetch("profile_pic") %>
-    <% @pfp = @user.profile_pic %>
-<% end %>
+<% @profile = @user.profile %>
+<% if @profile.nil? || @profile.profile_pic.nil? %>
+<%   @pfp = "/images/blankProfilePicture.webp"  %>
+<%   else %>
+<%   @pfp = "/images/user/#{@profile.profile_pic}"   %>
+<%   end %>
 
 <div class="dropdown">
 
-  <% unless @accountType == "admin" %>
-    <a id="pfp-link" href="/profile">
-        <img id="profile-menu" src="/images/user/<%= begin @user.profile.profile_picture rescue "" end %>" alt="Not Found"
-             onerror="this.src='/images/blankProfilePicture.webp'">
-    </a>
-  <% else %>
+  <% if @accountType == "admin" %>
     <img id="profile-menu" src=<%= @pfp %>>
+  <% else %>
+    <a id="pfp-link" href="/profile">
+      <img id="profile-menu" src="<%= @pfp %>" alt="Not Found" erroroner="this.src='/images/blankProfilePicture.webp'"/>
+    </a>
   <% end %>
 
     <div class="dropdown-content centerer">
