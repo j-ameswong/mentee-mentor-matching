@@ -170,47 +170,49 @@ class User < Sequel::Model(DB)
     end
   end
 
-  def flag(reasoning)
-    auth = Authentication.first(user_id: self.id)
-    if auth
-      DB.transaction do
-        auth.update(flagged: true, flag_reasoning: reasoning)
-        
-        DB[:flagged_accounts].insert(
-          user_id: self.id,
-          flag_reasoning: reasoning,
-          flagged_at: Time.now
-        )
-      end
-      true
-    else
-      false
+def flagged?
+  auth = Authentication.first(user_id: self.id)
+  # Use [] notation to access the column directly
+  auth && auth[:flagged] == true
+end
+
+def flag_reasoning
+  auth = Authentication.first(user_id: self.id)
+  # Use [] notation to access the column directly
+  auth && auth[:flagged] ? auth[:flag_reasoning] : nil
+end
+
+def flag(reasoning)
+  auth = Authentication.first(user_id: self.id)
+  if auth
+    DB.transaction do
+      auth.flag!(reasoning)
+      
+      DB[:flagged_accounts].insert(
+        user_id: self.id.to_s,
+        flag_reasoning: reasoning,
+        flagged_at: Time.now
+      )
     end
+    true
+  else
+    false
   end
-  
-  def unflag
-    auth = Authentication.first(user_id: self.id)
-    if auth
-      DB.transaction do
-        auth.update(flagged: false, flag_reasoning: nil)
-        
-        DB[:flagged_accounts].where(user_id: self.id).delete
-      end
-      true
-    else
-      false
+end
+
+def unflag
+  auth = Authentication.first(user_id: self.id)
+  if auth
+    DB.transaction do
+      auth.unflag!
+      
+      DB[:flagged_accounts].where(user_id: self.id.to_s).delete
     end
+    true
+  else
+    false
   end
-  
-  def flagged?
-    auth = Authentication.first(user_id: self.id)
-    auth && auth.flagged
-  end
-  
-  def flag_reasoning
-    auth = Authentication.first(user_id: self.id)
-    auth && auth.flagged ? auth.flag_reasoning : nil
-  end
+end
 
 end
 

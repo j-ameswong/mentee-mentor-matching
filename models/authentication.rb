@@ -100,4 +100,16 @@ class Authentication < Sequel::Model(:authentication)
       errors.add(:confirm_password, "must match") if @params.key?(:new_password) && @params.key?(:confirm_password) && @params[:new_password] != @params[:confirm_password]
     end
   end
+
+  def flag!(reasoning)
+    self.values[:flagged] = true
+    self.values[:flag_reasoning] = reasoning
+    self.save(validate: false)
+  end
+
+  def unflag!
+    self.values[:flagged] = false
+    self.values[:flag_reasoning] = nil
+    self.save(validate: false)
+  end
 end
