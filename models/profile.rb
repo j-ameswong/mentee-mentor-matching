@@ -83,7 +83,7 @@ class MentorProfile < Sequel::Model
     self.year_of_study = params[:year_of_study] if params.key?(:year_of_study)
     self.num_matches = 0 if self.num_matches.nil?
     self.num_matches = params[:num_matches] if params.key?(:num_matches)
-    self.max_matches = 3 if self.max_matches.nil?
+    self.max_matches = GlobalVariable.MAX_MATCHES if self.max_matches.nil?
     self.max_matches = params[:max_matches] if params.key?(:max_matches)
     # Don't update availability here, update when finishing profile edit
     #self.availability = num_matches < max_matches

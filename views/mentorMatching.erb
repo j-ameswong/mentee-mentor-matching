@@ -13,7 +13,7 @@
     <h2 id="welcome" class="centerer">Mentees</h2>
     <label for="mentor-max-mentees">Pick maximum mentees</label>
     <select name="mentor-max-mentees" id="mentor-max-mentees">
-      <% for i in 1..5 do %>
+      <% for i in 1..GlobalVariable.MAX_MATCHES do %>
         <option value="number"><%=i%></option>
       <% end %>
 
