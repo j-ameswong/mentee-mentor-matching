@@ -55,16 +55,15 @@ class Match < Sequel::Model
 
     #puts match.inspect
     match.save
-    match.mentor.mentor_profile.update(num_matches: match.mentor.mentor_profile.num_matches + 1)
-    match.mentor.mentor_profile.save
-    match.mentee.mentee_profile.update
-    match.mentee.save
   end
 
   def activate
     self.status = "active"
     self.start_date = Date.today
-    self.mentee.mentee_profile.update(:availability => false)
+    self.mentor.mentor_profile.update(num_matches: self.mentor.mentor_profile.num_matches + 1)
+    self.mentor.mentor_profile.save
+    self.mentee.mentee_profile.update(availability: false)
+    self.mentee.mentee_profile.save
     puts "Match activated for mentor #{self.mentor_id} and mentee #{self.mentee_id}"
     save
   end
