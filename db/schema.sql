@@ -190,5 +190,6 @@ CREATE INDEX "sent_by_index" ON "support_tickets" ("sent_by");
 CREATE TABLE "ticket_types" (
     "id" INTEGER PRIMARY KEY AUTOINCREMENT,
     "name" TEXT,
+    "desc_brief" TEXT,
     "description" TEXT
 )

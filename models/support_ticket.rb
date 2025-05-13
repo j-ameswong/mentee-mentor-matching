@@ -12,7 +12,7 @@ class SupportTicket < Sequel::Model
     case params[:type]
     when 'withdrawal'
     end
-    # etc...
+    # TODO: etc...
   end
 end
 

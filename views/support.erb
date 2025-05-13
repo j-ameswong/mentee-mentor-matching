@@ -20,15 +20,19 @@
     <div class="content-box centerer">
       <form action = "/support" method = "post">
         <label for="help-request-type">What do you need help with?:</label>
+        <% if @target_id %>
+          <p>Create request against:</p>
+          <input type="text" disabled name="target_id" value="<%= @target_id if @target_id %>"/>
+        <% end %>
         <select id = "help-category">
-          <option value = "option1">Account Deletion</option>
-          <option value = "option2">Report User</option>
-          <option value = "option3">Other</option>
+          <% TicketType.each do |row| %>
+            <option value="<%= row.id %>"><%= row.desc_brief %></option>
+          <% end %>
         </select><br><br><br><br><br>
         <label for="help-request">Please Specify: </label>
         <br>
         <br>
-        <textarea id = "help-request"></textarea>
+        <textarea name="details" id="help-request"></textarea>
         <br>
         <br>
         <input type="submit" value ="Submit">
