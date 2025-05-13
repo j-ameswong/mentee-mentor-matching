@@ -2,15 +2,15 @@ get "/accounts" do
   redirect "/login" unless session[:logged_in]
 
   @limit = User.count
-  @num_pages = 1
+  $num_pages = 1
 
   if @limit > 10
-    @num_pages = (@limit / 10).to_i
+    $num_pages = (@limit / 10).to_i
     @limit = 10
   end
 
-  @offset = 0
-  @users = User.limit(@limit).offset(@offset).all
+  $offset = 0
+  @users = User.limit(@limit).offset($offset * @limit).all
 
   @actions = Array.new(@limit) { ["delete", "reassign"] }
 
@@ -41,15 +41,19 @@ post "/accounts" do
   end
 
   @limit = User.count
-  @num_pages = 1
+  $num_pages = 1
 
   if @limit > 10
-    @num_pages = (@limit / 10).to_i
+    $num_pages = (@limit / 10).to_i
     @limit = 10
   end
 
-  @offset = 0
-  @users = User.limit(@limit).offset(@offset).where(@cond)
+  $offset = 0
+  if @cond
+    @users = User.limit(@limit).offset($offset * @limit).where(@cond)
+  else
+    @users = User.limit(@limit).offset($offset * @limit)
+  end
   # puts @users.inspect
 
   @actions = Array.new(@limit) { ["delete", "reassign"] }
@@ -72,20 +76,7 @@ post "/accounts/action" do
   if params[:action] == "delete"
     @users = User.where(id: params[:user_id])
     @users.each do |user|
-      # TODO: delete user
-      # unless user[:role] == "admin"
-      #   if user[:role] == "mentor"
-      #     MentorProfile.where(user_id: user[:id]).delete
-      #     Match.where(mentor_id: user[:id]).delete
-      #   else
-      #     MenteeProfile.where(user_id: user[:id]).delete
-      #     Match.where(mentee_id: user[:id]).delete
-      #   end
-      #   Profile.where(user_id: user[:id]).delete
-      #   end
-      # Authentication.where(user_id: user[:id]).delete
-      # UserExpertise.where(user_id: user[:id]).delete
-      # User.where(id: user[:id]).delete
+      user.delete_from_all
     end
   end
 
@@ -114,15 +105,15 @@ post "/accounts/action" do
   end
 
   @limit = User.count
-  @num_pages = 1
+  $num_pages = 1
 
   if @limit > 10
-    @num_pages = (@limit / 10).to_i
+    $num_pages = (@limit / 10).to_i
     @limit = 10
   end
 
-  @offset = 0
-  @users = User.limit(@limit).offset(@offset).where(@cond)
+  $offset = 0
+  @users = User.limit(@limit).offset($offset).where(@cond)
 
   @actions = Array.new(@limit) { ["delete", "reassign"] }
 
@@ -140,11 +131,89 @@ post "/accounts/action" do
 end
 
 post "/accounts/next" do
-  @offset = @offset + 1;
+  redirect "/login" unless session[:logged_in]
+
+  if $num_pages > 1 && $offset < $num_pages - 1
+    redirect "/login" unless session[:logged_in]
+
+    if $offset.nil?
+      $offset = 0
+    else
+      $offset = $offset + 1;
+    end
+
+    puts "offset: #{$offset}"
+  end
+
+  @limit = User.count
+  $num_pages = 1
+
+  if @limit > 10
+    $num_pages = (@limit / 10).to_i
+    @limit = 10
+  end
+
+  if @cond
+    @users = User.limit(@limit).offset($offset * @limit).where(@cond)
+  else
+    @users = User.limit(@limit).offset($offset * @limit)
+  end
+
+  @actions = Array.new(@limit) { ["delete", "reassign"] }
+
+  i = 0
+  @users.each { |user|
+    if user[:role] == "mentor"
+      if MentorProfile.where(user_id: user[:id]).limit(1).pluck(:year_of_study).first >= 4
+        @actions[i] = ["delete", "reassign", "badges"]
+      end
+    end
+    i += 1
+  }
+
+  erb :manageAccounts
 end
 
 post "/accounts/prev" do
-  @offset = @offset - 1;
+  redirect "/login" unless session[:logged_in]
+  if $offset > 0
+    if $offset.nil?
+      $offset = 0
+    else
+      $offset = $offset - 1;
+    end
+
+    puts "offset: #{$offset}"
+
+  end
+
+  @limit = User.count
+  $num_pages = 1
+
+  if @limit > 10
+    $num_pages = (@limit / 10).to_i
+    @limit = 10
+  end
+
+  if @cond
+    @users = User.limit(@limit).offset($offset * @limit).where(@cond)
+  else
+    @users = User.limit(@limit).offset($offset * @limit)
+  end
+
+  @actions = Array.new(@limit) { ["delete", "reassign"] }
+
+  i = 0
+  @users.each { |user|
+    if user[:role] == "mentor"
+      if MentorProfile.where(user_id: user[:id]).limit(1).pluck(:year_of_study).first >= 4
+        @actions[i] = ["delete", "reassign", "badges"]
+      end
+    end
+    i += 1
+  }
+
+  erb :manageAccounts
 end
 
 post "/no-of-matches" do

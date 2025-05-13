@@ -17,6 +17,8 @@ post "/profile/edit" do
   params[:bio_brief] = h(params[:bio_brief].strip) if params[:bio_brief]
   params[:bio_detailed] = params[:bio_detailed].strip if params[:bio_detailed]
 
+  params[:profile_pic]
+
   @all_good = true
 
   # Checking all fields are valid characters

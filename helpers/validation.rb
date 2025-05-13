@@ -71,6 +71,9 @@ module Validation
     file_ext = pic_data[:filename].split(".").last if pic_data && pic_data[:filename]
     return false unless file_ext
 
+    file_size = pic_data[:tempfile].size if pic_data && pic_data[:tempfile]
+    return false unless file_size && file_size <= 5 * 1024 * 1024 # 5MB limit
+
     valid_extensions = %w[jpg jpeg png]
     valid_extensions.include?(file_ext.downcase)
   end
