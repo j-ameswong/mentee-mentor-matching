@@ -83,13 +83,18 @@ class MentorProfile < Sequel::Model
     self.year_of_study = params[:year_of_study] if params.key?(:year_of_study)
     self.num_matches = 0 if self.num_matches.nil?
     self.num_matches = params[:num_matches] if params.key?(:num_matches)
-    self.max_matches = 3 if self.max_matches.nil?
+    self.max_matches = GlobalVariable.MAX_MATCHES if self.max_matches.nil?
     self.max_matches = params[:max_matches] if params.key?(:max_matches)
     # Don't update availability here, update when finishing profile edit
     #self.availability = num_matches < max_matches
     # TODO: temp fix please remove
-    # params.key?(:availability) ? (self.availability = params[:availability]) : self.availability = false
-    # self.availability = false if self.num_matches >= self.max_matches
+    self.availability = params[:availability] if params.key?(:availability)
+    # only do this update check if not signing up
+    self.availability = false unless self.availability
+    if num_matches >= max_matches
+      self.availability = false
+    end
+    self.num_matches = Match.where(mentor_id: self.user_id, status: "active").count
   end
 
   def validate
@@ -98,12 +103,16 @@ class MentorProfile < Sequel::Model
     errors.add(:year_of_study, "cannot be empty") if year_of_study.nil?
     errors.add(:role, "first years cannot be mentors") if year_of_study && year_of_study.to_i < 2
     errors.add(:num_matches, "cannot exceed max_matches set") if num_matches > max_matches
-    errors.add(:max_matches, "cannot exceed maximum allowed") if max_matches > 3
+    #errors.add(:max_matches, "cannot exceed maximum allowed") if max_matches > GlobalVariable.MAX_MATCHES
     errors.add(:user_id, "must belong to a mentor") unless @role.nil? || @role == "mentor"
   end
 
   def available?
-    (num_matches < max_matches) && self.availability
+    self.availability
+  end
+
+  def below_limit?
+    Match.where(mentor_id: self.user_id, status: "active").count < max_matches
   end
 
   def experience
@@ -121,8 +130,10 @@ class MenteeProfile < Sequel::Model
     params.key?(:year_of_study) ? @year_of_study = params[:year_of_study] : @year_of_study = 1
 
     self.user_id = params[:user_id] if params.key?(:user_id)
-    params.key?(:availability) ? self.availability = params[:availability] : self.availability = false
-    self.availability = false if Match.first(mentee_id: self.user_id, status: "active")
+    self.availability = params[:availability] if params.key?(:availability)
+    if Match.first(mentee_id: self.user_id, status: "active") || self.availability.nil?
+      self.availability = false
+    end
 
     # SAVING BREAKS EVERYTHING DO NOT SAVE
     # save

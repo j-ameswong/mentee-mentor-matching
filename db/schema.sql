@@ -143,3 +143,11 @@ CREATE TABLE "flagged_accounts" (
     "flagged_at" DateTime
 );
 CREATE INDEX "user_id_flag_index" ON "flagged_accounts" ("user_id");
+
+-- Global variables
+CREATE TABLE "global_variables" (
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "name" TEXT,
+    "value" INTEGER,
+    "description" TEXT
+)
