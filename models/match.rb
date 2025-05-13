@@ -62,12 +62,17 @@ class Match < Sequel::Model
   def activate
     self.status = "active"
     self.start_date = Date.today
-    self.mentor.mentor_profile.update(num_matches: self.mentor.mentor_profile.num_matches + 1)
-    self.mentor.mentor_profile.save
+    self.end_date = Time.at(GlobalVariable.END_DATE).to_datetime
+    puts "Match activated for mentor #{self.mentor_id} and mentee #{self.mentee_id}"
     self.mentee.mentee_profile.update(availability: false)
     self.mentee.mentee_profile.save
-    puts "Match activated for mentor #{self.mentor_id} and mentee #{self.mentee_id}"
+    self.mentor.mentor_profile.update(num_matches: self.mentor.mentor_profile.num_matches + 1) # this value doesnt matter
+    self.mentor.mentor_profile.save
     save
+    self.mentee.mentee_profile.update({})
+    self.mentee.mentee_profile.save
+    self.mentor.mentor_profile.update({})
+    self.mentor.mentor_profile.save
   end
 
   def decline

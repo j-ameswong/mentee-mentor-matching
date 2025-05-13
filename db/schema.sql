@@ -162,3 +162,10 @@ CREATE TABLE "messages" (
     "message_type" TEXT,
     "message_description" TEXT,
 );
+-- Global variables
+CREATE TABLE "global_variables" (
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "name" TEXT,
+    "value" INTEGER,
+    "description" TEXT
+)
