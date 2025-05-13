@@ -144,6 +144,24 @@ CREATE TABLE "flagged_accounts" (
 );
 CREATE INDEX "user_id_flag_index" ON "flagged_accounts" ("user_id");
 
+-- User messages table
+CREATE TABLE "user_messages" (
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "sent_by" TEXT
+    "received_by" TEXT,
+    "message_id" INTEGER,
+    "read_status" Boolean,
+    "created_at" DateTime,
+    FOREIGN KEY ("message_id") REFERENCES "messages" ("id"),
+);
+CREATE INDEX "user_id_message_index" ON "user_messages" ("message_id");
+
+-- List of all messages
+CREATE TABLE "messages" (
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "message_type" TEXT,
+    "message_description" TEXT,
+);
 -- Global variables
 CREATE TABLE "global_variables" (
     "id" INTEGER PRIMARY KEY AUTOINCREMENT,
