@@ -117,6 +117,7 @@ class MenteeProfile < Sequel::Model
 
     self.user_id = params[:user_id] if params.key?(:user_id)
     params.key?(:availability) ? self.availability = params[:availability] : self.availability = false
+    self.availability = false if Match.first(mentee_id: self.user_id, status: "active")
 
     # SAVING BREAKS EVERYTHING DO NOT SAVE
     # save

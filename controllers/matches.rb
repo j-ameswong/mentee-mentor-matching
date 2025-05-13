@@ -87,7 +87,7 @@ post "/matches/mentor" do
     elsif params[:report]
       # TODO: report profile
     end
-  elsif params[:mentee_id] && session[:user].mentor_profile.available? && User.first(params[:mentee_id]).mentee_profile.available?
+  elsif params[:mentee_id] && session[:user].mentor_profile.available? && User.first(id: params[:mentee_id]).mentee_profile.available?
     # if is a regular mentee that applied to this specific mentor
     match = Match.first(mentee_id: params[:mentee_id], mentor_id: session[:user].id, status: "pending")
     if params[:accept]

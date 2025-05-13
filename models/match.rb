@@ -56,6 +56,9 @@ class Match < Sequel::Model
     #puts match.inspect
     match.save
     match.mentor.mentor_profile.update(num_matches: match.mentor.mentor_profile.num_matches + 1)
+    match.mentor.mentor_profile.save
+    match.mentee.mentee_profile.update
+    match.mentee.save
   end
 
   def activate
