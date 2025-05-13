@@ -80,6 +80,8 @@ class MentorProfile < Sequel::Model
     self.num_matches = params[:num_matches] if params.key?(:num_matches)
     self.max_matches = 3 if self.max_matches.nil?
     self.max_matches = params[:max_matches] if params.key?(:max_matches)
+    # Don't update availability here, update when finishing profile edit
+    #self.availability = num_matches < max_matches
     # TODO: temp fix please remove
     # params.key?(:availability) ? (self.availability = params[:availability]) : self.availability = false
     # self.availability = false if self.num_matches >= self.max_matches
@@ -96,7 +98,7 @@ class MentorProfile < Sequel::Model
   end
 
   def available?
-    num_matches < max_matches
+    (num_matches < max_matches) && self.availability
   end
 
   def experience

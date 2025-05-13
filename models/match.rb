@@ -53,8 +53,9 @@ class Match < Sequel::Model
     match.mentee_id = params[:mentee_id]
     match.application_message = params[:message]
 
-    puts match.inspect
+    #puts match.inspect
     match.save
+    match.mentor.mentor_profile.update(num_matches: match.mentor.mentor_profile.num_matches + 1)
   end
 
   def activate
