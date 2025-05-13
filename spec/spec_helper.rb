@@ -31,6 +31,10 @@ RSpec.configure do |config|
   config.before(:suite) do
     spec_before
   end
+
+  # config.after(:all) do
+  #   spec_after
+  # end
 end
 
 # This is to be overridden if needed in spec/spec_functions,

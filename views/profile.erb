@@ -19,9 +19,9 @@
     <h3><%= @viewed_user.username.capitalize %>'s Profile</h3>
     <div id="profile-box" class="content-box centerer">
       <form method="post" action="/profile?id=<%= @viewed_user.id %>" enctype="multipart/form-data">
-        <figure class="row profile_pic centerer">
+        <figure class="row centerer">
           <%# If profile pic has not been set by user, use default profile picture %>
-          <img width="100" height="100" src="/images/user/<%= @viewed_user.profile.profile_picture %>" alt="Not Found"
+          <img class="profile_pic" width="100" height="100" src="/images/user/<%= @viewed_user.profile.profile_picture %>" alt="Not Found"
               onerror="this.src='/images/blankProfilePicture.webp'"/>
         </figure>
 

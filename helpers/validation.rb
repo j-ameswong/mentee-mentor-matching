@@ -65,16 +65,14 @@ module Validation
     !!(str =~ /[<>&"'\/]/)
   end
 
-  def valid_pic?(pic_data)
+  def invalid_pic?(pic_data)
     return false if pic_data.nil?
 
     file_ext = pic_data[:filename].split(".").last if pic_data && pic_data[:filename]
-    return false unless file_ext
+    valid_extensions = %w[jpg jpeg png]
+    return "error; invalid file format. Please upload a PNG or JPG file." unless file_ext && valid_extensions.include?(file_ext.downcase)
 
     file_size = pic_data[:tempfile].size if pic_data && pic_data[:tempfile]
-    return false unless file_size && file_size <= 5 * 1024 * 1024 # 5MB limit
-
-    valid_extensions = %w[jpg jpeg png]
-    valid_extensions.include?(file_ext.downcase)
+    "error; file size exceeds 5MB limit." unless file_size && file_size <= 5 * 1024 * 1024 # 5MB limit
   end
 end
