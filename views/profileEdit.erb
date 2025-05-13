@@ -153,12 +153,6 @@
           </div>
         </div>
 
-        <% unless @edited_user.errors.count == 0 %>
-          <h4>Error:
-            <%= @edited_user.errors %>
-          </h4>
-        <% end %>
-
         <p class="error"><%= @edited_user.errors.inspect.tr(':{"[]}', '') %></p>
 
         <button type="submit">Save</button>

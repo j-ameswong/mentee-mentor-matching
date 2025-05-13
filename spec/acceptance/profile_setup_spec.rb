@@ -38,9 +38,9 @@ RSpec.describe "Edit Profile" do
 
       # Simulate uploading an invalid file format
       visit "/profile/edit"
-      attach_file("Upload Profile Picture", "spec/fixtures/profile_picture.txt")
+      attach_file("Upload Profile Picture", "spec/fixtures/profile_picture.webp")
       click_button "Save"
-      expect(page).to have_content("Invalid file format. Please upload a PNG or JPG file.")
+      expect(text).to include("profile_pic error; invalid file format. Please upload a PNG or JPG file.")
     end
 
     it "displays an error message for oversized file" do
@@ -57,7 +57,7 @@ RSpec.describe "Edit Profile" do
       visit "/profile/edit"
       attach_file("Upload Profile Picture", "spec/fixtures/oversized_profile_picture.jpg")
       click_button "Save"
-      expect(page).to have_content("File size exceeds 5MB limit.")
+      expect(page).to have_content("profile_pic error; file size exceeds 5MB limit.")
     end
   end
 end

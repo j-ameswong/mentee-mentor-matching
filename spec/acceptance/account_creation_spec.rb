@@ -8,13 +8,13 @@ RSpec.describe "Account creation" do
       expect(page).to have_content("Sign up instead")
 
       click_link "Sign up instead"
-      fill_in "Username", with: "menteeUser"
+      fill_in "Username", with: "menteeuser"
 
       fill_in "first_name", with: "Mentee"
       fill_in "last_name", with: "User"
 
-      fill_in "Email", with: "menteemail@sheffield.ac.uk"
-      fill_in "DoB", with: Date.new(2001, 02, 03) \
+      fill_in "Email", with: "menteemail1@sheffield.ac.uk"
+      fill_in "DoB", with: Date.new(2001, 02, 03)
 
         select "Mentee", from: "role"
       select "Year 1", from: "year_of_study"
@@ -33,9 +33,9 @@ RSpec.describe "Account creation" do
 
       expect(page).to have_content("Welcome to UniConnect!")
 
-      visit "/approvals"
+      visit "/accounts"
 
-      expect(page).to have_content("menteemail@sheffield.ac.uk")
+      expect(page).to have_content("menteeuser")
     end
 
     it "requires an admin to approve the account" do
@@ -51,11 +51,11 @@ RSpec.describe "Account creation" do
 
       visit "/approvals"
 
-      expect(page).to have_content("menteemail@sheffield.ac.uk")
+      expect(page).to have_content("menteemail1@sheffield.ac.uk")
 
       click_link "Approve"
 
-      expect(page).not_to have_content("menteemail@sheffield.ac.uk")
+      expect(page).not_to have_content("menteemail1@sheffield.ac.uk")
     end
   end
 

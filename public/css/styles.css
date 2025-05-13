@@ -763,3 +763,9 @@ textarea {
     min-height: 15vh;
     border-radius: 10px;
 }
+
+.error {
+    color: darkred;
+    font-size: 1em;
+    margin: 0;
+}
