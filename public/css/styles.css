@@ -493,12 +493,19 @@ footer {
     text-align: left;
     justify-content: center;
 
-    width: 20vw;
-    height: 20vw;
+    max-width: 5vw;
+    max-height: 5vw;
     border-radius: 50%;
     outline-style: solid;
     outline-width: medium;
     outline-color: var(--purple);
+}
+
+.pfp-img {
+    max-width: 5vw;
+    max-height: 5vw;
+    height: 5vw;
+    border-radius: 50%;
 }
 
 #statements {
