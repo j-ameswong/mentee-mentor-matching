@@ -11,10 +11,22 @@ def send_match_notification(sent_by, received_by, message_type)
   end
 end
 
+def check_match_end
+  # Check for match end
+  session[:user].mentee_matches.first.check_end if session[:user].mentee?
+  if session[:user].mentor?
+    session[:user].mentor_matches.all.each do |match|
+      match.check_end
+    end
+  end
+end
+
 get "/matches" do
   redirect "/login" unless session[:logged_in]
   redirect "/matches/mentee" if session[:user].mentee?
   redirect "/matches/mentor" if session[:user].mentor?
+
+  check_match_end
 end
 
 get "/matches/matched" do
@@ -38,6 +50,7 @@ get "/matches/mentee" do
       @currentMentor = match.mentor
     end
 
+    check_match_end
     erb :menteeMatching
   end
 end
@@ -75,6 +88,8 @@ get "/matches/mentor" do
   mentor_id = session[:user].id
   @menteeApplicants = Match.where(mentor_id: mentor_id, status: 'pending')
   @mentees = MenteeProfile.where(availability: true)
+
+  check_match_end
   erb :mentorMatching
 end
 
@@ -98,6 +113,8 @@ get "/matches/matched/mentor" do
 
   mentor_id = session[:user].id
   @mentees = Match.where(mentor_id: mentor_id, status: 'active')
+
+  check_match_end
   erb :mentorMatchingMatches
 end
 

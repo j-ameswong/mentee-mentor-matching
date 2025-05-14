@@ -83,9 +83,17 @@ class Match < Sequel::Model
 
   def end
     self.status = "completed"
-    # TODO: set end_date to global variable semester end date
     self.end_date = Date.today
     save
+  end
+
+  def check_end
+    puts "Checking end date..."
+    puts self.end_date
+    puts Date.today.to_datetime
+    if Date.today.to_datetime.to_i > self.end_date.to_datetime.to_i
+      puts "THE END TIMES HAVE ARRIVED"
+    end
   end
 
   def cancel
