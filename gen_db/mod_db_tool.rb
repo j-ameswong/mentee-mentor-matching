@@ -13,6 +13,65 @@ require_relative '../db/db.rb'
 # users = User.where(username: "luqman")
 # users.each do |user|
 #   user.delete_from_all
+DB.transaction do
+  unless DB.schema(:authentication).map { |col| col[0] }.include?(:flagged)
+    puts "flagged column added to the authentication table"
+    DB.alter_table :authentication do
+      add_column :flagged, TrueClass, default: false
+    end
+  end
+  
+  unless DB.schema(:authentication).map { |col| col[0] }.include?(:flag_reasoning)
+    puts "flag_reasoning column added to the authentication table"
+    DB.alter_table :authentication do
+      add_column :flag_reasoning, String, text: true
+    end
+  end
+  
+  unless DB.table_exists?(:flagged_accounts)
+    puts "Creating flagged_accounts table"
+    DB.create_table :flagged_accounts do
+      primary_key :id
+      String :user_id
+      String :flag_reasoning, text: true
+      DateTime :flagged_at
+      
+      index :user_id
+    end
+  end
+end
+
+# User.where(role: nil).delete
+# User.where(role: nil).delete
+# User.where(role: nil).delete
+# User.where(role: nil).delete
+
+# -- User messages table
+# CREATE TABLE "user_messages" (
+#     "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+#     "sent_by" TEXT
+#     "recieved_by" TEXT,
+#     "message_id" INTEGER,
+#     "read_status" Boolean,
+#     "created_at" DateTime,
+#     FOREIGN KEY ("message_id") REFERENCES "messages" ("id"),
+# );
+# CREATE INDEX "user_id_message_index" ON "user_messages" ("message_id");
+
+# -- List of all messages
+# CREATE TABLE "messages" (
+#     "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+#     "message_type" TEXT,
+#     "message_description" TEXT,
+# );
+
+# DB.create_table? :user_messages do
+#   primary_key :id
+#   String :sent_by
+#   String :recieved_by
+#   foreign_key :message_id, :messages
+#   Boolean :read_status
+#   DateTime :created_at
 # end
 
 # # User.where(role: nil).delete
@@ -90,4 +149,6 @@ require_relative '../db/db.rb'
 
 DB.alter_table :user_messages do
   add_column :received_by, :text
+end
+  rename_column :recieved_by, :received_by
 end

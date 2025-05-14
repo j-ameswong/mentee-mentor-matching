@@ -30,20 +30,20 @@ class UserMessage < Sequel::Model
   end
   
   # uility method to send a message to a user
-  def self.send_message(options = {})
-    options = {
-      sent_by: "System",
-      message_type: nil,
-      received_by: nil  
-    }.merge(options)
-
+  def self.send_message(options)
+    puts options
+    options[:sent_by] = "Uni Connect" unless options[:sent_by]
+    options[:received_by] = nil unless options[:received_by]
+    options[:message_type] = nil unless options[:message_type]
+      
     return false if options[:message_type].nil? || options[:received_by].nil?
+    
+    puts "YEP" if Message.first(message_type: options[:message_type])
+    return unless Message.first(message_type: options[:message_type])
 
-    message = Message.first(message_type: options[:message_type])
-    return false unless message
     
     create(
-      message_id: message.id,
+      message_id: Message.first(message_type: options[:message_type]).id,
       sent_by: options[:sent_by],
       received_by: options[:received_by],
       read_status: 0  # Initialize as unread

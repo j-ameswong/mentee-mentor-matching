@@ -27,27 +27,18 @@ end
   
 get "/matches/mentee" do
   redirect "/login" unless session[:logged_in]
+  redirect "/matches/mentor" if session[:user].mentor?
 
-  if session[:user].role == 'mentee'
-    user = User.first(id: session[:user].id)  
-    mentee_profile = MenteeProfile.first(user_id: user.id) 
-    
-    if mentee_profile && mentee_profile.availability
-      match = Match.first(mentee_id: user.id, status: "active")
-      
-      if match
-        mentor_id = match.mentor_id
-        @currentMentor = MentorProfile.first(user_id: mentor_id)
-      else
-        @currentMentor = nil
-      end
-    else
-      @currentMentor = nil
+  if session[:user].mentee?
+    user = session[:user]
+    mentee_profile = user.mentee_profile
+    match = Match.first(mentee_id: user.id, status: "active")
+
+    if mentee_profile && match
+      @currentMentor = match.mentor
     end
 
     erb :menteeMatching
-  else
-    redirect "/matches/mentor"
   end
 end
 
@@ -69,6 +60,14 @@ post "/matches/mentee" do
   redirect "/matches/mentee"
 end
 
+post "/matches/mentee/report" do
+  redirect "/login" unless session[:logged_in]
+  redirect "/matches/mentor" if session[:user].mentor?
+
+  target_id = params[:target_id]
+  redirect "/support?target_id=#{target_id}&type=#{TicketType.first(name: "report").id}"
+end
+
 get "/matches/mentor" do
   redirect "/login" unless session[:logged_in]
   redirect "/matches/mentee" if session[:user].mentee?
@@ -79,6 +78,20 @@ get "/matches/mentor" do
   erb :mentorMatching
 end
 
+post "/matches/matched/mentee" do
+  redirect "/login" unless session[:logged_in]
+  redirect "/matches/mentor" if session[:user].mentor?
+
+  target_id = params[:target_id]
+  if params[:report]
+    redirect "/support?target_id=#{target_id}&type=#{TicketType.first(name: "report").id}"
+  elsif params[:withdrawal]
+    redirect "/matches/matched/withdrawal"
+  else
+    redirect "/matches/mentee"
+  end
+end
+
 get "/matches/matched/mentor" do 
   redirect "/login" unless session[:logged_in]
   redirect "/matches/mentee" if session[:user].mentee?
@@ -86,6 +99,20 @@ get "/matches/matched/mentor" do
   mentor_id = session[:user].id
   @mentees = Match.where(mentor_id: mentor_id, status: 'active')
   erb :mentorMatchingMatches
+end
+
+post "/matches/matched/mentor" do
+  redirect "/login" unless session[:logged_in]
+  redirect "/matches/mentee" if session[:user].mentee?
+
+  target_id = params[:target_id]
+  if params[:report]
+    redirect "/support?target_id=#{target_id}&type=#{TicketType.first(name: "report").id}"
+  elsif params[:withdrawal]
+    redirect "/matches/matched/withdrawal"
+  else
+    redirect "/matches/matched/mentor"
+  end
 end
 
 post "/matches/mentor" do
@@ -159,6 +186,14 @@ post "/matches/mentor" do
 
   redirect "/matches/mentor" unless @error
   erb :mentorMatching if @error
+end
+
+post "/matches/mentor/report" do
+  redirect "/login" unless session[:logged_in]
+  redirect "/matches/mentor" unless session[:user].mentor? || session[:user].admin?
+
+  target_id = params[:target_id]
+  redirect "/support?target_id=#{target_id}&type=#{TicketType.first(name: "report").id}"
 end
 
 post "/matches/mentor/set-max" do

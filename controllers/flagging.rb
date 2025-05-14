@@ -7,7 +7,8 @@ def send_notification_safely(sent_by, received_by, message_type)
       message_type: message_type
     )
   rescue => e
-    puts "Error sending #{message_type} notification: #{e.message}"
+    puts $!.backtrace unless $!.nil?
+    puts "Error sending #{message_type} notification: #{}"
   end
 end
 
