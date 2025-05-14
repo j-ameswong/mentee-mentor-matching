@@ -13,9 +13,9 @@ end
 
 def check_match_end
   # Check for match end
-  session[:user].mentee_matches.first.check_end if session[:user].mentee?
-  if session[:user].mentor?
-    session[:user].mentor_matches.all.each do |match|
+  session[:user].mentee_matches.first.check_end if session[:user].mentee? && Match.first(mentee_id: session[:user].id, status: "active")
+  if session[:user].mentor? && Match.first(mentor_id: session[:user].id, status: "active")
+    session[:user].mentor_matches.each do |match|
       match.check_end
     end
   end
