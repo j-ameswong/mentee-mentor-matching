@@ -36,11 +36,16 @@
                 <option value=<%= row.mentee_id %>><%= row.mentee.username %></option>
               <% end %>
             <% end %>
+          <% elsif session[:user].mentee? %>
+            <% match = Match.first(mentor_id: @target_id, mentee_id: session[:user].id, status: "active") %>
+            <% if match && @target_id != match.mentor_id %>
+              <option value=<%= match.mentor_id %>><%= match.mentor.username %></option>
+            <% end %>
           <% end %>
         </select>
 
         <br><br><br><br><br>
-        <label for="help-request">Please Specify: </label>
+        <label for="help-request">Please Specify/Provide good reasoning: </label>
         <br>
         <br>
         <textarea name="details" id="help-request"></textarea>

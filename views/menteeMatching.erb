@@ -39,7 +39,7 @@
                     <p class="profile-bio-detailed">Bio: <%= @mentor.bio_brief %></p>
                     <a class="view-profile" href=<%="/profile?id=#{@mentor.user_id}"%>>View profile and contact information</a>
                     <div class="matching-wrapper" id="<%= @mentor.user_id %>-wrapper">
-                      <form method="post" action="/matching/mentee/matched">
+                      <form method="post" action="/matches/matched/mentee">
                         <input hidden name="target_id" value=<%= @mentor.user_id %>>
                         <button name="withdrawal" type="submit" class="withdraw-mentor" id="<%= @mentor.user_id %>-withdraw">Withdraw</button>
                         <button name="report" type="submit" class="report-mentor" id="<%= @mentor.user_id %>-report">Report</button>

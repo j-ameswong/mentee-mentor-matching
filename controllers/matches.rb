@@ -59,6 +59,20 @@ get "/matches/mentor" do
   erb :mentorMatching
 end
 
+post "/matches/matched/mentee" do
+  redirect "/login" unless session[:logged_in]
+  redirect "/matches/mentor" if session[:user].mentor?
+
+  target_id = params[:target_id]
+  if params[:report]
+    redirect "/support?target_id=#{target_id}&type=#{TicketType.first(name: "report").id}"
+  elsif params[:withdrawal]
+    redirect "/matches/matched/withdrawal"
+  else
+    redirect "/matches/mentee"
+  end
+end
+
 get "/matches/matched/mentor" do 
   redirect "/login" unless session[:logged_in]
   redirect "/matches/mentee" if session[:user].mentee?
