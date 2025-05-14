@@ -44,7 +44,7 @@ class Match < Sequel::Model
   end
 
   def self.exists?(mentee_id, mentor_id)
-    true if Match.first(mentee_id: mentee_id, mentor_id: mentor_id)
+    Match.first(mentee_id: mentee_id, mentor_id: mentor_id) ? true : false
   end
 
   def self.generate!(params)

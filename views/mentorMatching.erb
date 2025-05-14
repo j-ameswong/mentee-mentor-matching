@@ -26,8 +26,8 @@
       <button id="max-mentees-button" class="centerer">Set</button>
     </form>
 
-    <div id="matching-list" class="content-box">
-      <div id="mentee-applicants">
+    <section id="matching-list" class="content-box">
+      <section id="mentee-applicants">
         <h2>Mentee Applications</h2>
         <% unless @menteeApplicants.nil? %>
           <% @menteeApplicants.all.each do |row| %>
@@ -45,7 +45,7 @@
               </div>
               <div id="applicant-detailed-info" class="detailed-info">
                 <p class="detailed-info-content">Age: <%= mentee.age %></p>
-                <p class="detailed-info-content">Nationality: <%= Nationality.first(id: mentee.nationality_id).country_name %></p>
+                <p class="detailed-info-content">Nationality: <%= Nationality.first(id: mentee.nationality_id).country_name unless mentee.nationality_id.nil? %></p>
                 <p class="detailed-info-content">Languages: 
                     <% UserLanguage.where(user_id: row.mentee_id).each do |ulanguage| %>
                         <%= ulanguage.language.language_name %>
@@ -68,7 +68,7 @@
           <% end %>
         <% end %>
 
-        <div id="mentee-others">
+        <section id="mentee-others">
             <h2>Waitlisted Mentees</h2>
             <% unless @mentees.nil? %>
               <% @mentees.all.each do |row| %>
@@ -102,6 +102,10 @@
                               <input type="hidden" name="mentee_id" value="<%= row.user.id %>">
                               <input type="hidden" name="waitlisted_mentee">
                               <button type="submit" class="apply-mentor" name="accept">Match</button>
+                            </form>
+                            <form method="post" action="/matches/report">
+                              <input type="hidden" name="mentee_id" value="<%= row.user.id %>">
+                              <input type="hidden" name="waitlisted_mentee">
                               <button type="submit" class="apply-mentor" name="report">Report</button>
                             </form>
                           </div>
@@ -110,8 +114,8 @@
                 <% end %>
               <% end %>
             <% end %>
-        </div>
-    </div>
+        </section>
+    </section>
 </div>
 
   </div>
