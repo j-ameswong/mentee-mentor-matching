@@ -22,7 +22,7 @@
         <label for="help-request-type">What do you need help with?:</label>
         <select name="type" id="help-category">
           <% TicketType.each do |row| %>
-            <option <%= "disabled" if User.first(id: @target_id) %>
+            <option <%= "disabled" unless @errors || !User.first(id: @target_id) %>
                     <%= "selected" if @type == row.id %> value="<%= row.id %>"><%= row.desc_brief %></option>
           <% end %>
           <% if User.first(id: @target_id) %>

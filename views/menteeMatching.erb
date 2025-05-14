@@ -37,6 +37,9 @@
                 </div>
                 <div class="bio-and-accept">
                     <p class="profile-bio-detailed">Bio: <%= @mentor.bio_brief %></p>
+                    <% if SupportTicket.withdrawing?(session[:user].mentee_matches.first) %>
+                      <p class="profile-bio-detailed" style="color: red"><%= TicketType.first(id: SupportTicket.withdraw?).description %></p>
+                    <% end %>
                     <a class="view-profile" href=<%="/profile?id=#{@mentor.user_id}"%>>View profile and contact information</a>
                     <div class="matching-wrapper" id="<%= @mentor.user_id %>-wrapper">
                       <form method="post" action="/matches/matched/mentee">
