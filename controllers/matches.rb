@@ -86,7 +86,7 @@ post "/matches/matched/mentee" do
   if params[:report]
     redirect "/support?target_id=#{target_id}&type=#{TicketType.first(name: "report").id}"
   elsif params[:withdrawal]
-    redirect "/matches/matched/withdrawal"
+    redirect "/support?target_id=#{target_id}&type=#{TicketType.first(name: "withdrawal").id}"
   else
     redirect "/matches/mentee"
   end
@@ -107,9 +107,9 @@ post "/matches/matched/mentor" do
 
   target_id = params[:target_id]
   if params[:report]
-    redirect "/support?target_id=#{target_id}&type=#{TicketType.first(name: "report").id}"
+    redirect "/support?target_id=#{target_id}&type=#{SupportTicket.report?}"
   elsif params[:withdrawal]
-    redirect "/matches/matched/withdrawal"
+    redirect "/support?target_id=#{target_id}&type=#{SupportTicket.withdraw?}"
   else
     redirect "/matches/matched/mentor"
   end
