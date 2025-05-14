@@ -126,6 +126,14 @@ post "/matches/mentor" do
   erb :mentorMatching if @error
 end
 
+post "/matches/mentor/report" do
+  redirect "/login" unless session[:logged_in]
+  redirect "/matches/mentor" unless session[:user].mentor? || session[:user].admin?
+
+  target_id = params[:target_id]
+  redirect "/support?target_id=#{target_id}&type=#{TicketType.first(name: "report").id}"
+end
+
 post "/matches/mentor/set-max" do
   redirect "/login" unless session[:logged_in]
   redirect "/matches" unless session[:user].mentor? || session[:user].admin?
