@@ -13,3 +13,12 @@ post "/support" do
   SupportTicket.create!(params.merge!(:sent_by => session[:user].id))
   redirect "/support"
 end
+
+get "/support/admin" do
+  redirect "/login" unless session[:logged_in]
+  redirect "/support" if (session[:user].mentor? || session[:user].mentee?)
+
+  @tickets = SupportTicket.all
+  erb :adminSupport
+end
+
