@@ -22,17 +22,19 @@
         <label for="help-request-type">What do you need help with?:</label>
         <select name="type" id="help-category">
           <% TicketType.each do |row| %>
-            <option <%= "selected" if @type && @type == row.id %> value="<%= row.id %>"><%= row.desc_brief %></option>
+            <option <%= "selected" if @type == row.id %> value="<%= row.id %>"><%= row.desc_brief %></option>
           <% end %>
         </select>
 
         <select name="target_id">
-          <% if @target_id %>
+          <% if User.first(id: @target_id) %>
             <option selected value=<%= @target_id %>><%= User.first(id: @target_id).username %></option>
           <% end %>
           <% if session[:user].mentor? %>
             <% Match.where(mentor_id: session[:user].id, status: "active").each do |row| %>
-              <option value=<%= row.mentee_id %>><%= row.mentee.username %></option>
+              <% if @target_id != row.mentee_id %>
+                <option value=<%= row.mentee_id %>><%= row.mentee.username %></option>
+              <% end %>
             <% end %>
           <% end %>
         </select>
