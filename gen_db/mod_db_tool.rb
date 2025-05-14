@@ -3,56 +3,56 @@ require_relative '../models/user.rb'
 require_relative '../db/db.rb'
 
 
-#DB.alter_table :mentor_profiles do
-  # drop_column :expertise_name
-#add_column :availability, :boolean
-#DB.alter_table :authentication do
-  # add_column :flag_reasoning, :text
-#end
+# #DB.alter_table :mentor_profiles do
+#   # drop_column :expertise_name
+# #add_column :availability, :boolean
+# #DB.alter_table :authentication do
+#   # add_column :flag_reasoning, :text
+# #end
 
-users = User.where(username: "luqman")
-users.each do |user|
-  user.delete_from_all
-end
-
-# User.where(role: nil).delete
-# User.where(role: nil).delete
-# User.where(role: nil).delete
-# User.where(role: nil).delete
-
-# -- User messages table
-# CREATE TABLE "user_messages" (
-#     "id" INTEGER PRIMARY KEY AUTOINCREMENT,
-#     "sent_by" TEXT
-#     "recieved_by" TEXT,
-#     "message_id" INTEGER,
-#     "read_status" Boolean,
-#     "created_at" DateTime,
-#     FOREIGN KEY ("message_id") REFERENCES "messages" ("id"),
-# );
-# CREATE INDEX "user_id_message_index" ON "user_messages" ("message_id");
-
-# -- List of all messages
-# CREATE TABLE "messages" (
-#     "id" INTEGER PRIMARY KEY AUTOINCREMENT,
-#     "message_type" TEXT,
-#     "message_description" TEXT,
-# );
-
-# DB.create_table? :user_messages do
-#   primary_key :id
-#   String :sent_by
-#   String :recieved_by
-#   foreign_key :message_id, :messages
-#   Boolean :read_status
-#   DateTime :created_at
+# users = User.where(username: "luqman")
+# users.each do |user|
+#   user.delete_from_all
 # end
 
-# DB.create_table? :messages do
-#   primary_key :id
-#   String :message_type
-#   String :message_description
-# end
+# # User.where(role: nil).delete
+# # User.where(role: nil).delete
+# # User.where(role: nil).delete
+# # User.where(role: nil).delete
+
+# # -- User messages table
+# # CREATE TABLE "user_messages" (
+# #     "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+# #     "sent_by" TEXT
+# #     "received_by" TEXT,
+# #     "message_id" INTEGER,
+# #     "read_status" Boolean,
+# #     "created_at" DateTime,
+# #     FOREIGN KEY ("message_id") REFERENCES "messages" ("id"),
+# # );
+# # CREATE INDEX "user_id_message_index" ON "user_messages" ("message_id");
+
+# # -- List of all messages
+# # CREATE TABLE "messages" (
+# #     "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+# #     "message_type" TEXT,
+# #     "message_description" TEXT,
+# # );
+
+# # DB.create_table? :user_messages do
+# #   primary_key :id
+# #   String :sent_by
+# #   String :received_by
+# #   foreign_key :message_id, :messages
+# #   Boolean :read_status
+# #   DateTime :created_at
+# # end
+
+# # DB.create_table? :messages do
+# #   primary_key :id
+# #   String :message_type
+# #   String :message_description
+# # end
 
 # messages = [
 #   { message_type: 'account_deleted', message_description: 'Your account has been deleted by an admin' },
@@ -68,6 +68,20 @@ end
 #   { message_type: 'report', message_description: 'Your account has been reported for misconduct' }
 # ]
 
+# # messages.each do |msg|
+# #   Message.find_or_create(message_type: msg[:message_type]) do |m|
+# #     m.message_description = msg[:message_description]
+# #   end
+# # end
+
+# # DB.alter_table :user_messages do
+# #   rename_column :received_by, :received_by
+# # end
+
+# # messages = [
+# #   { message_type: 'match_pending', message_description: 'You have received a new mentee application' }
+# # ]
+
 # messages.each do |msg|
 #   Message.find_or_create(message_type: msg[:message_type]) do |m|
 #     m.message_description = msg[:message_description]
@@ -75,5 +89,5 @@ end
 # end
 
 DB.alter_table :user_messages do
-  rename_column :recieved_by, :received_by
+  add_column :received_by, :text
 end

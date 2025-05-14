@@ -91,6 +91,42 @@ class Match < Sequel::Model
   def cancel
     self.status = "cancelled"
     self.end_date = Date.today
+    #TODO : cancel match message
+    #TODO : send message to mentee
+    #TODO : send message to mentor
+    begin 
+      UserMessage.send_message(
+        sent_by: "System",
+        received_by: self.mentee_id,
+        message_type: "match_cancelled"
+      )
+      UserMessage.send_message(
+        sent_by: "System",
+        received_by: self.mentor_id,
+        message_type: "match_cancelled"
+      )
+
+    rescue => e
+      puts "Error sending match cancelled notification: #{e.message}"
+    end
+
+    begin
+      mentor_profile = self.mentor.mentor_profile
+      mentor_profile.update(num_matches: mentor_profile.num_matches - 1)
+      mentor_profile.save
+    rescue => e
+      puts "Error updating mentors number of matches: #{e.message}"
+    end
+
+    begin
+      if Match.where(mentee_id: self.mentee_id, status: "active").count == 0
+        mentee_profile = self.mentee.mentee_profile
+        mentee_profile.update(availability: true)
+        mentee_profile.save
+      end
+    rescue => e
+      puts "Error updating mentee availability :  #{e.message}"
+    end
     save
   end
 end

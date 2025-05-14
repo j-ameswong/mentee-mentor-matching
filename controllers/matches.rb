@@ -1,3 +1,16 @@
+# Helper method for safe message sending
+def send_match_notification(sent_by, received_by, message_type)
+  begin
+    UserMessage.send_message(
+      sent_by: sent_by,
+      received_by: received_by,
+      message_type: message_type
+    )
+  rescue => e
+    puts "Error sending match notification (#{message_type}): #{e.message}"
+  end
+end
+
 get "/matches" do
   redirect "/login" unless session[:logged_in]
   redirect "/matches/mentee" if session[:user].mentee?
@@ -45,6 +58,12 @@ post "/matches/mentee" do
   unless Match.exists?(session[:user].id, params[:mentor_id])
     Match.generate!(params.merge(:mentee_id => session[:user].id))
     puts "Match application created by #{session[:user].id} to #{params[:mentor_id]}"
+
+    send_match_notification(
+      session[:user].username,
+      params[:mentor_id],
+      'match_pending'
+    )
   end
 
   redirect "/matches/mentee"
@@ -86,6 +105,16 @@ post "/matches/mentor" do
       Match.where(mentee_id: params[:mentee_id]).exclude(mentor_id: session[:user].id).delete
       Match.first(mentee_id: params[:mentee_id], mentor_id: session[:user].id, status: "pending").activate
       # TODO: message informing successful match
+      send_match_notification(
+        session[:user].username,
+        params[:mentee_id],
+        'match_success'
+      )
+      send_match_notification(
+        "System",
+        session[:user].id,
+        'match_success'
+      )
       redirect "/matches"
     elsif params[:report]
       # TODO: report profile
@@ -98,11 +127,31 @@ post "/matches/mentor" do
       Match.where(mentee_id: params[:mentee_id]).exclude(mentor_id: session[:user].id).delete
       match.activate
       # TODO: message informing successful match
+      UserMessage.send_message(
+        sent_by: session[:user].username,
+        received_by: params[:mentee_id],
+        message_type: 'match_success'
+      )
+      UserMessage.send_message(
+        sent_by: "System",
+        received_by: session[:user].id,
+        message_type: 'match_success'
+      )
     elsif params[:decline]
       match.decline
       # TODO: create message in message table telling mentee he was rejected
+      UserMessage.send_message(
+        sent_by: session[:user].username,
+        received_by: params[:mentee_id],
+        message_type: 'match_declined'
+      )
     elsif params[:report]
       # TODO: report profile
+      send_match_notification(
+        session[:user].username,
+        params[:mentee_id],
+        'report'
+      )
     end
   else
      @error = "Match has already been accepted by another mentor or mentee limit exceeded"
@@ -122,3 +171,16 @@ post "/matches/mentor/set-max" do
   #puts session[:user].mentor_profile.inspect
   redirect "/matches/mentor"
 end
+
+# WHERE ARE MATHCES COMPLETED?
+# UserMessage.send_message(
+#       sent_by: "System",
+#       received_by: match.mentee_id,
+#       message_type: 'match_completed'
+#     )
+    
+#     UserMessage.send_message(
+#       sent_by: "System",
+#       received_by: match.mentor_id,
+#       message_type: 'match_completed'
+#     )

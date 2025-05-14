@@ -23,16 +23,30 @@ class UserMessage < Sequel::Model
     sender = User.first(id: self[:sent_by])
     sender ? sender.username : "System"
   end
+
+  def received_by
+    receiver = User.first(id: self[:received_by])
+    receiver ? receiver.username : "Unknown"
+  end
   
-  def self.send_message(sent_by_id, received_by_id, message_type)
-    message = Message.first(message_type: message_type)
+  # uility method to send a message to a user
+  def self.send_message(options = {})
+    options = {
+      sent_by: "System",
+      message_type: nil,
+      received_by: nil  
+    }.merge(options)
+
+    return false if options[:message_type].nil? || options[:received_by].nil?
+
+    message = Message.first(message_type: options[:message_type])
     return false unless message
     
     create(
       message_id: message.id,
-      sent_by: sent_by_id,
-      received_by: received_by_id,
-      read_status: 0
+      sent_by: options[:sent_by],
+      received_by: options[:received_by],
+      read_status: 0  # Initialize as unread
     )
   end
 end

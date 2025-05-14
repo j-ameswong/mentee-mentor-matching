@@ -1,3 +1,16 @@
+#Helper methods for safe message sending
+def send_notification_safely(sent_by, received_by, message_type)
+  begin
+    UserMessage.send_message(
+      sent_by: sent_by,
+      received_by: received_by,
+      message_type: message_type
+    )
+  rescue => e
+    puts "Error sending #{message_type} notification: #{e.message}"
+  end
+end
+
 get "/flagging" do
   redirect "/" unless session[:logged_in] && session[:user].admin?
   query = User
@@ -34,6 +47,7 @@ post "/flagging" do
   redirect "/flagging"
 end
 
+
 post "/flag" do
   redirect "/" unless session[:logged_in] && session[:user].admin?
   
@@ -43,6 +57,8 @@ post "/flag" do
   user = User.first(id: user_id)
   if user && !reasoning.empty?
     user.flag(reasoning)
+    #TODO : message for flagging
+    send_notification_safely(session[:user].username || "Admin", user.id, 'account_flagged')
   end
   
   redirect "/flagging"
@@ -54,6 +70,8 @@ post "/unflag/:id" do
   user = User.first(id: params[:id].to_i)
   if user
     user.unflag
+    #TODO : message for flagging
+    send_notification_safely(session[:user].username || "Admin", user.id, 'account_flagged')
   end
   
   redirect "/flagging"
@@ -64,6 +82,8 @@ post "/delete/:id" do
   
   user = User.first(id: params[:id].to_i)
   if user
+    #TODO : message for account deletion
+    send_notification_safely(session[:user].username || "Admin", user.id, 'account_deleted')
     user.delete_from_all
   end
   
