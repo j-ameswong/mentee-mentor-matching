@@ -35,6 +35,11 @@ elsif choice == "4"
   puts lang.id
 end
 
-today = DateTime.new(2025,5,24).to_i
-puts today
+ticket = SupportTicket.first(is_read: false)
+puts ticket.sent_by_user
+puts ticket.target_id_user
+puts ticket.ticket_type
+
+
+
 
