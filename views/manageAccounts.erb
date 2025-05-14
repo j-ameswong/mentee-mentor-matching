@@ -99,23 +99,6 @@
 <body>
 <%= erb :"common/header" %>
 <section class="content">
-  <% if @flash && !@flash.empty? %>
-    <div class="row centerer">
-      <div class="content-box">
-        <% if @flash.is_a?(String) %>
-          <div class="flash-message">
-            <%= @flash %>
-          </div>
-        <% else %>
-          <% @flash.each do |type, message| %>
-            <div class="flash-<%= type %>">
-              <%= message %>
-            </div>
-          <% end %>
-        <% end %>
-      </div>
-    </div>
-  <% end %>
 
   <h3>Accounts Management</h3>
 
@@ -174,7 +157,6 @@
           <th>Email</th>
           <th>Account Type</th>
           <th>Flag Status</th>
-          <th>Flag Reason</th>
           <th>Actions</th>
         </tr>
         </thead>
@@ -186,7 +168,6 @@
             <td><%= user.email %></td>
             <td><%= user.role.capitalize %></td>
             <td><%= user.flagged? ? 'Flagged' : 'Not Flagged' %></td>
-            <td><%= user.flag_reasoning %></td>
             <td>
               <form action="/accounts/action" method="post">
                 <input type="hidden" name="user_id" value="<%= user.id %>">
@@ -199,19 +180,12 @@
                     <% if user.role == "mentor" %>
                       <option value="apply_badge">Apply Badge</option>
                     <% end %>
-                    <% if user.flagged? %>
-                      <option value="unflag">Unflag</option>
-                    <% else %>
-                      <option value="flag">Flag</option>
-                    <% end %>
                   </select>
                 </div>
                 <div class="row centerer">
                   <input type="submit" value="Submit" class="row centerer">
                 </div>
               </form>
-              <form id="flag-form-<%= user.id %>" style="display: none;"></form>
-              <form id="unflag-form-<%= user.id %>" action="/unflag/<%= user.id %>" method="post" style="display: none;"></form>
               <form id="delete-form-<%= user.id %>" action="/delete/<%= user.id %>" method="post" style="display: none;"></form>
             </td>
           </tr>
@@ -242,22 +216,6 @@
   </div>
 </section>
 
-<div id="flagModal" class="modal">
-  <div class="modal-content">
-    <h4>Flag User: <span id="modalUsername"></span></h4>
-    <form action="/flag" method="post" id="flagForm">
-      <input type="hidden" name="user_id" id="modalUserId">
-      <label for="flag_reasoning">Reason for flagging:</label>
-      <textarea name="flag_reasoning" id="flag_reasoning" required placeholder="Please provide a reason for flagging this user"></textarea>
-      <div class="modal-buttons">
-        <button type="button" class="close-modal" onclick="closeModal()">Cancel</button>
-        <button type="submit" class="submit-modal">Submit</button>
-      </div>
-    </form>
-  </div>
-</div>
-
-<script src="/js/flagModal.js"></script>
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     const forms = document.querySelectorAll('form[action="/accounts/action"]');
@@ -266,13 +224,7 @@
       form.addEventListener('submit', function(e) {
         const action = form.querySelector('select[name="action"]').value;
         const userId = form.querySelector('input[name="user_id"]').value;
-        
-        if (action === 'flag') {
-          e.preventDefault();
-          const username = form.closest('tr').querySelector('td:first-child').textContent;
-          openFlagModal(userId, username);
-        }
-        else if (action === 'delete') {
+        if (action === 'delete') {
           e.preventDefault();
           if (confirm('Are you sure you want to delete this user?')) {
             document.getElementById(`delete-form-${userId}`).submit();

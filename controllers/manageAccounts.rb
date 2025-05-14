@@ -5,8 +5,6 @@ end
 get "/accounts" do
   redirect "/login" unless session[:logged_in]
 
-  @flash = { error: "This is a test flash message" }
-
   if params[:flag_status]
     session[:account_filters] ||= {}
     session[:account_filters][:flag_status] = params[:flag_status]
@@ -44,7 +42,7 @@ get "/accounts" do
 
   @actions = []
   @users.each do |user|
-    actions = ["delete", "reassign"]
+    actions = ["reassign"]
     
     if user[:role] == "mentor" && 
        !MentorProfile.where(user_id: user[:id]).limit(1).pluck(:year_of_study).first.nil? &&
@@ -78,9 +76,6 @@ post "/accounts/action" do
   
   case params[:action]
 
-  when "delete"
-    user.delete_from_all if user
-
   when "reassign"
     # TODO: Implement reassign functionality
 
@@ -104,19 +99,16 @@ post "/accounts/action" do
         if eligible_match_exists
           mentor_profile.update(badges: "Experienced Mentor")
           session[:flash] = { success: "Badge applied successfully." }
+          puts "FLASH SET: #{session[:flash].inspect}"
         else
           session[:flash] = { error: "A mentor must have at least one completed match to gain a badge." }
+          puts "FLASH SET: #{session[:flash].inspect}"
         end
       else
         session[:flash] = { error: "Mentor must be a fourth year student to gain a badge." }
         puts "FLASH SET: #{session[:flash].inspect}" 
       end
     end
-
-  when "flag"
-
-  when "unflag"
-    user.unflag if user
   end
 
   redirect "/accounts"
@@ -150,41 +142,5 @@ post "/no-of-matches" do
     end
   end
 
-  redirect "/accounts"
-end
-
-post "/flag" do
-  redirect "/login" unless session[:logged_in]
-  
-  user_id = params[:user_id].to_i
-  reasoning = params[:flag_reasoning].strip
-  
-  user = User.first(id: user_id)
-  if user && !reasoning.empty?
-    user.flag(reasoning)
-  end
-  
-  redirect "/accounts"
-end
-
-post "/unflag/:id" do
-  redirect "/login" unless session[:logged_in]
-  
-  user = User.first(id: params[:id].to_i)
-  if user
-    user.unflag
-  end
-  
-  redirect "/accounts"
-end
-
-post "/delete/:id" do
-  redirect "/login" unless session[:logged_in]
-  
-  user = User.first(id: params[:id].to_i)
-  if user
-    user.delete_from_all
-  end
-  
   redirect "/accounts"
 end
