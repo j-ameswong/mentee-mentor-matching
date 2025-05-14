@@ -29,10 +29,10 @@
             <% if @filter == "all" || ticket.type.to_s == @filter %>
                 <div class="centerer content-box approvals">
                     <div class="row centerer">
-                        <p id="role-text">Sent by: <%= ticket.sent_by %> </p>
+                        <p id="ticket-sender">Sent by: <%= ticket.sent_by_user.username %> </p>
                     </div>
                     <div class="row centerer">
-                        <p id="email-text">Details: <%= ticket.details %> </p>
+                        <p id="ticket-details">Details: <%= ticket.details %> </p>
                     </div>
                     <% if ticket.type == 1 %> <!-- Withdrawal -->
                         <div class="approval-decision centerer">
@@ -40,7 +40,7 @@
                         </div>
                     <% elsif ticket.type == 2 %> <!-- Report -->
                         <div class="row centerer">
-                            <p id="email-text">Target: <%= ticket.target_id %> </p>
+                            <p id="ticket-receiver">Target: <%= ticket.target_id %> </p>
                         </div>
                         <div class="row centerer">
                             <p>Type: Report</p>
@@ -63,6 +63,11 @@
                             
                         </div>
                     <% end %>
+                    <div class="approval-decision centerer">
+                        <form action="/message-read" method="post">
+                            <button class="approval-btn">Ticket Handled</button>
+                        </form>
+                    </div>
                 </div>
             <% end %>
         <% end %>

@@ -41,3 +41,5 @@ post "/support/filter" do
   filter = params["filter-accounts"]
   redirect "/support/admin?filter=#{params["filter-accounts"]}"
 end
+
+post "/message-read"
