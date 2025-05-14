@@ -37,6 +37,8 @@ end
 
 ticket = SupportTicket.first(is_read: false)
 puts ticket.sent_by_user
+puts ticket.target_id_user
+puts ticket.ticket_type
 
 
 

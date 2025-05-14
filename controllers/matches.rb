@@ -33,6 +33,8 @@ get "/matches" do
 end
 
 get "/matches/matched" do
+  redirect "/login" unless session[:logged_in]
+
   if session[:user].mentor?
     redirect "/matches/matched/mentor"
   else
