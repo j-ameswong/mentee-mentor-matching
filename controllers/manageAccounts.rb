@@ -11,19 +11,23 @@ get "/accounts" do
   end
 
   @limit = User.count
-  @num_pages = 1
+  $num_pages = 1
 
   if @limit > 10
-    @num_pages = (@limit / 10).to_i
+    $num_pages = (@limit / 10).to_i
     @limit = 10
   end
 
-  @offset = 0
-  
-  @cond = {}
-  if session[:account_filters]
-    unless session[:account_filters][:username].to_s.empty?
-      @cond[:username] = Sequel.like(:username, "%#{session[:account_filters][:username]}%")
+  $offset = 0
+  @users = User.limit(@limit).offset($offset * @limit).all
+
+  @actions = Array.new(@limit) { ["delete", "reassign"] }
+
+  i = 0
+  @users.each do |user|
+    if user[:role] == "mentor" && !MentorProfile.where(user_id: user[:id]).limit(1).pluck(:year_of_study).first.nil? &&
+       MentorProfile.where(user_id: user[:id]).limit(1).pluck(:year_of_study).first >= 4
+      @actions[i] = ["delete", "reassign", "badges"]
     end
     unless session[:account_filters][:role].to_s.empty?
       @cond[:role] = session[:account_filters][:role]
@@ -59,11 +63,50 @@ end
 post "/accounts" do
   redirect "/login" unless session[:logged_in]
 
+<<<<<<< HEAD
   session[:account_filters] = {
     username: params[:username],
     email: params[:email],
     role: params[:role],
     flag_status: params[:flag_status]
+=======
+  @cond = {}
+  unless params[:username].empty?
+    @cond[:username] = params[:username]
+  end
+  unless params[:role].empty?
+    @cond[:role] = params[:role]
+  end
+  unless params[:email].empty?
+    @cond[:email] = params[:email]
+  end
+
+  @limit = User.count
+  $num_pages = 1
+
+  if @limit > 10
+    $num_pages = (@limit / 10).to_i
+    @limit = 10
+  end
+
+  $offset = 0
+  if @cond
+    @users = User.limit(@limit).offset($offset * @limit).where(@cond)
+  else
+    @users = User.limit(@limit).offset($offset * @limit)
+  end
+  # puts @users.inspect
+
+  @actions = Array.new(@limit) { ["delete", "reassign"] }
+
+  i = 0
+  @users.each { |user|
+    if user[:role] == "mentor" && !MentorProfile.where(user_id: user[:id]).limit(1).pluck(:year_of_study).first.nil? &&
+       MentorProfile.where(user_id: user[:id]).limit(1).pluck(:year_of_study).first >= 4
+      @actions[i] = ["delete", "reassign", "badges"]
+    end
+    i += 1
+>>>>>>> master
   }
 
   redirect "/accounts"
@@ -72,6 +115,7 @@ end
 post "/accounts/action" do
   redirect "/login" unless session[:logged_in]
 
+<<<<<<< HEAD
   user = User.first(id: params[:user_id].to_i)
   
   case params[:action]
@@ -84,6 +128,12 @@ post "/accounts/action" do
     if mentor_profile
       mentor_profile.update(badges: "Experienced Mentor")
       mentor_profile.save
+=======
+  if params[:action] == "delete"
+    @users = User.where(id: params[:user_id])
+    @users.each do |user|
+      user.delete_from_all
+>>>>>>> master
     end
 
   when "apply_badge"
@@ -96,6 +146,7 @@ post "/accounts/action" do
           match.status == "completed"
         end
 
+<<<<<<< HEAD
         if eligible_match_exists
           mentor_profile.update(badges: "Experienced Mentor")
           session[:flash] = { success: "Badge applied successfully." }
@@ -107,6 +158,34 @@ post "/accounts/action" do
       else
         session[:flash] = { error: "Mentor must be a fourth year student to gain a badge." }
         puts "FLASH SET: #{session[:flash].inspect}" 
+=======
+  @cond = {}
+  unless params[:username].empty?
+    @cond[:username] = params[:username]
+  end
+  unless params[:role].empty?
+    @cond[:role] = params[:role]
+  end
+
+  @limit = User.count
+  $num_pages = 1
+
+  if @limit > 10
+    $num_pages = (@limit / 10).to_i
+    @limit = 10
+  end
+
+  $offset = 0
+  @users = User.limit(@limit).offset($offset).where(@cond)
+
+  @actions = Array.new(@limit) { ["delete", "reassign"] }
+
+  i = 0
+  @users.each { |user|
+    if user[:role] == "mentor"
+      if MentorProfile.where(user_id: user[:id]).limit(1).pluck(:year_of_study).first >= 4
+        @actions[i] = ["delete", "reassign", "badges"]
+>>>>>>> master
       end
     end
   end
@@ -115,6 +194,7 @@ post "/accounts/action" do
 end
 
 post "/accounts/next" do
+<<<<<<< HEAD
   @offset = session[:offset] || 0
   session[:offset] = @offset + 10
   redirect "/accounts"
@@ -124,6 +204,91 @@ post "/accounts/prev" do
   @offset = session[:offset] || 0
   session[:offset] = [@offset - 10, 0].max
   redirect "/accounts"
+=======
+  redirect "/login" unless session[:logged_in]
+
+  if $num_pages > 1 && $offset < $num_pages - 1
+    redirect "/login" unless session[:logged_in]
+
+    if $offset.nil?
+      $offset = 0
+    else
+      $offset = $offset + 1;
+    end
+
+    puts "offset: #{$offset}"
+  end
+
+  @limit = User.count
+  $num_pages = 1
+
+  if @limit > 10
+    $num_pages = (@limit / 10).to_i
+    @limit = 10
+  end
+
+  if @cond
+    @users = User.limit(@limit).offset($offset * @limit).where(@cond)
+  else
+    @users = User.limit(@limit).offset($offset * @limit)
+  end
+
+  @actions = Array.new(@limit) { ["delete", "reassign"] }
+
+  i = 0
+  @users.each { |user|
+    if user[:role] == "mentor"
+      if MentorProfile.where(user_id: user[:id]).limit(1).pluck(:year_of_study).first >= 4
+        @actions[i] = ["delete", "reassign", "badges"]
+      end
+    end
+    i += 1
+  }
+
+  erb :manageAccounts
+end
+
+post "/accounts/prev" do
+  redirect "/login" unless session[:logged_in]
+  if $offset > 0
+    if $offset.nil?
+      $offset = 0
+    else
+      $offset = $offset - 1;
+    end
+
+    puts "offset: #{$offset}"
+
+  end
+
+  @limit = User.count
+  $num_pages = 1
+
+  if @limit > 10
+    $num_pages = (@limit / 10).to_i
+    @limit = 10
+  end
+
+  if @cond
+    @users = User.limit(@limit).offset($offset * @limit).where(@cond)
+  else
+    @users = User.limit(@limit).offset($offset * @limit)
+  end
+
+  @actions = Array.new(@limit) { ["delete", "reassign"] }
+
+  i = 0
+  @users.each { |user|
+    if user[:role] == "mentor"
+      if MentorProfile.where(user_id: user[:id]).limit(1).pluck(:year_of_study).first >= 4
+        @actions[i] = ["delete", "reassign", "badges"]
+      end
+    end
+    i += 1
+  }
+
+  erb :manageAccounts
+>>>>>>> master
 end
 
 post "/no-of-matches" do

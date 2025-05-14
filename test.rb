@@ -35,6 +35,6 @@ elsif choice == "4"
   puts lang.id
 end
 
-Profile.where(last_name: "Freeborn").each do |heretic|
-  heretic.delete
-end
+today = DateTime.new(2025,5,24).to_i
+puts today
+

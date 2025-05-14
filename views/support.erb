@@ -20,15 +20,39 @@
     <div class="content-box centerer">
       <form action = "/support" method = "post">
         <label for="help-request-type">What do you need help with?:</label>
-        <select id = "help-category">
-          <option value = "option1">Account Deletion</option>
-          <option value = "option2">Report User</option>
-          <option value = "option3">Other</option>
-        </select><br><br><br><br><br>
-        <label for="help-request">Please Specify: </label>
+        <select name="type" id="help-category">
+          <% TicketType.each do |row| %>
+            <option <%= "selected" if @type == row.id %> value="<%= row.id %>"><%= row.desc_brief %></option>
+          <% end %>
+        </select>
+
+        <select name="target_id">
+          <% if session[:user].mentor? %>
+            <% if User.first(id: @target_id) %>
+              <option selected value=<%= @target_id %>><%= User.first(id: @target_id).profile.full_name %></option>
+            <% end %>
+            <% Match.where(mentor_id: session[:user].id, status: "active").each do |row| %>
+              <% if @target_id != row.mentee_id %>
+                <option value=<%= row.mentee_id %>><%= row.mentee.profile.full_name %></option>
+              <% end %>
+            <% end %>
+          <% elsif session[:user].mentee? %>
+            <% match = Match.first(mentee_id: session[:user].id, status: "active") %>
+            <% if match.nil? || (match && User.first(id: @target_id) && @target_id != match.mentor_id) %>
+              <option value=<%= @target_id %>><%= User.first(id: @target_id).profile.full_name %></option>
+            <% end %>
+
+            <% unless match.nil? %>
+              <option value=<%= match.mentor_id %>><%= match.mentor.profile.full_name %></option>
+            <% end %>
+          <% end %>
+        </select>
+
+        <br><br><br><br><br>
+        <label for="help-request">Please Specify/Provide good reasoning: </label>
         <br>
         <br>
-        <textarea id = "help-request"></textarea>
+        <textarea name="details" id="help-request"></textarea>
         <br>
         <br>
         <input type="submit" value ="Submit">

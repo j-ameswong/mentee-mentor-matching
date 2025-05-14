@@ -16,7 +16,7 @@ class UserExpertise < Sequel::Model
       new_entry = UserExpertise.new
       new_entry.user_id = params[:user_id]
       new_entry.expertise_id = expertise.id
-      puts new_entry.inspect
+      # puts new_entry.inspect
       new_entry.save
     end
   end

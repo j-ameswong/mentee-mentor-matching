@@ -1,0 +1,26 @@
+<% if !@user.nil? %>
+  <!-- THIS CODE REQUIRES THE "received_by" attribute in the table which needs to be fixed?
+  <%# @userID = session[:user].id %>
+  <%# @unread = false %>
+  <%# UserMessage.where(received_by: @userID).each do |message| %>
+    <%# if !message.read? %>
+      <%# @unread = true %>
+      <%# break %>
+    <%# end %>
+  <%# end %>
+
+  <a href="/message" class="notifications-btn">
+    <%# if @unread %>
+      <img id="bell-icon" src="/images/bell_notify.png" alt="Bell icon">
+    <%# else %>
+      <img id="bell-icon" src="/images/bell.png" alt="Bell icon">
+    <%# end %>
+  </a>
+  -->
+
+  <a href="/message" class="notifications-btn">
+      <img id="bell-icon" src="/images/bell.png" alt="Bell icon">
+  </a>
+
+
+<% end %>

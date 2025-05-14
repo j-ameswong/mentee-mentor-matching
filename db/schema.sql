@@ -105,7 +105,8 @@ CREATE TABLE "user_expertises" (
     FOREIGN KEY ("user_id") REFERENCES "users" ("id"),
     FOREIGN KEY ("expertise_id") REFERENCES "expertises" ("id")
 );
-CREATE INDEX "user_id_user_expertises_index" ON "user_expertises" ("user_id")
+CREATE INDEX "user_id_user_expertises_index" ON "user_expertises" ("user_id");
+
 -- List of all possible expertises
 CREATE TABLE "expertises" (
     "id" INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -132,7 +133,7 @@ CREATE TABLE "languages" (
     "language_name" TEXT,
     "native_name" TEXT,
     "language_code" TEXT
-)
+);
 
 -- List of all flagged accounts
 CREATE TABLE "flagged_accounts" (
@@ -142,3 +143,53 @@ CREATE TABLE "flagged_accounts" (
     "flagged_at" DateTime
 );
 CREATE INDEX "user_id_flag_index" ON "flagged_accounts" ("user_id");
+
+-- User messages table
+CREATE TABLE "user_messages" (
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "sent_by" TEXT
+    "received_by" TEXT,
+    "message_id" INTEGER,
+    "read_status" Boolean,
+    "created_at" DateTime,
+    FOREIGN KEY ("message_id") REFERENCES "messages" ("id")
+);
+CREATE INDEX "user_id_message_index" ON "user_messages" ("message_id");
+
+-- List of all messages
+CREATE TABLE "messages" (
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "message_type" TEXT,
+    "message_description" TEXT
+);
+
+-- Global variables
+CREATE TABLE "global_variables" (
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "name" TEXT,
+    "value" INTEGER,
+    "description" TEXT
+);
+
+-- Support Tickets
+CREATE TABLE "support_tickets" (
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "sent_by" INTEGER,
+    "target_id" INTEGER,
+    "is_read" Boolean,
+    "type" INTEGER,
+    "details" TEXT,
+    "created_at" DateTime,
+    "updated_at" DateTime,
+    FOREIGN KEY ("sent_by") REFERENCES "users" ("id"),
+    FOREIGN KEY ("target_id") REFERENCES "users" ("id"),
+    FOREIGN KEY ("type") REFERENCES "ticket_types" ("id")
+);
+CREATE INDEX "sent_by_index" ON "support_tickets" ("sent_by");
+
+CREATE TABLE "ticket_types" (
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "name" TEXT,
+    "desc_brief" TEXT,
+    "description" TEXT
+)

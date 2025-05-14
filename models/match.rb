@@ -17,7 +17,9 @@ class Match < Sequel::Model
     errors.add(:mentor_id, "cannot be empty") if mentor_id.nil?
     errors.add(:mentee_id, "cannot be empty") if mentee_id.nil?
     errors.add(:status, "must be valid") unless STATUSES.include?(status)
+    mentor = User.first(id: self.mentor_id)
     errors.add(:mentor_id, "must belong to a mentor") unless mentor && mentor.mentor?
+    mentee = User.first(id: self.mentee_id)
     errors.add(:mentee_id, "must belong to a mentee") unless mentee && mentee.mentee?
   end
 
@@ -42,15 +44,15 @@ class Match < Sequel::Model
   end
 
   def self.exists?(mentee_id, mentor_id)
-    true if Match.first(mentee_id: mentee_id, mentor_id: mentor_id)
+    Match.first(mentee_id: mentee_id, mentor_id: mentor_id) ? true : false
   end
 
   def self.generate!(params)
     match = Match.new
 
     match.status = "pending"
-    match.mentor_id = params[:mentor_id]
-    match.mentee_id = params[:mentee_id]
+    match.mentor_id = params[:mentor_id].to_i
+    match.mentee_id = params[:mentee_id].to_i
     match.application_message = params[:message]
 
     puts match.inspect
@@ -60,9 +62,17 @@ class Match < Sequel::Model
   def activate
     self.status = "active"
     self.start_date = Date.today
-    self.mentee.mentee_profile.update!(:availability => false)
+    self.end_date = Time.at(GlobalVariable.END_DATE).to_datetime
     puts "Match activated for mentor #{self.mentor_id} and mentee #{self.mentee_id}"
+    self.mentee.mentee_profile.update(availability: false)
+    self.mentee.mentee_profile.save
+    self.mentor.mentor_profile.update(num_matches: self.mentor.mentor_profile.num_matches + 1) # this value doesnt matter
+    self.mentor.mentor_profile.save
     save
+    self.mentee.mentee_profile.update({})
+    self.mentee.mentee_profile.save
+    self.mentor.mentor_profile.update({})
+    self.mentor.mentor_profile.save
   end
 
   def decline

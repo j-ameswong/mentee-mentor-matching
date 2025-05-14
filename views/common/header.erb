@@ -19,7 +19,7 @@
         <% @option2 = "Matching" %>
         <% @link2 = "/matches" %>
         <% @option3 = "Mentees" %>
-        <% @link3 = "/" %>
+        <% @link3 = "/matches/matched" %>
     <% end %>
 
 <% else %>
@@ -37,4 +37,5 @@
 
 <%if !(@user.nil?)%>
     <%= erb :"common/dropdown" %>
+    <%= erb :"common/notifications" %>
 <%end%>

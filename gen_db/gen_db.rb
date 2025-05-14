@@ -138,8 +138,8 @@ def gen_profile(data, uname)
   user.authentication.approved = true
 end
 
-def write_to_csv(combined_data)
-  CSV.open("./mentormentee.csv", "wb") do |csv|
+def write_to_csv(combined_data, filename)
+  CSV.open(filename, "wb") do |csv|
     csv << ['id', 'first_name', 'last_name', 'email', 'date_of_birth', 'password_', 'role']
     (0...combined_data[0].length).each do |i|
       csv << [combined_data[0][i], combined_data[1][i], combined_data[2][i], combined_data[3][i], combined_data[4][i], combined_data[5][i], combined_data[6][i]]

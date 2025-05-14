@@ -6,7 +6,7 @@ class Profile < Sequel::Model
   many_to_one :user
   many_to_one :nationality, key: :id
 
-  def update!(params)
+  def update(params)
     @role = params[:role] if params.key?(:role)
     self.user_id = params[:user_id] if params.key?(:user_id)
     self.date_of_birth = params.fetch(:date_of_birth, "") if params.key?(:date_of_birth)
@@ -14,16 +14,17 @@ class Profile < Sequel::Model
     self.last_name = params.fetch(:last_name, "").strip.capitalize if params.key?(:last_name)
     self.nationality_id = params[:nationality] if params.key?(:nationality)
     self.gender = params[:gender] if params.key?(:gender)
-    # self.profile_picture = params[:profile_picture] if params.key?(:profile_picture)
+    if params.key?(:profile_picture)
+      if File.exist?("/public/images/user/#{self.profile_picture}")
+        File.delete("/public/images/user/#{self.profile_picture}")
+        puts "File deleted"
+      else
+        puts "File does not exist"
+      end
+      self.profile_picture = params[:profile_picture]
+    end
     self.bio_brief = params[:bio_brief] if params.key?(:bio_brief)
     self.bio_detailed = params[:bio_detailed] if params.key?(:bio_detailed)
-    # Check if tempfile exists
-    if params[:profile_pic] && params[:profile_pic][:tempfile]
-      @img_data = params[:profile_pic][:tempfile].read
-      # puts "Length of img_data: #{@img_data.length}"
-      File.open(File.expand_path("../public/images/user/#{return_hash(self.user.email)}", __dir__), "wb") { |f| f.write(@img_data) }
-      self.profile_picture = return_hash(self.user.email)
-    end
   end
 
   def age
@@ -35,6 +36,10 @@ class Profile < Sequel::Model
 
   def full_name
     "#{first_name} #{last_name}"
+  end
+
+  def profile_pic
+    "#{profile_picture}"
   end
 
   def return_hash(value)
@@ -72,16 +77,24 @@ class MentorProfile < Sequel::Model
 
   many_to_one :user
 
-  def update!(params)
+  def update(params)
     params.key?(:role) ? @role = params[:role] : @role = "mentor"
     self.user_id = params[:user_id] if params.key?(:user_id)
     self.year_of_study = params[:year_of_study] if params.key?(:year_of_study)
     self.num_matches = 0 if self.num_matches.nil?
     self.num_matches = params[:num_matches] if params.key?(:num_matches)
-    self.max_matches = 3 if self.max_matches.nil?
+    self.max_matches = GlobalVariable.MAX_MATCHES if self.max_matches.nil?
     self.max_matches = params[:max_matches] if params.key?(:max_matches)
-    params.key?(:availability) ? (self.availability = params[:availability]) : self.availability = false
-    self.availability = false if self.num_matches >= self.max_matches
+    # Don't update availability here, update when finishing profile edit
+    #self.availability = num_matches < max_matches
+    # TODO: temp fix please remove
+    self.availability = params[:availability] if params.key?(:availability)
+    # only do this update check if not signing up
+    self.availability = false unless self.availability
+    if num_matches >= max_matches
+      self.availability = false
+    end
+    self.num_matches = Match.where(mentor_id: self.user_id, status: "active").count
   end
 
   def validate
@@ -90,12 +103,16 @@ class MentorProfile < Sequel::Model
     errors.add(:year_of_study, "cannot be empty") if year_of_study.nil?
     errors.add(:role, "first years cannot be mentors") if year_of_study && year_of_study.to_i < 2
     errors.add(:num_matches, "cannot exceed max_matches set") if num_matches > max_matches
-    errors.add(:max_matches, "cannot exceed maximum allowed") if max_matches > 3
+    #errors.add(:max_matches, "cannot exceed maximum allowed") if max_matches > GlobalVariable.MAX_MATCHES
     errors.add(:user_id, "must belong to a mentor") unless @role.nil? || @role == "mentor"
   end
 
   def available?
-    num_matches < max_matches
+    self.availability
+  end
+
+  def below_limit?
+    Match.where(mentor_id: self.user_id, status: "active").count < max_matches
   end
 
   def experience
@@ -108,14 +125,18 @@ class MenteeProfile < Sequel::Model
 
   many_to_one :user
 
-  def update!(params)
+  def update(params)
     params.key?(:role) ? @role = params[:role] : @role = "mentee"
     params.key?(:year_of_study) ? @year_of_study = params[:year_of_study] : @year_of_study = 1
 
     self.user_id = params[:user_id] if params.key?(:user_id)
-    params.key?(:availability) ? self.availability = params[:availability] : self.availability = false
+    self.availability = params[:availability] if params.key?(:availability)
+    if Match.first(mentee_id: self.user_id, status: "active") || self.availability.nil?
+      self.availability = false
+    end
 
-    save
+    # SAVING BREAKS EVERYTHING DO NOT SAVE
+    # save
   end
 
   def validate
@@ -123,7 +144,8 @@ class MenteeProfile < Sequel::Model
     errors.add(:user_id, "cannot be empty") if user_id.nil?
     errors.add(:user_id, "must belong to a mentee") unless @role == "mentee"
     errors.add(:availability, "status must exist") if availability.nil?
-    errors.add(:year_of_study, "cannot be empty") if @year_of_study.nil?
+    # literally doesnt matter, mentees don't even have a year_of_study line
+    # errors.add(:year_of_study, "cannot be empty") if @year_of_study.nil?
     errors.add(:role, "only first years can be mentees") if @year_of_study && @year_of_study.to_i > 1
   end
 
@@ -136,7 +158,7 @@ class MenteeProfile < Sequel::Model
     waitlisted = available? && TimeDifference.between(self.created_at, DateTime.now).in_days >= 7
     if waitlisted
       # TODO: Create entry in messages db if not already exists, with content: you have been added to waitlist
-      puts "Found #{self.user_id} in waitlist" # TODO: remove, only notification to mentee is required
+      # puts "Found #{self.user_id} in waitlist" # TODO: remove, only notification to mentee is required
     end
 
     waitlisted

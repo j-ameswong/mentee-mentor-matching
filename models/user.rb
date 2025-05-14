@@ -112,7 +112,7 @@ class User < Sequel::Model(DB)
     # profiles table, Profile class, admins dont need profile
     unless self.admin?
       profile = Profile.new
-      profile.update!(params)
+      profile.update(params)
       unless profile.valid?
         puts "Error when writing to profiles!"
         self.errors.merge!(profile.errors)
@@ -122,7 +122,7 @@ class User < Sequel::Model(DB)
       # mentor_profiles table, MentorProfile class
       if self.mentor?
         mentor = MentorProfile.new
-        mentor.update!(params)
+        mentor.update(params)
         unless mentor.valid?
           puts "Error when writing to mentor_profiles!"
           self.errors.merge!(mentor.errors)
@@ -132,14 +132,16 @@ class User < Sequel::Model(DB)
 
       if self.mentee?
         mentee = MenteeProfile.new
-        mentee.update!(params)
+        # puts params.inspect
+        mentee.update(params)
       end
     end
 
     auth = Authentication.new
-    auth.update!(params)
+    auth.update(params)
     unless auth.valid?
       puts "Error when writing to authentication!"
+      puts auth.errors
       self.errors.merge!(auth.errors)
     end
 

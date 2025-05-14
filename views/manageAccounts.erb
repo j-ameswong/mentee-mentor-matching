@@ -148,7 +148,7 @@
       </form>
     </div>
 
-    <div class="content-box column centerer">
+    <div class="content-box column centerer manage-acc-table">
       <h3>Search Results: </h3>
       <table>
         <thead>
@@ -197,14 +197,14 @@
         <p class="row centerer">No results found for chosen filters</p>
       <% end %>
       <div class="row centerer">
-        <% if @offset > 0 %>
+        <% if $offset > 0 %>
           <div class="column centerer">
             <form action="/accounts/prev" method="post">
               <input type="submit" value="Previous Page" class="row centerer">
             </form>
           </div>
         <% end %>
-        <% if @num_pages > 1 %>
+        <% if $num_pages > 1 && $offset < $num_pages - 1 %>
           <div class="column centerer">
             <form action="/accounts/next" method="post">
               <input type="submit" value="Next Page" class="row centerer">

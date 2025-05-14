@@ -117,7 +117,7 @@ header {
 }
 
 #profile-menu {
-    max-width: 6vw;
+    max-width: 9vh;
     height: 9vh;
 
     border-radius: 50%;
@@ -155,7 +155,7 @@ header {
 
 #profile-menu:hover {
     outline-style: solid;
-    outline-width: 2%;
+    outline-width: thin;
     outline-color: var(--lblu);
 }
 
@@ -184,6 +184,12 @@ h2 {
 p {
     color: var(--grey);
     size: 1rem;
+}
+
+.admin-pg-btn {
+    color: var(--grey);
+    background-color: var(--lgrey);
+    outline: var(--grey);
 }
 
 .content-box {
@@ -492,6 +498,20 @@ footer {
 .profile_pic {
     text-align: left;
     justify-content: center;
+
+    max-width: 5vw;
+    max-height: 5vw;
+    border-radius: 50%;
+    outline-style: solid;
+    outline-width: medium;
+    outline-color: var(--purple);
+}
+
+.pfp-img {
+    max-width: 5vw;
+    max-height: 5vw;
+    height: 5vw;
+    border-radius: 50%;
 }
 
 #statements {
@@ -500,12 +520,17 @@ footer {
 
 .approvals {
     font-weight: bold;
-    width: 100%;
+    width: 50%;
     max-width: none;
     align-items: flex-start;
     margin: 1% 0 0 0;
-    /*padding: 1%;*/
+    padding: 1%;
     height: 12vh;
+}
+
+.admin-approval {
+    height: auto;
+    padding: 2%;
 }
 
 html,
@@ -530,20 +555,26 @@ body {
     font-weight: bold;
 }
 
+
 .approval-decision {
-    display: inline-flex;
-    gap: 10%;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.vertical-margin {
+    margin-bottom: 1%;
 }
 
 .approval-btn,
 .deny-btn {
-    flex: 1;
+    background-color: var(--lgrey);
     text-decoration: none;
     color: var(--grey);
-    /*padding: 2% 4% 2% 4%;*/
     border: 1px solid var(--grey);
-    border-radius: 25px;
-
+    border-radius: 10px;
+    display: inline-block;
+    padding: 2% 4%;
     width: fit-content;
     max-width: 10vw;
 }
@@ -564,15 +595,27 @@ body {
     margin: 0 0 1% 0;
 }
 
-#mentee-list {
+#matching-list {
   max-width: none;
   padding-left: 1vw;
   padding-right: 1vw;
 }
 
-#mentor-list{
+#current-mentor-box {
+  background-color: var(--lgrey);
+  box-shadow: 1px 1px 5px;
   max-width: none;
-  padding: 0;
+  padding-left: 1vw;
+  padding-right: 1vw;
+}
+
+.apply-mentor, .report-mentor, .withdraw-mentor {
+    outline: black solid 1px;
+}
+
+.apply-mentor:hover, .report-mentor:hover, .withdraw-mentor:hover {
+    color: #7300ff;
+    outline-color: #7300ff;
 }
 
 h4 {
@@ -584,24 +627,30 @@ h4 {
 .profile-box {
   display: flex;
   margin-bottom: 1%;
+  flex-direction: row;
+  height: 18vh;
 }
 
 .basic-info {
-    width: 25%;
+    flex: 1;
     padding: 1%;
     border-top-left-radius: 10px;
     border-bottom-left-radius: 10px;
     background-color: rgb(205, 205, 205);
+    align-self: auto;
 }
 
 .detailed-info {
-    width: 40%;
+    flex: 1.5;
     padding: 1%;
     text-align: left;
+    overflow-y: auto;
+    max-height: 100%;
     background-color: var(--lgrey);
 }
 
 .detailed-info-content {
+    flex: 0 0 auto;
     margin: 0;
     padding: 1%;
 }
@@ -610,15 +659,21 @@ h4 {
     margin: 0;
     width: auto;
     text-align: left;
+    overflow-y: auto;
+    max-height: 100%;
     height: 80%;
 }
 
 .bio-and-accept {
-    width: 100%;
+    flex: 3;
     background-color: var(--lgrey);
     padding: 1%;
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    max-height: 100%;
 }
 
 .accept-reject {
@@ -627,20 +682,18 @@ h4 {
     height: 20%;
 }
 
-.matching-wrapper {
-    text-align: right;
-}
-
-.admin-approval {
-  height: 20vh;
+.matching-wrapper, .application-wrapper {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
 }
 
 .expertise-tag {
+    display: inline-block;
     background-color: #b073fa;
     font-size: 0.70em;
     padding: 1%;
     border-radius: 10px;
-    height: 25vh;
 }
 
 table {
@@ -679,3 +732,169 @@ textarea {
     font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
     "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
 }
+
+.match-popup {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.match-popup-content {
+    background-color: var(--lblu);
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 50%;
+    min-width: 50%;
+    border-radius: 10px;
+}
+
+.popup-no-style {
+    background-color: var(--lgrey);
+    border: none;
+}
+
+.applicant-bio {
+    flex: 1; /* main content */
+    margin-bottom: 1%;
+    overflow: auto;
+}
+
+.application-message {
+    width: 100%;
+    margin: 1%;
+}
+
+.popup-info {
+    width: 100%;
+    overflow-y: auto;
+}
+
+.inline-wrapper {
+    width: 100%;
+    display: inline-flex;
+    background-color: var(--lgrey);
+    border-radius: 10px;
+    border-bottom: var(--lblu) solid 5px;
+    max-height: 18vh;
+}
+
+.mentee-submit {
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 10px;
+}
+
+.approvals-wrapper {
+    width: 100%;
+}
+
+.popup-bio {
+    background-color: var(--lgrey);
+    padding: 5%;
+    height: 15vh;
+    border-radius: 10px;
+    overflow-y: auto;
+}
+
+.view-profile {
+    text-align: right;
+}
+
+.error {
+    color: darkred;
+    font-size: 1em;
+    margin-top: 1%;
+}
+
+.flagging-table {
+    overflow-x: auto; 
+    max-height: 30vh;
+}
+
+.manage-acc-table {
+    min-width: 50%;
+}
+
+.notifications-btn {
+    grid-row: 1/2;
+    justify-self: end;
+    grid-column: 5;
+    position: sticky;
+    align-self: center;
+}
+
+#bell-icon {
+    max-width: 5vh;
+    height: 5vh;
+    border-radius: 50%;
+    outline: var(--purple)
+}
+
+.application-message-form {
+    width: 100%;
+}
+
+.modal {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.4);
+    }
+
+    .modal-content {
+      background-color: #fefefe;
+      margin: 15% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 50%;
+      border-radius: 5px;
+    }
+
+    .modal-content h4 {
+      margin-top: 0;
+    }
+
+    .modal-content textarea {
+      width: 100%;
+      min-height: 100px;
+      margin-bottom: 10px;
+      resize: vertical;
+    }
+
+    .modal-buttons {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .modal-buttons button {
+      margin-left: 10px;
+      padding: 8px 16px;
+      cursor: pointer;
+    }
+
+    .close-modal {
+      background-color: #ccc;
+      border: none;
+      border-radius: 3px;
+    }
+
+    .submit-modal {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 3px;
+    }
+
+    .login-error-msg {
+        display: inline-block;
+    }

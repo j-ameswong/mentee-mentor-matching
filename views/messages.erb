@@ -1,0 +1,76 @@
+<!-- messages.erb -->
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    <meta charset="utf-8" />
+    <% @title = "Messages" %>
+    <title><%= @title %></title>
+    <meta name="author" content="Team 17">
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="icon" href="/images/UniConnectLogo.png" type="image/x-icon">
+    </head>
+
+    <body>
+        <%= erb :"common/header" %>
+        <section class="content centerer">
+
+            <h3>Messages</h3>
+
+            <div class="content-box centerer">
+                <h3>Search for a message:</h3>
+                <form action="/message" method="post">
+
+                <label for="username" class="row centerer">Filter by sender:</label>
+                <input type="text" name="username" placeholder="Enter sender username" value="<%= session[:message_filters] && session[:message_filters][:username] %>">
+
+                <div class="column">
+                    <br>
+                    <label for="read_status" class="row">Filter by Read Status:</label>
+                    <select name="read_status" id="read_status" class="row">
+                    <option value="" selected>Any read status</option>
+                    <option value="0" <%= session[:message_filters] && session[:message_filters][:read_status] == '0' ? 'selected' : '' %>>Unread</option>
+                    <option value="1" <%= session[:message_filters] && session[:message_filters][:read_status] == '1' ? 'selected' : '' %>>Read</option>
+                    </select>
+                    <br>
+
+                    <input type="submit" value="Update Filters" class="row centerer">
+                </div>
+                </form>
+            </div>
+
+            <div class="content-box centerer">
+                <h3>Your Messages: </h3>
+                <table>
+                <thead>
+                    <tr>
+                    <th>Sender</th>
+                    <th>Message</th>
+                    <th>Sent on</th>
+                    <th>Read Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% @messages.each do |user_message| %>
+                    <tr class="<%= user_message.read? ? 'read-message' : 'unread-message' %>">
+                        <td><%= user_message.sent_by %></td>
+                        <td><%= user_message.message.message_description %></td>
+                        <td><%= user_message.created_at.strftime('%Y-%m-%d %H:%M') %></td>
+                        <td>
+                        <% if user_message.read? %>
+                            <form action="/unread/<%= user_message.id %>" method="post" style="display: inline;">
+                            <input type="submit" value="Unread" class="unread-button">
+                            </form>
+                        <% else %>
+                            <form action="/read/<%= user_message.id %>" method="post" style="display: inline;">
+                            <input type="submit" value="Read" class="read-button">
+                            </form>
+                        <% end %>
+                        </td>
+                    </tr>
+                    <% end %>
+                </tbody>
+                </table>
+            </div>
+        </section>
+    </body>
+</html>

@@ -7,62 +7,6 @@
   <meta name="author" content="Team 17">
   <link rel="stylesheet" href="/css/styles.css" />
   <link rel="icon" href="/images/UniConnectLogo.png" type="image/x-icon">
-  <style>
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 1;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0,0,0,0.4);
-    }
-
-    .modal-content {
-      background-color: #fefefe;
-      margin: 15% auto;
-      padding: 20px;
-      border: 1px solid #888;
-      width: 50%;
-      border-radius: 5px;
-    }
-
-    .modal-content h4 {
-      margin-top: 0;
-    }
-
-    .modal-content textarea {
-      width: 100%;
-      min-height: 100px;
-      margin-bottom: 10px;
-      resize: vertical;
-    }
-
-    .modal-buttons {
-      display: flex;
-      justify-content: flex-end;
-    }
-
-    .modal-buttons button {
-      margin-left: 10px;
-      padding: 8px 16px;
-      cursor: pointer;
-    }
-
-    .close-modal {
-      background-color: #ccc;
-      border: none;
-      border-radius: 3px;
-    }
-
-    .submit-modal {
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      border-radius: 3px;
-    }
-  </style>
 </head>
 
 <body>
@@ -104,42 +48,44 @@
 
   <div class="content-box centerer">
     <h3>Search Results: </h3>
-    <table>
-      <thead>
-        <tr>
-          <th>Username</th>
-          <th>Email</th>
-          <th>Account Type</th>
-          <th>Flag Status</th>
-          <th>Flag Reason</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @users.each do |user| %>
-          <tr <%= user.flagged? ? 'class="flagged"' : '' %>>
-            <td><%= user.username %></td>
-            <td><%= user.email %></td>
-            <td><%= user.role.capitalize %></td>
-            <td><%= user.flagged? ? 'Flagged' : 'Not Flagged' %></td>
-            <td><%= user.flag_reasoning %></td>
-            <td>
-              <% if user.flagged? %>
-                <form action="/unflag/<%= user.id %>" method="post" style="display: inline;">
-                  <input type="submit" value="Unflag" class="unflag-button">
-                </form>
-              <% else %>
-                <button class="flag-button" onclick="openFlagModal('<%= user.id %>', '<%= user.username %>')">Flag</button>
-              <% end %>
-              <form action="/delete/<%= user.id %>" method="post" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this user?');">
-                <input type="submit" value="Delete" class="delete-button">
-              </form>
-            </td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-  </div>
+    <div class="flagging-table">
+        <table>
+            <thead>
+                <tr>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Account Type</th>
+                <th>Flag Status</th>
+                <th>Flag Reason</th>
+                <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% @users.each do |user| %>
+                <tr <%= user.flagged? ? 'class="flagged"' : '' %>>
+                    <td><%= user.username %></td>
+                    <td><%= user.email %></td>
+                    <td><%= user.role.capitalize %></td>
+                    <td><%= user.flagged? ? 'Flagged' : 'Not Flagged' %></td>
+                    <td><%= user.flag_reasoning %></td>
+                    <td>
+                    <% if user.flagged? %>
+                        <form action="/unflag/<%= user.id %>" method="post" style="display: inline;">
+                        <input type="submit" value="Unflag" class="unflag-button">
+                        </form>
+                    <% else %>
+                        <button class="flag-button" onclick="openFlagModal('<%= user.id %>', '<%= user.username %>')">Flag</button>
+                    <% end %>
+                    <form action="/delete/<%= user.id %>" method="post" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this user?');">
+                        <input type="submit" value="Delete" class="delete-button">
+                    </form>
+                    </td>
+                </tr>
+                <% end %>
+            </tbody>
+        </table>
+      </div>
+    </div>
 </section>
 
 <!-- Flag Modal -->
