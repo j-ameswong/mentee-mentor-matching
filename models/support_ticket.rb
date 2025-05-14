@@ -3,9 +3,9 @@ require_relative '../db/db'
 class SupportTicket < Sequel::Model
   plugin :timestamps, update_on_create: true
 
-  many_to_one :sent_by_user, class: :User
-  many_to_one :target_id_user, class: :User
-  many_to_one :ticket_type, class: :TicketType
+  many_to_one :sent_by_user, key: :sent_by, class: :User
+  many_to_one :target_id_user, key: :target_id, class: :User
+  many_to_one :ticket_type, key: :type, class: :TicketType
 
   def self.create!(params)
     puts params

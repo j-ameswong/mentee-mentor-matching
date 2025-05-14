@@ -35,11 +35,9 @@ elsif choice == "4"
   puts lang.id
 end
 
-match = Match.first(status: "active")
-match.end_date = match.end_date.to_datetime - 20.days
-match.save
+ticket = SupportTicket.first(is_read: false)
+puts ticket.sent_by_user
 
-puts match.inspect
 
 
 
