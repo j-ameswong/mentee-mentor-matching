@@ -14,14 +14,43 @@
     <% if @currentMentor %>
         <h2 id="welcome" class="centerer">Your Mentor</h2>
         <div id="current-mentor-box" class="content-box">
-            
+            <div class="profile-box">
+            <% @mentor = @currentMentor.mentee.profile %>
+                <div class="basic-info centerer">
+                    <div class="profile_pic">
+                        <% if @mentor.profile_picture %>
+                            <img class="pfp-img" src="<%= "/images/user/#{@mentor.profile_picture}" %>" alt="Profile Picture" onerror="this.src='/images/blankProfilePicture.webp'">
+                        <% else %>
+                            <img class="pfp-img" src="/images/blankProfilePicture.webp" alt="Profile Picture">
+                        <% end %>
+                    </div>
+                    <p class="profile-name"><%= @mentor.first_name %> <%= @mentor.last_name %></p>
+                </div>
+                <div class="detailed-info">
+                    <p class="detailed-info-content">Age: <%= @mentor.age %></p>
+                    <p class="detailed-info-content">Nationality: <%= Nationality.first(id: @mentor.nationality_id).country_name %></p>
+                    <p class="detailed-info-content">Languages: 
+                        <% UserLanguage.where(user_id: @currentMentor.mentee_id).each do |ulanguage| %>
+                            <%= ulanguage.language.language_name %>
+                        <% end %>
+                    </p>
+                </div>
+                <div class="bio-and-accept">
+                    <p class="profile-bio-detailed">Bio: <%= @mentor.bio_brief %></p>
+                    <a class="view-profile" href=<%="/profile?id=#{@mentor.user_id}"%>>View profile and contact information</a>
+                    <div class="matching-wrapper" id="<%= row.user.id %>-wrapper">
+                        <button type="button" class="withdraw-mentor" id="<%= row.user.id %>-withdraw">Withdraw</button>
+                        <button type="button" class="report-mentor" id="<%= row.user.id %>-report">Report</button>
+                    </div>
+                </div>
+            </div>
         </div>
     <% else %>
         <h2 id="welcome" class="centerer">Mentors</h2>
         <div id="matching-list" class="content-box">
             <div id="mentor-applicants">
                 <h2>Available Mentors</h2>
-                <% MentorProfile.each do |row| %>
+                <% MentorProfile.all.each do |row| %>
                     <% if row.available? && !Match.exists?(session[:user].id, row.user.id) %>
                         <div class="profile-box">
                             <% @mentor = row.user.profile %>
@@ -34,6 +63,7 @@
                                     <% end %>
                                 </div>
                                 <p class="profile-name"><%= @mentor.first_name %> <%=@mentor.last_name %></p>
+                                <!-- Whoever is working on the badges, please place it here in the basic-info div-->
                             </div>
                             <div class="detailed-info">
                                 <p class="detailed-info-content"><%="Year " + row.year_of_study.to_s %></p>
@@ -71,6 +101,7 @@
                                                 <% end %>
                                             </div>
                                             <p class="profile-name"><%= @mentor.first_name %> <%= @mentor.last_name %></p>
+                                            <!-- Whoever is working on the badges, please place it here in the basic-info div-->
                                         </div>
                                         <div class="detailed-info popup-no-style popup-info">
                                             <p class="detailed-info-content"><%="Year " + row.year_of_study.to_s %></p>

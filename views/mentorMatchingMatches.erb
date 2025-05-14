@@ -22,9 +22,9 @@
                             <div class="basic-info centerer">
                                 <div class="profile_pic">
                                 <% if mentee.profile_picture %>
-                                    <img id="profile-menu" src="<%= "/images/user/#{mentee.profile_picture}" %>" alt="Profile Picture">
+                                    <img class="pfp-img" src="<%= "/images/user/#{mentee.profile_picture}" %>" alt="Profile Picture" onerror="this.src='/images/blankProfilePicture.webp'">
                                 <% else %>
-                                    <img id="profile-menu" src="/images/blankProfilePicture.webp" alt="Profile Picture">
+                                    <img class="pfp-img" src="/images/blankProfilePicture.webp" alt="Profile Picture">
                                 <% end %>
                                 </div>
                                 <p class="profile-name"><%= mentee.first_name %> <%= mentee.last_name %></p>
@@ -38,8 +38,14 @@
                                     <% end %>
                                 </p>
                             </div>
-                            <p class="profile-bio-detailed">Bio: <%= mentee.bio_detailed %></p>
-                            <a href=<%="/profile?id=#{mentee.user_id}"%>>View profile and contact information</a>
+                            <div class="bio-and-accept">
+                                <p class="profile-bio-detailed">Bio: <%= mentee.bio_detailed %></p>
+                                <div class="matching-wrapper" id="<%= mentee.user_id %>-wrapper">
+                                    <a class="view-profile" href=<%="/profile?id=#{mentee.user_id}"%>>View profile and contact information</a>
+                                    <button type="button" class="withdraw-mentor" id="<%= mentee.user_id %>-withdraw">Withdraw</button>
+                                    <button type="button" class="report-mentor" id="<%= mentee.user_id %>-report">Report</button>
+                                </div>
+                            </div>
                         </div>
                     <% end %>
                 <% end %>

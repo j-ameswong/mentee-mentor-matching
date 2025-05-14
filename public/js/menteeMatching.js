@@ -3,6 +3,7 @@
         const form = document.createElement('form');
         form.method = 'POST';
         form.action = '/matches/mentee';
+        form.classList = "application-message-form"
 
         const textArea = document.createElement('textarea');
         textArea.name = 'message';

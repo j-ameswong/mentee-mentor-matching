@@ -73,21 +73,24 @@ post "/matches/mentor" do
   redirect "/login" unless session[:logged_in]
   redirect "/matches/mentee" unless session[:user].mentor? || session[:user].admin?
   #puts params
+  @menteeApplicants = Match.where(mentor_id: session[:user].id, status: 'pending')
+  @mentees = MenteeProfile.where(availability: true)
+  puts session[:user].mentor_profile.below_limit?
 
   # if is a waitlist mentee, create new match
-  if params[:waitlisted_mentee] && session[:user].mentor_profile.available? && User.first(id: params[:mentee_id]).mentee_profile.available?
+  if params[:waitlisted_mentee] && session[:user].mentor_profile.below_limit? && User.first(id: params[:mentee_id]).mentee_profile.available?
     if params[:accept]
       Match.generate!(params.merge(:mentor_id => session[:user].id,
                                    :message => "Matched after being put into waitlist"))
       # Delete all other applications the mentee made
       Match.where(mentee_id: params[:mentee_id]).exclude(mentor_id: session[:user].id).delete
-      Match.first(mentee_id: params[:mentee_id]).activate
+      Match.first(mentee_id: params[:mentee_id], mentor_id: session[:user].id, status: "pending").activate
       # TODO: message informing successful match
       redirect "/matches"
     elsif params[:report]
       # TODO: report profile
     end
-  elsif params[:mentee_id] && session[:user].mentor_profile.available? && User.first(id: params[:mentee_id]).mentee_profile.available?
+  elsif params[:mentee_id] && session[:user].mentor_profile.below_limit? && User.first(id: params[:mentee_id]).mentee_profile.available?
     # if is a regular mentee that applied to this specific mentor
     match = Match.first(mentee_id: params[:mentee_id], mentor_id: session[:user].id, status: "pending")
     if params[:accept]
@@ -103,8 +106,19 @@ post "/matches/mentor" do
     end
   else
      @error = "Match has already been accepted by another mentor or mentee limit exceeded"
-     erb :mentorMatching
   end
 
+  redirect "/matches/mentor" unless @error
+  erb :mentorMatching if @error
+end
+
+post "/matches/mentor/set-max" do
+  redirect "/login" unless session[:logged_in]
+  redirect "/matches" unless session[:user].mentor? || session[:user].admin?
+
+  session[:user].mentor_profile.update(:max_matches => params[:mentor_max_mentees])
+  session[:user].mentor_profile.save
+
+  #puts session[:user].mentor_profile.inspect
   redirect "/matches/mentor"
 end
