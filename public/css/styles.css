@@ -806,3 +806,18 @@ textarea {
 .manage-acc-table {
     min-width: 50%;
 }
+
+.notifications-btn {
+    grid-row: 1/2;
+    justify-self: end;
+    grid-column: 5;
+    position: sticky;
+    align-self: center;
+}
+
+#bell-icon {
+    max-width: 5vh;
+    height: 5vh;
+    border-radius: 50%;
+    outline: var(--purple)
+}
