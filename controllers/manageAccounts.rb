@@ -1,5 +1,14 @@
+before do
+  @flash = session.delete(:flash) || {}
+end
+
 get "/accounts" do
   redirect "/login" unless session[:logged_in]
+
+  if params[:flag_status]
+    session[:account_filters] ||= {}
+    session[:account_filters][:flag_status] = params[:flag_status]
+  end
 
   @limit = User.count
   $num_pages = 1
@@ -15,13 +24,38 @@ get "/accounts" do
   @actions = Array.new(@limit) { ["delete", "reassign"] }
 
   i = 0
-  @users.each { |user|
+  @users.each do |user|
     if user[:role] == "mentor" && !MentorProfile.where(user_id: user[:id]).limit(1).pluck(:year_of_study).first.nil? &&
        MentorProfile.where(user_id: user[:id]).limit(1).pluck(:year_of_study).first >= 4
       @actions[i] = ["delete", "reassign", "badges"]
     end
-    i += 1
-  }
+    unless session[:account_filters][:role].to_s.empty?
+      @cond[:role] = session[:account_filters][:role]
+    end
+    unless session[:account_filters][:email].to_s.empty?
+      @cond[:email] = Sequel.like(:email, "%#{session[:account_filters][:email]}%")
+    end
+  end
+  
+  @users = User.limit(@limit).offset(@offset).where(@cond).all
+  
+  if session[:account_filters] && !session[:account_filters][:flag_status].to_s.empty?
+    flag_status = session[:account_filters][:flag_status] == "1"
+    @users = @users.select { |user| user.flagged? == flag_status }
+  end
+
+  @actions = []
+  @users.each do |user|
+    actions = ["reassign"]
+    
+    if user[:role] == "mentor" && 
+       !MentorProfile.where(user_id: user[:id]).limit(1).pluck(:year_of_study).first.nil? &&
+       MentorProfile.where(user_id: user[:id]).limit(1).pluck(:year_of_study).first >= 4
+      actions << "badges"
+    end
+    
+    @actions << actions
+  end
 
   erb :manageAccounts
 end
@@ -29,6 +63,13 @@ end
 post "/accounts" do
   redirect "/login" unless session[:logged_in]
 
+<<<<<<< HEAD
+  session[:account_filters] = {
+    username: params[:username],
+    email: params[:email],
+    role: params[:role],
+    flag_status: params[:flag_status]
+=======
   @cond = {}
   unless params[:username].empty?
     @cond[:username] = params[:username]
@@ -65,37 +106,59 @@ post "/accounts" do
       @actions[i] = ["delete", "reassign", "badges"]
     end
     i += 1
+>>>>>>> master
   }
 
-  erb :manageAccounts
+  redirect "/accounts"
 end
 
 post "/accounts/action" do
   redirect "/login" unless session[:logged_in]
 
+<<<<<<< HEAD
+  user = User.first(id: params[:user_id].to_i)
+  
+  case params[:action]
+
+  when "reassign"
+    # TODO: Implement reassign functionality
+
+  when "badges"
+    mentor_profile = MentorProfile.first(user_id: user.id)
+    if mentor_profile
+      mentor_profile.update(badges: "Experienced Mentor")
+      mentor_profile.save
+=======
   if params[:action] == "delete"
     @users = User.where(id: params[:user_id])
     @users.each do |user|
       user.delete_from_all
+>>>>>>> master
     end
-  end
 
-  if params[:action] == "reassign"
-    @users = User.where(id: params[:user_id])
-    @users.each do |user|
-      # TODO: reassign user
-    end
-  end
+  when "apply_badge"
+    if user && user.role == "mentor"
+      mentor_profile = MentorProfile.first(user_id: user.id)
 
-  if params[:action] == "badges"
-    @mentors = MentorProfile.where(id: params[:user_id])
-    @mentors.each do |mentor|
-      mentor[:badges] = "Experienced Mentor"
-      # puts mentor.inspect
-      # puts mentor[:badges].inspect
-    end
-  end
+      if mentor_profile && mentor_profile.year_of_study >= 4
+        matches = Match.where(mentor_id: user.id).all
+        eligible_match_exists = matches.any? do |match|
+          match.status == "completed"
+        end
 
+<<<<<<< HEAD
+        if eligible_match_exists
+          mentor_profile.update(badges: "Experienced Mentor")
+          session[:flash] = { success: "Badge applied successfully." }
+          puts "FLASH SET: #{session[:flash].inspect}"
+        else
+          session[:flash] = { error: "A mentor must have at least one completed match to gain a badge." }
+          puts "FLASH SET: #{session[:flash].inspect}"
+        end
+      else
+        session[:flash] = { error: "Mentor must be a fourth year student to gain a badge." }
+        puts "FLASH SET: #{session[:flash].inspect}" 
+=======
   @cond = {}
   unless params[:username].empty?
     @cond[:username] = params[:username]
@@ -122,15 +185,26 @@ post "/accounts/action" do
     if user[:role] == "mentor"
       if MentorProfile.where(user_id: user[:id]).limit(1).pluck(:year_of_study).first >= 4
         @actions[i] = ["delete", "reassign", "badges"]
+>>>>>>> master
       end
     end
-    i += 1
-  }
+  end
 
-  erb :manageAccounts
+  redirect "/accounts"
 end
 
 post "/accounts/next" do
+<<<<<<< HEAD
+  @offset = session[:offset] || 0
+  session[:offset] = @offset + 10
+  redirect "/accounts"
+end
+
+post "/accounts/prev" do
+  @offset = session[:offset] || 0
+  session[:offset] = [@offset - 10, 0].max
+  redirect "/accounts"
+=======
   redirect "/login" unless session[:logged_in]
 
   if $num_pages > 1 && $offset < $num_pages - 1
@@ -214,15 +288,22 @@ post "/accounts/prev" do
   }
 
   erb :manageAccounts
+>>>>>>> master
 end
 
 post "/no-of-matches" do
   redirect "/login" unless session[:logged_in]
 
   if params[:max_matches]
-    @users = User.where(role: "mentor").all
-    @users.each do |user|
-      user[:num_matches] = params[:max_matches]
+    max_matches = params[:max_matches].to_i
+    mentors = User.where(role: "mentor").all
+    
+    mentors.each do |user|
+      mentor_profile = MentorProfile.first(user_id: user.id)
+      if mentor_profile
+        mentor_profile.update(max_matches: max_matches)
+        mentor_profile.save
+      end
     end
   end
 
