@@ -19,7 +19,6 @@
             <option <%= "selected" if @filter == "All" %> value="all">All</option>
             <option <%= "selected" if @filter == "Withdrawal" %> value="1">Withdrawals</option>
             <option <%= "selected" if @filter == "Report" %> value="2">Report</option>
-            <option <%= "selected" if @filter == "Profile Detail Change" %> value="3">Profile Detail Change</option>
             <option <%= "selected" if @filter == "Account Deletion" %> value="4">Account Deletion</option>
         </select>
         </form>
@@ -31,43 +30,37 @@
                     <div class="row centerer">
                         <p id="ticket-sender">Sent by: <%= ticket.sent_by_user.username %> </p>
                     </div>
-                    <div class="row centerer">
-                        <p id="ticket-details">Details: <%= ticket.details %> </p>
-                    </div>
                     <% if ticket.type == 1 %> <!-- Withdrawal -->
+                        <div class="row centerer">
+                            <p id="ticket-receiver">Target: <%= ticket.target_id_user.username %> </p>
+                        </div>
+                        <div class="row centerer">
+                            <p id="ticket-details">Reason: <%= ticket.details %> </p>
+                        </div>
                         <div class="approval-decision centerer">
-                            
+                            <a class="approval-btn" href="<%= %>">Approve</a>
+                            <a class="deny-btn" href="<%= %>">Deny</a>
                         </div>
                     <% elsif ticket.type == 2 %> <!-- Report -->
                         <div class="row centerer">
-                            <p id="ticket-receiver">Target: <%= ticket.target_id %> </p>
+                            <p id="ticket-receiver">Target: <%= ticket.target_id_user.username %> </p>
                         </div>
                         <div class="row centerer">
-                            <p>Type: Report</p>
+                            <p id="ticket-details">Reason: <%= ticket.details %> </p>
                         </div>
                         <div class="approval-decision centerer">
-
-                        </div>
-                    <% elsif ticket.type == 3 %> <!-- Profile Detail Change -->
-                        <div class="row centerer">
-                            <p>Type: Detail Change</p>
-                        </div>
-                        <div class="approval-decision centerer">
-                           
+                            <a class="approval-btn" href="<%= %>">Approve</a>
+                            <a class="deny-btn" href="<%= %>">Deny</a>
                         </div>
                     <% elsif ticket.type == 4 %> <!-- Account deletion -->
                         <div class="row centerer">
-                            <p>Type: Account Deletion</p>
+                            <p id="ticket-details">Details: <%= ticket.details %> </p>
                         </div>
                         <div class="approval-decision centerer">
-                            
+                            <a class="approval-btn" href="<%= %>">Approve</a>
+                            <a class="deny-btn" href="<%= %>">Deny</a>
                         </div>
                     <% end %>
-                    <div class="approval-decision centerer">
-                        <form action="/message-read" method="post">
-                            <button class="approval-btn">Ticket Handled</button>
-                        </form>
-                    </div>
                 </div>
             <% end %>
         <% end %>
