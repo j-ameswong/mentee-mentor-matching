@@ -35,6 +35,11 @@ elsif choice == "4"
   puts lang.id
 end
 
-today = DateTime.new(2025,5,24).to_i
-puts today
+match = Match.first(status: "active")
+match.end_date = match.end_date.to_datetime - 20.days
+match.save
+
+puts match.inspect
+
+
 
