@@ -83,9 +83,35 @@ class Match < Sequel::Model
 
   def end
     self.status = "completed"
-    # TODO: set end_date to global variable semester end date
-    self.end_date = Date.today
     save
+    self.mentee.mentee_profile.update(availability: true)
+    self.mentee.mentee_profile.save
+    self.mentor.mentor_profile.update(availability: true)
+    self.mentor.mentor_profile.save
+
+    UserMessage.send_message(
+           sent_by: "System",
+           received_by: self.mentee_id,
+           message_type: 'match_completed'
+         )
+
+    UserMessage.send_message(
+           sent_by: "System",
+           received_by: self.mentor_id,
+           message_type: 'match_completed'
+         )
+    true
+  end
+
+  def check_end
+    puts "Checking end date..."
+    puts self.end_date
+    puts Date.today.to_datetime
+    if Date.today.to_datetime.to_i > self.end_date.to_datetime.to_i
+      puts "THE END TIMES HAVE ARRIVED"
+      return self.end
+    end
+    false
   end
 
   def cancel

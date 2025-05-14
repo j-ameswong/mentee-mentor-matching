@@ -44,7 +44,9 @@
                     <div class="matching-wrapper" id="<%= @mentor.user_id %>-wrapper">
                       <form method="post" action="/matches/matched/mentee">
                         <input hidden name="target_id" value=<%= @mentor.user_id %>>
-                        <button name="withdrawal" type="submit" class="withdraw-mentor" id="<%= @mentor.user_id %>-withdraw">Withdraw</button>
+                        <% unless SupportTicket.withdrawing?(Match.first(mentee_id: session[:user].id, status: "active")) %>
+                          <button name="withdrawal" type="submit" class="withdraw-mentor" id="<%= @mentor.user_id %>-withdraw">Withdraw</button>
+                        <% end %>
                         <button name="report" type="submit" class="report-mentor" id="<%= @mentor.user_id %>-report">Report</button>
                       </form>
                     </div>
