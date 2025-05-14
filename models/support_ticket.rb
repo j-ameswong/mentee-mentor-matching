@@ -8,6 +8,7 @@ class SupportTicket < Sequel::Model
   many_to_one :ticket_type, class: :TicketType
 
   def self.create!(params)
+    puts params
     case params[:type].to_i
     when report?
       SupportTicket.report!(params)
@@ -51,7 +52,7 @@ class SupportTicket < Sequel::Model
 
     ticket.sent_by = params[:sent_by]
     ticket.target_id = params[:target_id]
-    ticket.is_read = falstickete
+    ticket.is_read = false
     ticket.type = params[:type]
     ticket.details = params[:details]
 
