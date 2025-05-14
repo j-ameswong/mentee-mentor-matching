@@ -51,7 +51,7 @@
                 </div>
             </div>
         </div>
-    <% else %>
+    <% elsif session[:user].mentee_profile.available? %>
         <h2 id="welcome" class="centerer">Mentors</h2>
         <div id="matching-list" class="content-box">
             <div id="mentor-applicants">
@@ -139,6 +139,8 @@
                     <% end %>
                 <% end %>
             </div>
+    <% else %>
+      <p style="color: red">Please finish editing your profile first!</p>
     <% end %>
     <script src="/js/menteeMatching.js/?"></script>
     </div>
