@@ -37,6 +37,9 @@
                 </div>
                 <div class="bio-and-accept">
                     <p class="profile-bio-detailed">Bio: <%= @mentor.bio_brief %></p>
+                    <% if SupportTicket.withdrawing?(session[:user].mentee_matches.first) %>
+                      <p class="profile-bio-detailed" style="color: red"><%= TicketType.first(id: SupportTicket.withdraw?).description %></p>
+                    <% end %>
                     <a class="view-profile" href=<%="/profile?id=#{@mentor.user_id}"%>>View profile and contact information</a>
                     <div class="matching-wrapper" id="<%= @mentor.user_id %>-wrapper">
                       <form method="post" action="/matches/matched/mentee">
@@ -48,7 +51,7 @@
                 </div>
             </div>
         </div>
-    <% else %>
+    <% elsif session[:user].mentee_profile.available? %>
         <h2 id="welcome" class="centerer">Mentors</h2>
         <div id="matching-list" class="content-box">
             <div id="mentor-applicants">
@@ -136,6 +139,8 @@
                     <% end %>
                 <% end %>
             </div>
+    <% else %>
+      <p style="color: red">Please finish editing your profile first!</p>
     <% end %>
     <script src="/js/menteeMatching.js/?"></script>
     </div>
