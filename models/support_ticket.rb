@@ -59,5 +59,10 @@ class SupportTicket < Sequel::Model
     ticket.save
     ticket.inspect
   end
+
+  def self.withdrawing?(match)
+    SupportTicket.first(sent_by: match.mentee_id, target_id: match.mentor_id, type: self.withdraw?) ||
+      SupportTicket.first(sent_by: match.mentor_id, target_id: match.mentee_id, type: self.withdraw?)
+  end
 end
 

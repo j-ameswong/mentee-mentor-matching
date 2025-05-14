@@ -39,12 +39,17 @@
                                 </p>
                             </div>
                             <div class="bio-and-accept">
-                                <p class="profile-bio-detailed">Bio: <%= mentee.bio_detailed %></p>
+                                <p class="profile-bio-detailed">Bio: <%= mentee.bio_brief %></p>
+                                <% if SupportTicket.withdrawing?(row) %>
+                                    <p class="profile-bio-detailed" style="color: red"><%= TicketType.first(id: SupportTicket.withdraw?).description %></p>
+                                <% end %>
                                 <div class="matching-wrapper" id="<%= mentee.user_id %>-wrapper">
-                                    <a class="view-profile" href=<%="/profile?id=#{mentee.user_id}"%>>View profile and contact information</a>
+                                    <a class="view-profile" href=<%="/profile?id=#{mentee.user_id}"%>>View detailed profile and contact information</a>
                                   <form method="post" action="/matches/matched/mentor">
                                     <input hidden name="target_id" value=<%= mentee.user_id %>>
-                                    <button type="submit" name="withdrawal" class="withdraw-mentor" id="<%= mentee.user_id %>-withdraw">Withdraw</button>
+                                    <% unless SupportTicket.withdrawing?(row) %>
+                                      <button type="submit" name="withdrawal" class="withdraw-mentor" id="<%= mentee.user_id %>-withdraw">Withdraw</button>
+                                    <% end %>
                                     <button type="submit" name="report" class="report-mentor" id="<%= mentee.user_id %>-report">Report</button>
                                   </form>
                                 </div>
