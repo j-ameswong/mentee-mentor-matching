@@ -3,7 +3,7 @@ require "csv"
 post "/profile/edit" do
   # TODO: Only matched pairs can view each other's details, unless admin or themself
   redirect "/" unless session[:logged_in]
-  @edited_user = User.first(id: params[:id].to_i)
+  @edited_user = session[:user]
   redirect "/profile" if @edited_user.nil?
 
   # The code here is to update the user's profile, if field is blank
@@ -22,7 +22,7 @@ post "/profile/edit" do
     # take the file extension from the uploaded file
     file_ext = params[:profile_pic][:filename].split('.').last
     # create path to save the file
-    path = File.join("public", "images", "user", "#{@edited_user.id}.#{file_ext}")
+    path = "public/images/user/#{@edited_user.id}.#{file_ext}"
     File.open(path, "wb") do |f|
       # write the file to the path
       f.write(params[:profile_pic][:tempfile].read)
@@ -43,6 +43,7 @@ post "/profile/edit" do
   end
 
   puts "@all_good: #{@all_good}"
+
   @edited_user.role = params[:role] if params[:role]
 
   # Only update the profile if params are valid
@@ -56,7 +57,9 @@ post "/profile/edit" do
     @edited_user.errors.add(:email, inv) unless valid_email?(params[:email])
     @edited_user.errors.add(:bio_brief, inv) if html_unsafe?(params[:bio_brief])
     @edited_user.errors.add(:bio_detailed, inv) if html_unsafe?(params[:bio_detailed])
-    puts " #{@edited_user.errors.inspect.tr(':{"[]}', '')}"
+    @err_str = @edited_user.errors.inspect.tr(':{"[]}', '')
+    @err_str = @err_str.tr('_', ' ')
+    puts " #{@err_str}"
   end
   @edited_user.mentor_profile.update(params.merge(:availability => true)) if @edited_user.mentor?
   # after editing profile for the first time, mentee is now open to matching
