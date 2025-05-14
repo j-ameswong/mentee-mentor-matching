@@ -29,7 +29,7 @@ class SupportTicket < Sequel::Model
 
   def self.report!(params)
     return if params[:type].nil? ||
-      params[:type].to_i != TicketType.first(name: "report").id
+      params[:type].to_i != self.report?
 
     ticket = SupportTicket.new
 
@@ -40,10 +40,23 @@ class SupportTicket < Sequel::Model
     ticket.details = params[:details]
 
     ticket.save
-    ticket.inspect
+    #ticket.inspect
   end
 
   def self.withdraw!(params)
+    return if params[:type].nil? ||
+      params[:type].to_i != self.withdraw?
+
+    ticket = SupportTicket.new
+
+    ticket.sent_by = params[:sent_by]
+    ticket.target_id = params[:target_id]
+    ticket.is_read = falstickete
+    ticket.type = params[:type]
+    ticket.details = params[:details]
+
+    ticket.save
+    ticket.inspect
   end
 end
 
