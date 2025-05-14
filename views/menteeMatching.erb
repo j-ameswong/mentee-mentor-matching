@@ -19,7 +19,7 @@
                 <div class="basic-info centerer">
                     <div class="profile_pic">
                         <% if @mentor.profile_picture %>
-                            <img class="pfp-img" src="<%= "/images/user/#{@mentor.profile_picture}" %>" alt="Profile Picture" onerror="this.src='/images/blankProfilePicture.webp'">
+                            <img class="pfp-img" src="<%= "/images/user/#{@mentor.id}" %>" alt="Profile Picture" onerror="this.src='/images/blankProfilePicture.webp'">
                         <% else %>
                             <img class="pfp-img" src="/images/blankProfilePicture.webp" alt="Profile Picture">
                         <% end %>
@@ -57,7 +57,7 @@
                             <div class="basic-info centerer">
                                 <div class="profile_pic centerer">
                                     <% if @mentor.profile_picture %>
-                                        <img class="pfp-img" src="<%= "/images/user/#{@mentor.profile_picture}" %>" alt="Profile Picture">
+                                        <img class="pfp-img" src="<%= "/images/user/#{@mentor.id}" %>" alt="Profile Picture">
                                     <% else %>
                                         <img class="pfp-img" src="/images/blankProfilePicture.webp" alt="Profile Picture">
                                     <% end %>
@@ -95,7 +95,7 @@
                                         <div class="basic-info centerer popup-no-style">
                                             <div class="profile_pic">
                                                 <% if @mentor.profile_picture%>
-                                                    <img class="pfp-img" src="<%= "/images/user/#{@mentor.profile_picture}" %>" alt="Profile Picture">
+                                                    <img class="pfp-img" src="<%= "/images/user/#{@mentor.id}" %>" alt="Profile Picture">
                                                 <% else %>
                                                     <img class="pfp-img" src="/images/blankProfilePicture.webp" alt="Profile Picture">
                                                 <% end %>

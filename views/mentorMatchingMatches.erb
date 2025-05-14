@@ -22,7 +22,7 @@
                             <div class="basic-info centerer">
                                 <div class="profile_pic">
                                 <% if mentee.profile_picture %>
-                                    <img class="pfp-img" src="<%= "/images/user/#{mentee.profile_picture}" %>" alt="Profile Picture" onerror="this.src='/images/blankProfilePicture.webp'">
+                                    <img class="pfp-img" src="<%= "/images/user/#{mentee.id}" %>" alt="Profile Picture" onerror="this.src='/images/blankProfilePicture.webp'">
                                 <% else %>
                                     <img class="pfp-img" src="/images/blankProfilePicture.webp" alt="Profile Picture">
                                 <% end %>

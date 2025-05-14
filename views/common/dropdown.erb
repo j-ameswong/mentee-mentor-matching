@@ -1,9 +1,12 @@
-<% @profile = @user.profile %>
-<% if @profile.nil? || @profile.profile_pic.nil? %>
-<%   @pfp = "/images/blankProfilePicture.webp"  %>
-<%   else %>
-<%   @pfp = "/images/user/#{@profile.profile_pic}"   %>
-<%   end %>
+<% @profile = session[:user].profile %>
+<% @user = session[:user] %>
+<%# if @profile.nil? || @profile[:profile_picture].nil? %>
+  <%# puts "pfp nil" %>
+  <%# @pfp = "/images/blankProfilePicture.webp" %>
+<%# else %>
+  <% puts "profile: #{@profile.inspect}" %>
+  <% @pfp = "/images/user/#{@user.id}" %>
+<%# end %>
 
 <div class="dropdown">
 
@@ -11,16 +14,16 @@
     <img id="profile-menu" src=<%= @pfp %>>
   <% else %>
     <a id="pfp-link" href="/profile">
-      <img id="profile-menu" src="<%= @pfp %>" alt="Not Found" onerror="this.src='/images/blankProfilePicture.webp'"/>
+      <img id="profile-menu" src="<%= @pfp %>" alt="Not Found"/>
     </a>
   <% end %>
 
-    <div class="dropdown-content centerer">
-      <% unless @accountType == "admin" %>
-        <a class="dropdown-link centerer" href="/profile">Profile</a>
-        <a class="dropdown-link centerer" href="/support">Help & Support</a>
-      <% end %>
-        <a class="dropdown-link centerer" href="/statements">Accessibility & Copyright</a>
-        <a class="dropdown-link centerer logout-btn" href="/logout">Log Out</a>
-    </div>
+  <div class="dropdown-content centerer">
+    <% unless @accountType == "admin" %>
+      <a class="dropdown-link centerer" href="/profile">Profile</a>
+      <a class="dropdown-link centerer" href="/support">Help & Support</a>
+    <% end %>
+    <a class="dropdown-link centerer" href="/statements">Accessibility & Copyright</a>
+    <a class="dropdown-link centerer logout-btn" href="/logout">Log Out</a>
+  </div>
 </div>
