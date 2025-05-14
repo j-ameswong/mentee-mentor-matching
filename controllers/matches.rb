@@ -14,27 +14,18 @@ end
   
 get "/matches/mentee" do
   redirect "/login" unless session[:logged_in]
+  redirect "/matches/mentor" if session[:user].mentor?
 
-  if session[:user].role == 'mentee'
-    user = User.first(id: session[:user].id)  
-    mentee_profile = MenteeProfile.first(user_id: user.id) 
-    
-    if mentee_profile && mentee_profile.availability
-      match = Match.first(mentee_id: user.id, status: "active")
-      
-      if match
-        mentor_id = match.mentor_id
-        @currentMentor = MentorProfile.first(user_id: mentor_id)
-      else
-        @currentMentor = nil
-      end
-    else
-      @currentMentor = nil
+  if session[:user].mentee?
+    user = session[:user]
+    mentee_profile = user.mentee_profile
+    match = Match.first(mentee_id: user.id, status: "active")
+
+    if mentee_profile && match
+      @currentMentor = match.mentor
     end
 
     erb :menteeMatching
-  else
-    redirect "/matches/mentor"
   end
 end
 
@@ -48,6 +39,14 @@ post "/matches/mentee" do
   end
 
   redirect "/matches/mentee"
+end
+
+post "/matches/mentee/report" do
+  redirect "/login" unless session[:logged_in]
+  redirect "/matches/mentor" if session[:user].mentor?
+
+  target_id = params[:target_id]
+  redirect "/support?target_id=#{target_id}&type=#{TicketType.first(name: "report").id}"
 end
 
 get "/matches/mentor" do
