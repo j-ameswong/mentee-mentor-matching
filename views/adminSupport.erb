@@ -10,61 +10,65 @@
 <%= erb :"common/header" %>
 
 <body>
-    <div class="content">
-  <h3>Account Approvals</h3>
-  <div id="filter">
-    <form action="/approvals/filter" method="post" id="filter-form">
-      <label for="account-filter" id="filter-label">Filter by:</label>
-      <select name="filter-accounts" id="account-filter">
-        <option <%= "selected" if @filter == "All" %> value="all">All</option>
-        <option <%= "selected" if @filter == "Withdrawal" %> value="1">Withdrawals</option>
-        <option <%= "selected" if @filter == "Report" %> value="2">Report</option>
-        <option <%= "selected" if @filter == "Profile Detail Change" %> value="3">Profile Detail Change</option>
-        <option <%= "selected" if @filter == "Account Deletion" %> value="4">Account Deletion</option>
-      </select>
-    </form>
+  <div class="content">
+    <h3>Account Approvals</h3>
+    <div id="filter">
+        <form action="/support/filter" method="post" id="filter-form">
+        <label for="account-filter" id="filter-label">Filter by:</label>
+        <select name="filter-accounts" id="account-filter">
+            <option <%= "selected" if @filter == "All" %> value="all">All</option>
+            <option <%= "selected" if @filter == "Withdrawal" %> value="1">Withdrawals</option>
+            <option <%= "selected" if @filter == "Report" %> value="2">Report</option>
+            <option <%= "selected" if @filter == "Profile Detail Change" %> value="3">Profile Detail Change</option>
+            <option <%= "selected" if @filter == "Account Deletion" %> value="4">Account Deletion</option>
+        </select>
+        </form>
+    </div>
+    <section class="row centerer approvals-wrapper">
+        <% @tickets.each do |ticket| %>
+            <% if @filter == "all" || ticket.type.to_s == @filter %>
+                <div class="centerer content-box approvals">
+                    <div class="row centerer">
+                        <p id="role-text">Sent by: <%= ticket.sent_by %> </p>
+                    </div>
+                    <div class="row centerer">
+                        <p id="email-text">Details: <%= ticket.details %> </p>
+                    </div>
+                    <% if ticket.type == 1 %> <!-- Withdrawal -->
+                        <div class="approval-decision centerer">
+                            
+                        </div>
+                    <% elsif ticket.type == 2 %> <!-- Report -->
+                        <div class="row centerer">
+                            <p id="email-text">Target: <%= ticket.target_id %> </p>
+                        </div>
+                        <div class="row centerer">
+                            <p>Type: Report</p>
+                        </div>
+                        <div class="approval-decision centerer">
+
+                        </div>
+                    <% elsif ticket.type == 3 %> <!-- Profile Detail Change -->
+                        <div class="row centerer">
+                            <p>Type: Detail Change</p>
+                        </div>
+                        <div class="approval-decision centerer">
+                           
+                        </div>
+                    <% elsif ticket.type == 4 %> <!-- Account deletion -->
+                        <div class="row centerer">
+                            <p>Type: Account Deletion</p>
+                        </div>
+                        <div class="approval-decision centerer">
+                            
+                        </div>
+                    <% end %>
+                </div>
+            <% end %>
+        <% end %>
+    </section>
   </div>
-  <section class="row centerer approvals-wrapper">
-    <% @tickets.each do |ticket| %>
-      <script>
-        console.log("Message");
-      </script>
-      <% if @filter == "all" || TicketType.where(id: @filter).any? %>
-        <div class="centerer content-box approvals">
-          <div class="row centerer">
-            <p id="role-text"> <%= ticket.sent_by %> </p>
-          </div>
-          <div class="row centerer">
-            <p id="email-text"><%= ticket.target_id %> </p>
-          </div>
-          <div class="row centerer">
-            <p id="email-text"><%= ticket.details %> </p>
-          </div>
-          <% if ticket.ticket_type.id == 1 %>"> <!-- Withdrawal -->
-            <div class="approval-decision centerer">
-              <a class="approval-btn" href="<%= "/support/withdraw?to_approve=#{auth.user.id}" %>">Approve</a>
-              <a class="deny-btn" href="<%= "/support/withdrawy?to_deny=#{auth.user.id}" %>">Deny</a>
-            </div>
-          <% elsif ticket.ticket_type.id == 2 %>"> <!-- Report -->
-            <div class="approval-decision centerer">
-              <a class="approval-btn" href="<%= "/support/report?to_approve=#{auth.user.id}" %>">Approve</a>
-              <a class="deny-btn" href="<%= "/support/report?to_deny=#{auth.user.id}" %>">Deny</a>
-            </div>
-          <% elsif ticket.ticket_type.id == 3 %>"> <!-- Profile Detail Change -->
-            <div class="approval-decision centerer">
-              <a class="approval-btn" href="<%= "/support/detail?to_approve=#{auth.user.id}" %>">Approve</a>
-              <a class="deny-btn" href="<%= "/support/detail?to_deny=#{auth.user.id}" %>">Deny</a>
-            </div>
-          <% elsif ticket.ticket_type.id == 4 %>"> <!-- Account deletion -->
-            <div class="approval-decision centerer">
-              <a class="approval-btn" href="<%= "/support/delete?to_approve=#{auth.user.id}" %>">Approve</a>
-              <a class="deny-btn" href="<%= "/support/delete?to_deny=#{auth.user.id}" %>">Deny</a>
-            </div>
-          <% end %>
-        </div>
-      <% end %>
-    <% end %>
-  </section>
+<script src="/js/approvalFilter.js"></script>
 </body>
 
 </html>

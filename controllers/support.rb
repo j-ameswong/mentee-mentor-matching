@@ -30,7 +30,14 @@ get "/support/admin" do
   redirect "/login" unless session[:logged_in]
   redirect "/support" if (session[:user].mentor? || session[:user].mentee?)
 
+  @filter = !params[:filter].nil? ? params[:filter] : "all"
   @tickets = SupportTicket.all
   erb :adminSupport
 end
 
+post "/support/filter" do
+  redirect "/" unless session[:logged_in] && session[:user].admin?
+
+  filter = params["filter-accounts"]
+  redirect "/support/admin?filter=#{params["filter-accounts"]}"
+end

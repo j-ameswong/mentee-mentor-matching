@@ -525,7 +525,7 @@ footer {
     align-items: flex-start;
     margin: 1% 0 0 0;
     padding: 1%;
-    height: 12vh;
+    height: fit-content;
 }
 
 .admin-approval {
