@@ -1,16 +1,35 @@
-# require "rspec"
+require "rspec"
 #
 # # 5.1. Admin can flag and manage accounts violating guidelines.
 #
-# Rspec.describe "Admin oversight" do
+RSpec.describe "Admin oversight" do
 #   # Admin
 #   # 1. Admins can flag user accounts with an assigned reason.
 #   # 2. Flagged users receive a notification of the issue.
-#   context "Flagging accounts" do
-#     it "allows admins to flag user accounts" do
-#
-#     end
-#   end
+  context "Flagging accounts" do
+    it "allows admins to flag user accounts" do
+      visit "/"
+      fill_in "Username/University Email Address:", with: "admin"
+      fill_in "Password:", with: "admin"
+      click_button "Log in"
+
+      expect(page).to have_content("Welcome to UniConnect!")
+
+      visit "/flagging"
+      expect(page).to have_content("Flagging")
+
+      fill_in "username", with: "user1"
+      click_button "Update Filters"
+      expect(page).to have_content("user1@sheffield.ac.uk")
+      expect(page).to have_content("Flag")
+
+      click_button "Flag"
+      fill_in "flag_reasoning", with: "Naughty boy"
+      click_button "Submit"
+
+      expect(page).to have_content("Flagged")
+    end
+  end
 #   # 5.2. Admins can permanently delete accounts if necessary.
 #   # Admin
 #   # 1. Admins can access a dedicated section listing flagged accounts requiring action due to repeated violations, non-response to flagging, graduation, or university departure.
@@ -19,20 +38,20 @@
 #   # 4. Once confirmed, data erasure is triggered and fully executed.
 #   # 5. The deleted account is removed from all browsing lists.
 #   # 6. Affected mentors/mentees receive a notification about the deletion, and their mentor-mentee connection is severed.
-#   context "Deleting accounts" do
-#     it "allows admins to delete accounts" do
-#       visit "/"
-#       expect(page).to have_content("Sign up instead")
-#       fill_in "Username", with: "admin"
-#       fill_in "Password", with: "admin"
-#       click_link "Log In"
-#
-#       expect(page).to have_content("Welcome to UniConnect!")
-#       visit "/accounts"
-#       expect(page).to have_content("Account Management")
-#     end
-#   end
-# end
+  context "Deleting accounts" do
+    it "allows admins to delete accounts" do
+      visit "/"
+      expect(page).to have_content("Sign up instead")
+      fill_in "Username/University Email Address:", with: "admin"
+      fill_in "Password:", with: "admin"
+      click_button "Log in"
+
+      expect(page).to have_content("Welcome to UniConnect!")
+      visit "/accounts"
+      expect(page).to have_content("Accounts Management")
+    end
+  end
+end
 # # 5.3. Admin can manually reassign mentors/mentees in extenuating circumstances.
 # # Admin
 #   # 1. In extenuating circumstances (e.g., mentors or mentees take Leave of Absence in the middle of the semester), admins can manually (re)assign mentors and mentees.

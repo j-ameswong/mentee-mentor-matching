@@ -110,20 +110,4 @@ RSpec.describe "Edit Profile" do
       expect(page).to have_content("bio detailed: is invalid")
     end
   end
-
-  context "Contact details are only visible to matched users" do
-    it "allows matched users to see each others' contact details" do
-    visit "/"
-    expect(page).to have_content("Sign up instead")
-
-    fill_in "Username", with: "user"
-    fill_in "Password", with: "user"
-    click_button "Log in"
-    expect(page).to have_content("Welcome to UniConnect!")
-    end
-
-    it "doesn't show users' contact details if not matched with the viewer" do
-
-    end
-  end
 end

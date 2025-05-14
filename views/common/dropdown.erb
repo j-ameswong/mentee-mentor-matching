@@ -1,12 +1,9 @@
-<% @profile = session[:user].profile %>
 <% @user = session[:user] %>
-<%# if @profile.nil? || @profile[:profile_picture].nil? %>
-  <%# puts "pfp nil" %>
-  <%# @pfp = "/images/blankProfilePicture.webp" %>
-<%# else %>
-  <% puts "profile: #{@profile.inspect}" %>
+<% if @user.profile %>
   <% @pfp = "/images/user/#{@user.id}" %>
-<%# end %>
+<% else %>
+  <% @pfp = "images/blankProfilePicture.webp" %>
+<% end %>
 
 <div class="dropdown">
 
