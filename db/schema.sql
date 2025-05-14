@@ -147,7 +147,7 @@ CREATE INDEX "user_id_flag_index" ON "flagged_accounts" ("user_id");
 -- User messages table
 CREATE TABLE "user_messages" (
     "id" INTEGER PRIMARY KEY AUTOINCREMENT,
-    "sent_by" TEXT
+    "sent_by" TEXT,
     "received_by" TEXT,
     "message_id" INTEGER,
     "read_status" Boolean,
@@ -169,4 +169,27 @@ CREATE TABLE "global_variables" (
     "name" TEXT,
     "value" INTEGER,
     "description" TEXT
-)
+);
+
+-- Support Tickets
+CREATE TABLE "support_tickets" (
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "sent_by" INTEGER,
+    "target_id" INTEGER,
+    "is_read" Boolean,
+    "type" INTEGER,
+    "details" TEXT,
+    "created_at" DateTime,
+    "updated_at" DateTime,
+    FOREIGN KEY ("sent_by") REFERENCES "users" ("id"),
+    FOREIGN KEY ("target_id") REFERENCES "users" ("id"),
+    FOREIGN KEY ("type") REFERENCES "ticket_types" ("id")
+);
+CREATE INDEX "sent_by_index" ON "support_tickets" ("sent_by");
+
+CREATE TABLE "ticket_types" (
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "name" TEXT,
+    "desc_brief" TEXT,
+    "description" TEXT
+);
