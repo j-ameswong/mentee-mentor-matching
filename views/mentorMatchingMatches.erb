@@ -40,7 +40,11 @@
                             </div>
                             <div class="bio-and-accept">
                                 <p class="profile-bio-detailed">Bio: <%= mentee.bio_detailed %></p>
-                                <a class="view-profile" href=<%="/profile?id=#{mentee.user_id}"%>>View profile and contact information</a>
+                                <div class="matching-wrapper" id="<%= mentee.user_id %>-wrapper">
+                                    <a class="view-profile" href=<%="/profile?id=#{mentee.user_id}"%>>View profile and contact information</a>
+                                    <button type="button" class="withdraw-mentor" id="<%= mentee.user_id %>-withdraw">Withdraw</button>
+                                    <button type="button" class="report-mentor" id="<%= mentee.user_id %>-report">Report</button>
+                                </div>
                             </div>
                         </div>
                     <% end %>

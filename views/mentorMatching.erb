@@ -26,8 +26,8 @@
       <button id="max-mentees-button" class="centerer">Set</button>
     </form>
 
-    <div id="matching-list" class="content-box">
-      <div id="mentee-applicants">
+    <section id="matching-list" class="content-box">
+      <section id="mentee-applicants">
         <h2>Mentee Applications</h2>
         <% unless @menteeApplicants.nil? %>
           <% @menteeApplicants.all.each do |row| %>
@@ -68,7 +68,7 @@
           <% end %>
         <% end %>
 
-        <div id="mentee-others">
+        <section id="mentee-others">
             <h2>Waitlisted Mentees</h2>
             <% unless @mentees.nil? %>
               <% @mentees.all.each do |row| %>
@@ -114,8 +114,8 @@
                 <% end %>
               <% end %>
             <% end %>
-        </div>
-    </div>
+        </section>
+    </section>
 </div>
 
   </div>
