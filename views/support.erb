@@ -27,19 +27,23 @@
         </select>
 
         <select name="target_id">
-          <% if User.first(id: @target_id) %>
-            <option selected value=<%= @target_id %>><%= User.first(id: @target_id).username %></option>
-          <% end %>
           <% if session[:user].mentor? %>
+            <% if User.first(id: @target_id) %>
+              <option selected value=<%= @target_id %>><%= User.first(id: @target_id).profile.full_name %></option>
+            <% end %>
             <% Match.where(mentor_id: session[:user].id, status: "active").each do |row| %>
               <% if @target_id != row.mentee_id %>
-                <option value=<%= row.mentee_id %>><%= row.mentee.username %></option>
+                <option value=<%= row.mentee_id %>><%= row.mentee.profile.full_name %></option>
               <% end %>
             <% end %>
           <% elsif session[:user].mentee? %>
-            <% match = Match.first(mentor_id: @target_id, mentee_id: session[:user].id, status: "active") %>
-            <% if match && @target_id != match.mentor_id %>
-              <option value=<%= match.mentor_id %>><%= match.mentor.username %></option>
+            <% match = Match.first(mentee_id: session[:user].id, status: "active") %>
+            <% if match.nil? || (match && User.first(id: @target_id) && @target_id != match.mentor_id) %>
+              <option value=<%= @target_id %>><%= User.first(id: @target_id).profile.full_name %></option>
+            <% end %>
+
+            <% unless match.nil? %>
+              <option value=<%= match.mentor_id %>><%= match.mentor.profile.full_name %></option>
             <% end %>
           <% end %>
         </select>
