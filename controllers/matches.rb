@@ -1,3 +1,16 @@
+# Helper method for safe message sending
+def send_match_notification(sent_by, received_by, message_type)
+  begin
+    UserMessage.send_message(
+      sent_by: sent_by,
+      received_by: received_by,
+      message_type: message_type
+    )
+  rescue => e
+    puts "Error sending match notification (#{message_type}): #{e.message}"
+  end
+end
+
 get "/matches" do
   redirect "/login" unless session[:logged_in]
   redirect "/matches/mentee" if session[:user].mentee?
@@ -14,27 +27,18 @@ end
   
 get "/matches/mentee" do
   redirect "/login" unless session[:logged_in]
+  redirect "/matches/mentor" if session[:user].mentor?
 
-  if session[:user].role == 'mentee'
-    user = User.first(id: session[:user].id)  
-    mentee_profile = MenteeProfile.first(user_id: user.id) 
-    
-    if mentee_profile && mentee_profile.availability
-      match = Match.first(mentee_id: user.id, status: "active")
-      
-      if match
-        mentor_id = match.mentor_id
-        @currentMentor = MentorProfile.first(user_id: mentor_id)
-      else
-        @currentMentor = nil
-      end
-    else
-      @currentMentor = nil
+  if session[:user].mentee?
+    user = session[:user]
+    mentee_profile = user.mentee_profile
+    match = Match.first(mentee_id: user.id, status: "active")
+
+    if mentee_profile && match
+      @currentMentor = match.mentor
     end
 
     erb :menteeMatching
-  else
-    redirect "/matches/mentor"
   end
 end
 
@@ -45,9 +49,23 @@ post "/matches/mentee" do
   unless Match.exists?(session[:user].id, params[:mentor_id])
     Match.generate!(params.merge(:mentee_id => session[:user].id))
     puts "Match application created by #{session[:user].id} to #{params[:mentor_id]}"
+
+    send_match_notification(
+      session[:user].username,
+      params[:mentor_id],
+      'match_pending'
+    )
   end
 
   redirect "/matches/mentee"
+end
+
+post "/matches/mentee/report" do
+  redirect "/login" unless session[:logged_in]
+  redirect "/matches/mentor" if session[:user].mentor?
+
+  target_id = params[:target_id]
+  redirect "/support?target_id=#{target_id}&type=#{TicketType.first(name: "report").id}"
 end
 
 get "/matches/mentor" do
@@ -60,6 +78,20 @@ get "/matches/mentor" do
   erb :mentorMatching
 end
 
+post "/matches/matched/mentee" do
+  redirect "/login" unless session[:logged_in]
+  redirect "/matches/mentor" if session[:user].mentor?
+
+  target_id = params[:target_id]
+  if params[:report]
+    redirect "/support?target_id=#{target_id}&type=#{TicketType.first(name: "report").id}"
+  elsif params[:withdrawal]
+    redirect "/matches/matched/withdrawal"
+  else
+    redirect "/matches/mentee"
+  end
+end
+
 get "/matches/matched/mentor" do 
   redirect "/login" unless session[:logged_in]
   redirect "/matches/mentee" if session[:user].mentee?
@@ -69,12 +101,27 @@ get "/matches/matched/mentor" do
   erb :mentorMatchingMatches
 end
 
+post "/matches/matched/mentor" do
+  redirect "/login" unless session[:logged_in]
+  redirect "/matches/mentee" if session[:user].mentee?
+
+  target_id = params[:target_id]
+  if params[:report]
+    redirect "/support?target_id=#{target_id}&type=#{TicketType.first(name: "report").id}"
+  elsif params[:withdrawal]
+    redirect "/matches/matched/withdrawal"
+  else
+    redirect "/matches/matched/mentor"
+  end
+end
+
 post "/matches/mentor" do
   redirect "/login" unless session[:logged_in]
   redirect "/matches/mentee" unless session[:user].mentor? || session[:user].admin?
   #puts params
   @menteeApplicants = Match.where(mentor_id: session[:user].id, status: 'pending')
   @mentees = MenteeProfile.where(availability: true)
+  puts session[:user].mentor_profile.below_limit?
 
   # if is a waitlist mentee, create new match
   if params[:waitlisted_mentee] && session[:user].mentor_profile.below_limit? && User.first(id: params[:mentee_id]).mentee_profile.available?
@@ -85,6 +132,16 @@ post "/matches/mentor" do
       Match.where(mentee_id: params[:mentee_id]).exclude(mentor_id: session[:user].id).delete
       Match.first(mentee_id: params[:mentee_id], mentor_id: session[:user].id, status: "pending").activate
       # TODO: message informing successful match
+      send_match_notification(
+        session[:user].username,
+        params[:mentee_id],
+        'match_success'
+      )
+      send_match_notification(
+        "System",
+        session[:user].id,
+        'match_success'
+      )
       redirect "/matches"
     elsif params[:report]
       # TODO: report profile
@@ -97,11 +154,31 @@ post "/matches/mentor" do
       Match.where(mentee_id: params[:mentee_id]).exclude(mentor_id: session[:user].id).delete
       match.activate
       # TODO: message informing successful match
+      UserMessage.send_message(
+        sent_by: session[:user].username,
+        received_by: params[:mentee_id],
+        message_type: 'match_success'
+      )
+      UserMessage.send_message(
+        sent_by: "System",
+        received_by: session[:user].id,
+        message_type: 'match_success'
+      )
     elsif params[:decline]
       match.decline
       # TODO: create message in message table telling mentee he was rejected
+      UserMessage.send_message(
+        sent_by: session[:user].username,
+        received_by: params[:mentee_id],
+        message_type: 'match_declined'
+      )
     elsif params[:report]
       # TODO: report profile
+      send_match_notification(
+        session[:user].username,
+        params[:mentee_id],
+        'report'
+      )
     end
   else
      @error = "Match has already been accepted by another mentor or mentee limit exceeded"
@@ -109,6 +186,14 @@ post "/matches/mentor" do
 
   redirect "/matches/mentor" unless @error
   erb :mentorMatching if @error
+end
+
+post "/matches/mentor/report" do
+  redirect "/login" unless session[:logged_in]
+  redirect "/matches/mentor" unless session[:user].mentor? || session[:user].admin?
+
+  target_id = params[:target_id]
+  redirect "/support?target_id=#{target_id}&type=#{TicketType.first(name: "report").id}"
 end
 
 post "/matches/mentor/set-max" do
@@ -121,3 +206,16 @@ post "/matches/mentor/set-max" do
   #puts session[:user].mentor_profile.inspect
   redirect "/matches/mentor"
 end
+
+# WHERE ARE MATHCES COMPLETED?
+# UserMessage.send_message(
+#       sent_by: "System",
+#       received_by: match.mentee_id,
+#       message_type: 'match_completed'
+#     )
+    
+#     UserMessage.send_message(
+#       sent_by: "System",
+#       received_by: match.mentor_id,
+#       message_type: 'match_completed'
+#     )

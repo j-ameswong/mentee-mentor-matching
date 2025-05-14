@@ -7,6 +7,93 @@
   <meta name="author" content="Team 17">
   <link rel="stylesheet" href="/css/styles.css"/>
   <link rel="icon" href="/images/UniConnectLogo.png" type="image/x-icon">
+  <style>
+    tr.flagged {
+      background-color: #fff0f0;
+    }
+    
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.4);
+    }
+
+    .modal-content {
+      background-color: #fefefe;
+      margin: 15% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 50%;
+      border-radius: 5px;
+    }
+
+    .modal-content h4 {
+      margin-top: 0;
+    }
+
+    .modal-content textarea {
+      width: 100%;
+      min-height: 100px;
+      margin-bottom: 10px;
+      resize: vertical;
+    }
+
+    .modal-buttons {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .modal-buttons button {
+      margin-left: 10px;
+      padding: 8px 16px;
+      cursor: pointer;
+    }
+
+    .close-modal {
+      background-color: #ccc;
+      border: none;
+      border-radius: 3px;
+    }
+
+    .submit-modal {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 3px;
+    }
+    
+    .flash-message {
+      background-color: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: 4px;
+    }
+
+    .flash-success {
+      background-color: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: 4px;
+    }
+
+    .flash-error {
+      background-color: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: 4px;
+    }
+  </style>
 </head>
 
 <body>
@@ -35,28 +122,27 @@
       <form action="/accounts" method="post">
         <div class="column centerer">
           <label for="username" class="row centerer">Filter by Username:</label>
-          <input type="text" name="username" placeholder="Enter username">
+          <input type="text" name="username" placeholder="Enter username" value="<%= session[:account_filters] && session[:account_filters][:username] %>">
 
           <br>
           <label for="email" class="row centerer">Filter by Email:</label>
-          <input type="text" name="email" placeholder="Enter email address">
+          <input type="text" name="email" placeholder="Enter email address" value="<%= session[:account_filters] && session[:account_filters][:email] %>">
           <br>
           <label for="role" class="row centerer">Filter by Account Type:</label>
           <select name="role" id="role" class="row">
             <option value="" selected>Select an account type</option>
-            <option value="admin">Admin</option>
-            <option value="mentee">Mentee</option>
-            <option value="mentor">Mentor</option>
+            <option value="admin" <%= session[:account_filters] && session[:account_filters][:role] == 'admin' ? 'selected' : '' %>>Admin</option>
+            <option value="mentee" <%= session[:account_filters] && session[:account_filters][:role] == 'mentee' ? 'selected' : '' %>>Mentee</option>
+            <option value="mentor" <%= session[:account_filters] && session[:account_filters][:role] == 'mentor' ? 'selected' : '' %>>Mentor</option>
           </select>
           <br>
-          <!--          <label for="action" class="row centerer">Filter by Available Action:</label>-->
-          <!--          <select name="action" id="action" class="row">-->
-          <!--            <option value="" selected>Select an action</option>-->
-          <!--            <option value="delete">Delete</option>-->
-          <!--            <option value="reassign">Re-Assign</option>-->
-          <!--            <option value="badges">Badges</option>-->
-          <!--          </select>-->
-          <!--          <br>-->
+          <label for="flag_status" class="row centerer">Filter by Flag Status:</label>
+          <select name="flag_status" id="flag_status" class="row">
+            <option value="" selected>Any flag status</option>
+            <option value="0" <%= session[:account_filters] && session[:account_filters][:flag_status] == '0' ? 'selected' : '' %>>Not Flagged</option>
+            <option value="1" <%= session[:account_filters] && session[:account_filters][:flag_status] == '1' ? 'selected' : '' %>>Flagged</option>
+          </select>
+          <br>
           <input type="submit" value="Update Filters" class="row centerer">
         </div>
       </form>
@@ -68,35 +154,43 @@
         <thead>
         <tr>
           <th>Username</th>
+          <th>Email</th>
           <th>Account Type</th>
+          <th>Flag Status</th>
           <th>Actions</th>
         </tr>
         </thead>
         <tbody>
         <% i = 0 %>
-        <% @users.each { |user| %>
-          <tr>
+        <% @users.each do |user| %>
+          <tr <%= user.flagged? ? 'class="flagged"' : '' %>>
             <td><%= user.username %></td>
-            <td><%= user.role %></td>
+            <td><%= user.email %></td>
+            <td><%= user.role.capitalize %></td>
+            <td><%= user.flagged? ? 'Flagged' : 'Not Flagged' %></td>
             <td>
               <form action="/accounts/action" method="post">
                 <input type="hidden" name="user_id" value="<%= user.id %>">
                 <div class="row centerer">
                   <select name="action" id="action">
                     <option value="" selected>Select an action</option>
-                    <% (0..@actions[i].length - 1).each { |j| %>
-                      <option value=<%= @actions[i][j] %>><%= @actions[i][j].capitalize %></option>
-                    <% } %>
+                    <% @actions[i].each do |action| %>
+                      <option value="<%= action %>"><%= action.capitalize %></option>
+                    <% end %>
+                    <% if user.role == "mentor" %>
+                      <option value="apply_badge">Apply Badge</option>
+                    <% end %>
                   </select>
                 </div>
                 <div class="row centerer">
                   <input type="submit" value="Submit" class="row centerer">
                 </div>
               </form>
+              <form id="delete-form-<%= user.id %>" action="/delete/<%= user.id %>" method="post" style="display: none;"></form>
             </td>
           </tr>
           <% i += 1 %>
-        <% } %>
+        <% end %>
         </tbody>
       </table>
       <% if @users.count == 0 %>
@@ -121,7 +215,24 @@
     </div>
   </div>
 </section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const forms = document.querySelectorAll('form[action="/accounts/action"]');
+    
+    forms.forEach(form => {
+      form.addEventListener('submit', function(e) {
+        const action = form.querySelector('select[name="action"]').value;
+        const userId = form.querySelector('input[name="user_id"]').value;
+        if (action === 'delete') {
+          e.preventDefault();
+          if (confirm('Are you sure you want to delete this user?')) {
+            document.getElementById(`delete-form-${userId}`).submit();
+          }
+        }
+      });
+    });
+  });
+</script>
 </body>
-
-
 </html>

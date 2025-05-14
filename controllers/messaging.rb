@@ -1,6 +1,6 @@
 get "/message" do
   redirect "/" unless session[:logged_in]
- 
+  puts session[:user].inspect
   query = UserMessage.where(received_by: session[:user].id)
   
   if session[:message_filters]

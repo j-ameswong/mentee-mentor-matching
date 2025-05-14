@@ -1,3 +1,16 @@
+# Helper method for safe message sending
+def send_admin_notification(sent_by, received_by, message_type)
+  begin
+    UserMessage.send_message(
+      sent_by: sent_by,
+      received_by: received_by,
+      message_type: message_type
+    )
+  rescue => e
+    puts "Error sending admin notification (#{message_type}): #{e.message}"
+  end
+end
+
 get "/accounts" do
   redirect "/login" unless session[:logged_in]
 
@@ -76,6 +89,11 @@ post "/accounts/action" do
   if params[:action] == "delete"
     @users = User.where(id: params[:user_id])
     @users.each do |user|
+      send_admin_notification(
+        session[:user].username || "Admin",
+        user.id,
+        'account_deleted'
+      )
       user.delete_from_all
     end
   end
@@ -84,6 +102,7 @@ post "/accounts/action" do
     @users = User.where(id: params[:user_id])
     @users.each do |user|
       # TODO: reassign user
+      #send_admin_notification()
     end
   end
 
@@ -91,6 +110,12 @@ post "/accounts/action" do
     @mentors = MentorProfile.where(id: params[:user_id])
     @mentors.each do |mentor|
       mentor[:badges] = "Experienced Mentor"
+      mentor.save  
+    UserMessage.send_message(
+      sent_by: "Badge System",
+      received_by: mentor.user_id,
+      message_type: 'badge_applied'
+    )
       # puts mentor.inspect
       # puts mentor[:badges].inspect
     end
