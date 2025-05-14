@@ -3,45 +3,47 @@ require_relative '../db/db'
 class SupportTicket < Sequel::Model
   plugin :timestamps, update_on_create: true
 
-  many_to_one :sent_by, class: :User
-  many_to_one :target_id, class: :User
-  many_to_one :type, class: :TicketType
+  many_to_one :sent_by_user, class: :User
+  many_to_one :target_id_user, class: :User
+  many_to_one :ticket_type, class: :TicketType
 
   def self.create!(params)
-    ticket = SupportTicket.new
-    case params[:type]
+    case params[:type].to_i
     when report?
-      report!(params)
+      SupportTicket.report!(params)
     when withdraw?
-      withdraw!(params)
+      SupportTicket.withdraw!(params)
     else
       puts "Invalid ticket type"
     end
     # TODO: etc...
   end
 
-  def report?
+  def self.report?
     TicketType.first(name: "report").id
   end
 
-  def withdraw?
-    TicketType.first(name: "withdraw").id
+  def self.withdraw?
+    TicketType.first(name: "withdrawal").id
   end
 
-  def report!(params)
+  def self.report!(params)
     return if params[:type].nil? ||
-      params[:type] != TicketType.first(name: "report").id
+      params[:type].to_i != TicketType.first(name: "report").id
 
-    SupportTicket.create(
-      :sent_by => params[:sent_by],
-      :target_id => params[:target_id],
-      :is_read => false,
-      :ticket.type => params[:type],
-      :ticket.details => params[:details]
-    )
+    ticket = SupportTicket.new
+
+    ticket.sent_by = params[:sent_by]
+    ticket.target_id = params[:target_id]
+    ticket.is_read = false
+    ticket.type = params[:type]
+    ticket.details = params[:details]
+
+    ticket.save
+    ticket.inspect
   end
 
-  def withdraw!(params)
+  def self.withdraw!(params)
   end
 end
 
