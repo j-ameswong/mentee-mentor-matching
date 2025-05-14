@@ -50,7 +50,7 @@
         <div id="matching-list" class="content-box">
             <div id="mentor-applicants">
                 <h2>Available Mentors</h2>
-                <% MentorProfile.each do |row| %>
+                <% MentorProfile.all.each do |row| %>
                     <% if row.available? && !Match.exists?(session[:user].id, row.user.id) %>
                         <div class="profile-box">
                             <% @mentor = row.user.profile %>

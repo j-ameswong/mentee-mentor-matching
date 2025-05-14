@@ -29,9 +29,11 @@
           <div class="row centerer">
             <input id="field" name="field" type="text" placeholder="Username or University Email Address" />
             <% if @user && @user.errors[:field] %>
-              <% @user.errors[:field].each do |error| %>
-                <p><%= error %></p>
-              <% end %>
+              <div>
+                <% @user.errors[:field].each do |error| %>
+                    <p class="login-error-msg"><%= error %></p>
+                <% end %>
+              </div>
             <% end %>
           </div>
           <br>

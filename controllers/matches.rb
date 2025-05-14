@@ -75,6 +75,7 @@ post "/matches/mentor" do
   #puts params
   @menteeApplicants = Match.where(mentor_id: session[:user].id, status: 'pending')
   @mentees = MenteeProfile.where(availability: true)
+  puts session[:user].mentor_profile.below_limit?
 
   # if is a waitlist mentee, create new match
   if params[:waitlisted_mentee] && session[:user].mentor_profile.below_limit? && User.first(id: params[:mentee_id]).mentee_profile.available?

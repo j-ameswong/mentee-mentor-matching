@@ -45,7 +45,7 @@
               </div>
               <div id="applicant-detailed-info" class="detailed-info">
                 <p class="detailed-info-content">Age: <%= mentee.age %></p>
-                <p class="detailed-info-content">Nationality: <%= Nationality.first(id: mentee.nationality_id).country_name %></p>
+                <p class="detailed-info-content">Nationality: <%= Nationality.first(id: mentee.nationality_id).country_name unless mentee.nationality_id.nil? %></p>
                 <p class="detailed-info-content">Languages: 
                     <% UserLanguage.where(user_id: row.mentee_id).each do |ulanguage| %>
                         <%= ulanguage.language.language_name %>
