@@ -13,12 +13,15 @@ end
 
 def check_match_end
   # Check for match end
-  session[:user].mentee_matches.first.check_end if session[:user].mentee? && Match.first(mentee_id: session[:user].id, status: "active")
+  return session[:user].mentee_matches.first.check_end if session[:user].mentee? && Match.first(mentee_id: session[:user].id, status: "active")
+
   if session[:user].mentor? && Match.first(mentor_id: session[:user].id, status: "active")
     session[:user].mentor_matches.each do |match|
-      match.check_end
+      return match.check_end if match.status == "active"
     end
   end
+
+  false
 end
 
 get "/matches" do
@@ -26,7 +29,7 @@ get "/matches" do
   redirect "/matches/mentee" if session[:user].mentee?
   redirect "/matches/mentor" if session[:user].mentor?
 
-  check_match_end
+  #redirect "/matches" if check_match_end
 end
 
 get "/matches/matched" do
@@ -50,8 +53,7 @@ get "/matches/mentee" do
       @currentMentor = match.mentor
     end
 
-    check_match_end
-    erb :menteeMatching
+    check_match_end ? (redirect "/matches") : (erb :menteeMatching)
   end
 end
 
@@ -89,8 +91,7 @@ get "/matches/mentor" do
   @menteeApplicants = Match.where(mentor_id: mentor_id, status: 'pending')
   @mentees = MenteeProfile.where(availability: true)
 
-  check_match_end
-  erb :mentorMatching
+  check_match_end ? (redirect "/matches") : (erb :mentorMatching)
 end
 
 post "/matches/matched/mentee" do
@@ -114,8 +115,7 @@ get "/matches/matched/mentor" do
   mentor_id = session[:user].id
   @mentees = Match.where(mentor_id: mentor_id, status: 'active')
 
-  check_match_end
-  erb :mentorMatchingMatches
+  check_match_end ? (redirect "/matches") : (erb :mentorMatchingMatches)
 end
 
 post "/matches/matched/mentor" do
@@ -223,16 +223,3 @@ post "/matches/mentor/set-max" do
   #puts session[:user].mentor_profile.inspect
   redirect "/matches/mentor"
 end
-
-# WHERE ARE MATHCES COMPLETED?
-# UserMessage.send_message(
-#       sent_by: "System",
-#       received_by: match.mentee_id,
-#       message_type: 'match_completed'
-#     )
-    
-#     UserMessage.send_message(
-#       sent_by: "System",
-#       received_by: match.mentor_id,
-#       message_type: 'match_completed'
-#     )
