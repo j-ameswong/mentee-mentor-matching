@@ -147,7 +147,7 @@ CREATE INDEX "user_id_flag_index" ON "flagged_accounts" ("user_id");
 -- User messages table
 CREATE TABLE "user_messages" (
     "id" INTEGER PRIMARY KEY AUTOINCREMENT,
-    "sent_by" TEXT
+    "sent_by" TEXT,
     "received_by" TEXT,
     "message_id" INTEGER,
     "read_status" Boolean,
@@ -192,4 +192,4 @@ CREATE TABLE "ticket_types" (
     "name" TEXT,
     "desc_brief" TEXT,
     "description" TEXT
-)
+);

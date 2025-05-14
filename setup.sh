@@ -13,6 +13,7 @@ ruby ./gen_db/csv_to_table_languages.rb
 ruby ./gen_db/csv_to_table_nationalities.rb
 ruby ./gen_db/global_variable.rb
 ruby ./gen_db/ticket_types.rb
+ruby ./gen_db/gen_messages.rb
 
 ruby setup.rb
 

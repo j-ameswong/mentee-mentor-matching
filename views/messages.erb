@@ -51,6 +51,7 @@
                 </thead>
                 <tbody>
                     <% @messages.each do |user_message| %>
+                    <% puts user_message %>
                     <tr class="<%= user_message.read? ? 'read-message' : 'unread-message' %>">
                         <td><%= user_message.sent_by %></td>
                         <td><%= user_message.message.message_description %></td>
