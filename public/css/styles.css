@@ -525,7 +525,7 @@ footer {
     align-items: flex-start;
     margin: 1% 0 0 0;
     padding: 1%;
-    height: 12vh;
+    height: fit-content;
 }
 
 .admin-approval {
@@ -822,11 +822,23 @@ textarea {
 }
 
 .notifications-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.notification-wrapper {
     grid-row: 1/2;
     justify-self: end;
     grid-column: 5;
     position: sticky;
     align-self: center;
+    top: 0;
+    z-index: 1000;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    height: 10vh;
 }
 
 #bell-icon {
