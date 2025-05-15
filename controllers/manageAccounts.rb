@@ -11,14 +11,8 @@ def send_admin_notification(sent_by, received_by, message_type)
   end
 end
 
-# TODO ON LOAD PAGE INIT (not a todo just so comment stands out)
 get "/accounts" do
   redirect "/login" unless session[:logged_in]
-
-  if params[:flag_status]
-    session[:account_filters] ||= {}
-    session[:account_filters][:flag_status] = params[:flag_status]
-  end
 
   @limit = User.count
   $num_pages = 1
@@ -27,68 +21,60 @@ get "/accounts" do
     $num_pages = (@limit / 10).to_i
     @limit = 10
   end
-  if $offset.nil?
-    $offset = 0
-  end
 
+  $offset = 0
   @users = User.limit(@limit).offset($offset * @limit).all
 
-  @actions = Array.new(@limit) { ["delete", "reassign"] }
+  @actions = Array.new(@limit) { ["delete"] }
 
   i = 0
-  @users.each do |user|
+  @users.each { |user|
     if user[:role] == "mentor" && !MentorProfile.where(user_id: user[:id]).limit(1).pluck(:year_of_study).first.nil? &&
        MentorProfile.where(user_id: user[:id]).limit(1).pluck(:year_of_study).first >= 4
-      @actions[i] = ["delete", "reassign", "badges"]
+      @actions[i] = ["delete","badges"]
     end
-  end
-
-  if $cond.nil?
-    @users = User.limit(@limit).offset($offset * @limit).all
-  else
-    @users = User.limit(@limit).offset($offset).where($cond).all
-  end
-
-  if !session[:account_filters].nil? && !session[:account_filters][:flag_status].to_s.empty?
-    flag_status = session[:account_filters][:flag_status] == "1"
-    @users = @users.select { |user| user.flagged? == flag_status }
-  end
-
-  @actions = []
-  @users.each do |user|
-    actions = ["reassign"]
-
-    if user[:role] == "mentor" &&
-       !MentorProfile.where(user_id: user[:id]).limit(1).pluck(:year_of_study).first.nil? &&
-       MentorProfile.where(user_id: user[:id]).limit(1).pluck(:year_of_study).first >= 4
-      actions << "badges"
+    if user[:role] == "mentee"
+      @actions[i] = ["delete", "reassign"]
     end
+    i += 1
+  }
 
-    @actions << actions
+  if params[:show_reassign_modal] && session[:reassign_data]
+    mentee_id = session[:reassign_data][:mentee_id]
+    current_match = Match.where(mentee_id: mentee_id, status: "active").first
+
+    if current_match
+      @available_mentors = User.where(role: "mentor")
+      .join(:mentor_profiles, user_id: :id)
+      .select_all(:users)
+      .select_append(Sequel[:mentor_profiles][:max_matches])
+      .where(Sequel.lit("mentor_profiles.availability = true"))
+      .exclude(Sequel[:users][:id] => current_match.mentor_id)
+      .all
+
+      @mentor_matches = {}
+
+      @available_mentors.each do |mentor|
+        @mentor_matches[mentor[:id]] = Match.where(mentor_id: mentor[:id], status: "active").count  
+      end
+    end
   end
 
   erb :manageAccounts
 end
 
-# TODO ON FILTERS UPDATE (not a todo just so comment stands out)
 post "/accounts" do
   redirect "/login" unless session[:logged_in]
 
-  session[:account_filters] = {
-    username: params[:username],
-    email: params[:email],
-    role: params[:role],
-    flag_status: params[:flag_status]
-  }
-  $cond = {}
+  @cond = {}
   unless params[:username].empty?
-    $cond[:username] = params[:username]
+    @cond[:username] = params[:username]
   end
   unless params[:role].empty?
-    $cond[:role] = params[:role]
+    @cond[:role] = params[:role]
   end
   unless params[:email].empty?
-    $cond[:email] = params[:email]
+    @cond[:email] = params[:email]
   end
 
   @limit = User.count
@@ -100,20 +86,20 @@ post "/accounts" do
   end
 
   $offset = 0
-  if $cond
-    @users = User.limit(@limit).offset($offset * @limit).where($cond)
+  if @cond
+    @users = User.limit(@limit).offset($offset * @limit).where(@cond)
   else
     @users = User.limit(@limit).offset($offset * @limit)
   end
   # puts @users.inspect
 
-  @actions = Array.new(@limit) { %w[delete reassign] }
+  @actions = Array.new(@limit) { ["delete", "reassign"] }
 
   i = 0
   @users.each { |user|
     if user[:role] == "mentor" && !MentorProfile.where(user_id: user[:id]).limit(1).pluck(:year_of_study).first.nil? &&
        MentorProfile.where(user_id: user[:id]).limit(1).pluck(:year_of_study).first >= 4
-      @actions[i] = %w[delete reassign badges]
+      @actions[i] = ["delete", "reassign", "badges"]
     end
     i += 1
   }
@@ -121,111 +107,311 @@ post "/accounts" do
   erb :manageAccounts
 end
 
-# TODO WHEN ACTION SELECTED IN TABLE (not a todo just so comment stands out)
 post "/accounts/action" do
   redirect "/login" unless session[:logged_in]
-
-  user = User.first(id: params[:user_id].to_i)
-
-  case params[:action]
-
-  when "reassign"
-    # TODO: Implement reassign functionality
-
-  when "delete"
-    user = User.where(id: params[:user_id])
-    user.delete_from_all
-
-  when "apply_badge"
-    if user && user.role == "mentor"
-      mentor_profile = MentorProfile.first(user_id: user.id)
-
-      if mentor_profile && mentor_profile.year_of_study >= 4
-        matches = Match.where(mentor_id: user.id).all
-        eligible_match_exists = matches.any? do |match|
-          match.status == "completed"
-        end
-
-        if eligible_match_exists
-          mentor_profile.update(badges: "Experienced Mentor")
-          session[:flash] = { success: "Badge applied successfully." }
-          puts "FLASH SET: #{session[:flash].inspect}"
-        else
-          session[:flash] = { error: "A mentor must have at least one completed match to gain a badge." }
-          puts "FLASH SET: #{session[:flash].inspect}"
-        end
-      else
-        session[:flash] = { error: "Mentor must be a fourth year student to gain a badge." }
-        puts "FLASH SET: #{session[:flash].inspect}"
-        $cond = {}
-        unless params[:username].empty?
-          $cond[:username] = params[:username]
-        end
-        unless params[:role].empty?
-          $cond[:role] = params[:role]
-        end
-      end
+  #DEBUG
+  puts "Action: #{params[:action]}, User ID: #{params[:user_id]}"
+  
+  if params[:action] == "delete"
+    @users = User.where(id: params[:user_id])
+    @users.each do |user|
+      send_admin_notification(
+        session[:user].username || "Admin",
+        user.id,
+        'account_deleted'
+      )
+      user.delete_from_all
     end
-  else
-    # type code here
+  end
+
+  if params[:action] == "reassign"
+    #DEBUG
+    puts "Entering reassign action"
+    session[:reassign_user_id] = params[:user_id]
+    user = User.where(id: params[:user_id]).first
+    #DEBUG
+    puts "User: #{user.inspect}"
+
+    if user && user.role == "mentee"
+      #DEBUG
+      puts "User is a mentee"
+      current_match = Match.where(mentee_id: user.id, status: "active").first
+      #DEBUG
+      puts "Current match: #{current_match.inspect}"
+      if current_match
+        #DEBUG
+        puts "Current match found"
+        current_mentor = User.where(id: current_match.mentor_id).first
+        #DEBUG
+        puts "Current mentor: #{current_mentor.inspect}"
+        @available_mentors = User.where(role: "mentor")
+        .join(:mentor_profiles, user_id: :id)
+        .where(Sequel.lit("mentor_profiles.availability = true"))
+        .exclude(Sequel[:users][:id] => current_match.mentor_id)
+        .all
+        #DEBUG
+        puts "Available mentors: #{@available_mentors.inspect}"
+        session[:reassign_data] = {
+          mentee_id: user[:id],
+          mentee_username: user[:username],
+          current_mentor_id: current_mentor[:id],
+          current_mentor_username: current_mentor[:username],
+        }
+        puts "Session reassign data: #{session[:reassign_data].inspect}"
+        puts "Redirecting to show modal"
+        redirect "/accounts?show_reassign_modal=true"
+        return
+      else
+        puts "No active match found for user #{user[:username]}"
+        redirect "/accounts"
+      end
+    else
+      error_message = user ? "User #{user[:username]} is not a mentee." : "User does not exist."
+      puts error_message
+      redirect "/accounts"
+    end
+  end
+
+  if params[:action] == "badges"
+    @mentors = MentorProfile.where(user_id: params[:user_id])
+    @mentors.each do |mentor|
+      mentor[:badges] = "Experienced Mentor"
+      mentor.save  
+    UserMessage.send_message(
+      sent_by: "Badge System",
+      received_by: mentor.user_id,
+      message_type: 'badge_applied'
+    )
+      # puts mentor.inspect
+      # puts mentor[:badges].inspect
+    end
+  end
+
+  @cond = {}
+  unless params[:username].nil? || params[:username].empty?
+    @cond[:username] = params[:username]
+  end
+  unless params[:role].nil? ||params[:role].empty?
+    @cond[:role] = params[:role]
   end
 
   @limit = User.count
   $num_pages = 1
+
   if @limit > 10
     $num_pages = (@limit / 10).to_i
     @limit = 10
   end
 
   $offset = 0
-  @users = User.limit(@limit).offset($offset).where($cond)
+  @users = User.limit(@limit).offset($offset).where(@cond)
 
-  @actions = Array.new(@limit) { %w[delete reassign] }
+  @actions = Array.new(@limit) { ["delete", "reassign"] }
+
   i = 0
   @users.each { |user|
     if user[:role] == "mentor"
       if MentorProfile.where(user_id: user[:id]).limit(1).pluck(:year_of_study).first >= 4
-        @actions[i] = %w[delete reassign badges]
+        @actions[i] = ["delete", "reassign", "badges"]
       end
     end
+    i += 1
   }
-  redirect "/accounts"
+
+  erb :manageAccounts
 end
 
-# TODO WHEN NEXT PAGE BUTTON CLICKED ON TABLE (not a todo just so comment stands out)
 post "/accounts/next" do
   redirect "/login" unless session[:logged_in]
-  if $offset < $num_pages
-    $offset += 1
+
+  if $num_pages > 1 && $offset < $num_pages - 1
+    redirect "/login" unless session[:logged_in]
+
+    if $offset.nil?
+      $offset = 0
+    else
+      $offset = $offset + 1;
+    end
+
+    puts "offset: #{$offset}"
   end
-  redirect "/accounts"
+
+  @limit = User.count
+  $num_pages = 1
+
+  if @limit > 10
+    $num_pages = (@limit / 10).to_i
+    @limit = 10
+  end
+
+  if @cond
+    @users = User.limit(@limit).offset($offset * @limit).where(@cond)
+  else
+    @users = User.limit(@limit).offset($offset * @limit)
+  end
+
+  @actions = Array.new(@limit) { ["delete", "reassign"] }
+
+  i = 0
+  @users.each { |user|
+    if user[:role] == "mentor"
+      if MentorProfile.where(user_id: user[:id]).limit(1).pluck(:year_of_study).first >= 4
+        @actions[i] = ["delete", "reassign", "badges"]
+      end
+    end
+    i += 1
+  }
+
+  erb :manageAccounts
 end
 
-# TODO WHEN PREV PAGE CLICKED ON TABLE (not a todo just so comment stands out)
 post "/accounts/prev" do
   redirect "/login" unless session[:logged_in]
   if $offset > 0
-    $offset -= 1
+    if $offset.nil?
+      $offset = 0
+    else
+      $offset = $offset - 1;
+    end
+
+    puts "offset: #{$offset}"
+
   end
-  redirect "/accounts"
+
+  @limit = User.count
+  $num_pages = 1
+
+  if @limit > 10
+    $num_pages = (@limit / 10).to_i
+    @limit = 10
+  end
+
+  if @cond
+    @users = User.limit(@limit).offset($offset * @limit).where(@cond)
+  else
+    @users = User.limit(@limit).offset($offset * @limit)
+  end
+
+  @actions = Array.new(@limit) { ["delete", "reassign"] }
+
+  i = 0
+  @users.each { |user|
+    if user[:role] == "mentor"
+      if MentorProfile.where(user_id: user[:id]).limit(1).pluck(:year_of_study).first >= 4
+        @actions[i] = ["delete", "reassign", "badges"]
+      end
+    end
+    i += 1
+  }
+
+  erb :manageAccounts
 end
 
-# TODO WHEN NUMBER OF MATCHES UPDATED (not a todo just so comment stands out)
 post "/no-of-matches" do
   redirect "/login" unless session[:logged_in]
 
   if params[:max_matches]
-    max_matches = params[:max_matches].to_i
-    mentors = User.where(role: "mentor").all
-
-    mentors.each do |user|
-      mentor_profile = MentorProfile.first(user_id: user.id)
-      if mentor_profile
-        mentor_profile.update(max_matches: max_matches)
-        mentor_profile.save
-      end
+    @users = User.where(role: "mentor").all
+    @users.each do |user|
+      user[:num_matches] = params[:max_matches]
     end
   end
 
   redirect "/accounts"
 end
+
+post "/reassign-mentee" do
+  redirect "/login" unless session[:logged_in]
+
+  mentee_id = params[:mentee_id]
+  new_mentor_id = params[:new_mentor_id]
+  #DEBUG
+  puts "Starting to reasssign mentee #{mentee_id} to mentor #{new_mentor_id}"
+  current_match = Match.where(mentee_id: mentee_id, status: "active").first
+
+  if current_match
+    old_mentor_id = current_match.mentor_id
+    #DEBUG
+    puts "The current match for the mentee is #{old_mentor_id}"
+
+
+    current_match.cancel
+    #DEBUG
+    puts "Cancelled the current match for mentee #{mentee_id} with mentor #{old_mentor_id}"
+
+    begin 
+      puts "Attempting to create a new match"
+      new_match = Match.generate!({
+        mentor_id: new_mentor_id,
+        mentee_id: mentee_id,
+        message: "Reassigned from #{current_match.mentor_id} to #{new_mentor_id} by admin"
+      })
+      #DEBUG
+      puts "New match created: #{new_match.inspect}"
+
+      new_match.activate
+      #DEBUG
+      puts "New match activated for mentee #{mentee_id} with mentor #{new_mentor_id}"
+
+      begin
+        # Notify both mentee about reassignment
+        UserMessage.send_message(
+          sent_by: "System",
+          received_by: mentee_id,
+          message_type: 'match_reassigned'
+        )
+        
+        # Inform the old mentor about reassignment
+        UserMessage.send_message(
+          sent_by: "System",
+          received_by: old_mentor_id,
+          message_type: 'match_reassigned'
+        )
+
+         # Notify mentee about new match
+        UserMessage.send_message(
+          sent_by: "System",
+          received_by: mentee_id,
+          message_type: 'match_success'
+        )
+        
+        # Notify new mentor about new match
+        UserMessage.send_message(
+          sent_by: "System",
+          received_by: new_mentor_id,
+          message_type: 'match_success'
+        )
+        
+        puts "Sent notifications about match reassignment and success"
+      rescue => e
+        puts "Error sending notifications: #{e.message}"
+      end
+
+      mentee = User.where(id: mentee_id).first
+      if mentee && mentee.mentee_profile
+        mentee.mentee_profile.update(availability: false)
+        mentee.mentee_profile.save
+        #DEBUG
+        puts "Updated mentee profile availability to false"
+      end
+
+      new_mentor = User.where(id: new_mentor_id).first
+      if new_mentor && new_mentor.mentor_profile
+        match_count = Match.where(mentor_id: new_mentor_id, status: "active").count
+        new_mentor.mentor_profile.update(num_matches: match_count)
+        new_mentor.mentor_profile.save
+        #DEBUG
+        puts "Updated new mentors match count to #{match_count}"
+      end
+    end
+  else
+    #DEBUG
+    puts "Reassignment failed: No active match found for mentee #{mentee_id}"
+  end
+
+  session[:reassign_user_id] = nil
+  session[:reassign_data] = nil
+
+  redirect "/accounts"
+end
+      

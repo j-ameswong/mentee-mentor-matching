@@ -216,23 +216,65 @@
   </div>
 </section>
 
+<script src="/js/reassign.js"></script>
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const forms = document.querySelectorAll('form[action="/accounts/action"]');
-    
-    forms.forEach(form => {
-      form.addEventListener('submit', function(e) {
-        const action = form.querySelector('select[name="action"]').value;
-        const userId = form.querySelector('input[name="user_id"]').value;
-        if (action === 'delete') {
-          e.preventDefault();
-          if (confirm('Are you sure you want to delete this user?')) {
-            document.getElementById(`delete-form-${userId}`).submit();
-          }
-        }
-      });
+  <% if params[:show_reassign_modal] && session[:reassign_data] %>
+    document.addEventListener('DOMContentLoaded', function() {
+      openReassignModal(
+        "<%= session[:reassign_data][:mentee_id] %>",
+        "<%= session[:reassign_data][:mentee_username] %>", 
+        "<%= session[:reassign_data][:current_mentor_username] %>"
+      );
     });
-  });
+  <% end %>
 </script>
+
+<div id="reassignModal" class="modal">
+  <div class="modal-content">
+    <h4>Reassign Mentee: <span id="reassignMenteeName"></span></h4>
+    <p>Current Mentor: <span id="currentMentorName"></span></p>
+    <p>Select a new mentor from the list below:</p>
+    
+    <div class="mentor-list">
+      <table>
+        <thead>
+          <tr>
+            <th>Username</th>
+            <th>Current Mentees</th>
+            <th>Max Mentees</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if @available_mentors && @available_mentors.any? %>
+            <% @available_mentors.each do |mentor| %>
+              <tr>
+                <td><%= mentor[:username] %></td>
+                <td><%= @mentor_matches[mentor[:id]] %></td>
+                <td><%= mentor[:max_matches] || "N/A" %></td>
+                <td>
+                  <form action="/reassign-mentee" method="post">
+                    <input type="hidden" name="mentee_id" value="<%= session[:reassign_data][:mentee_id] if session[:reassign_data] %>">
+                    <input type="hidden" name="new_mentor_id" value="<%= mentor[:id] %>">
+                    <button type="submit" class="match-button">Match</button>
+                  </form>
+                </td>
+              </tr>
+            <% end %>
+          <% else %>
+            <tr>
+              <td colspan="4">No available mentors found</td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+    
+    <div class="modal-buttons">
+      <button type="button" class="close-modal" onclick="closeReassignModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
