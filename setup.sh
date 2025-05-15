@@ -3,10 +3,15 @@
 # gem install pkg-config
 bundle install
 
-rm ./db/db_test.sqlite3
+echo 'Setting up prod db...'
+sleep 1
 
-sqlite3 ./db/db_test.sqlite3 < ./db/schema.sql
+rm ./db/db.sqlite3
+
+sqlite3 ./db/db.sqlite3 < ./db/schema.sql
 echo "Schema successfully applied to DB!"
+
+ruby ./gen_db/pre_prod.rb
 
 ruby ./gen_db/csv_to_table_expertises.rb
 ruby ./gen_db/csv_to_table_languages.rb
@@ -15,6 +20,6 @@ ruby ./gen_db/global_variable.rb
 ruby ./gen_db/ticket_types.rb
 ruby ./gen_db/gen_messages.rb
 
-ruby setup.rb
+ruby ./setup.rb
 
-echo "Database populated with initial users!"
+echo "Database populated with initial admin!"
