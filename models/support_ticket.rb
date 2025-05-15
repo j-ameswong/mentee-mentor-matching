@@ -36,7 +36,7 @@ class SupportTicket < Sequel::Model
 
     ticket.sent_by = params[:sent_by]
     ticket.target_id = params[:target_id]
-    ticket.is_read = false
+    ticket.is_resolved = false
     ticket.type = params[:type]
     ticket.details = params[:details]
 
@@ -52,7 +52,7 @@ class SupportTicket < Sequel::Model
 
     ticket.sent_by = params[:sent_by]
     ticket.target_id = params[:target_id]
-    ticket.is_read = false
+    ticket.is_resolved = false
     ticket.type = params[:type]
     ticket.details = params[:details]
 
@@ -61,8 +61,13 @@ class SupportTicket < Sequel::Model
   end
 
   def self.withdrawing?(match)
-    SupportTicket.first(sent_by: match.mentee_id, target_id: match.mentor_id, type: self.withdraw?) ||
-      SupportTicket.first(sent_by: match.mentor_id, target_id: match.mentee_id, type: self.withdraw?)
+    SupportTicket.first(sent_by: match.mentee_id, target_id: match.mentor_id, type: self.withdraw?, is_resolved: false) ||
+      SupportTicket.first(sent_by: match.mentor_id, target_id: match.mentee_id, type: self.withdraw?, is_resolved: false)
+  end
+
+  def resolve
+    self.is_resolved = true
+    save
   end
 end
 
