@@ -53,7 +53,7 @@ post "/support/decision" do
       ticket.resolve
     elsif params[:flag]
       session[:flag_filters] ||= {}
-      session[:flag_filters][:username] = ticket.target_id_user.username
+      session[:flag_filters][:username] = ticket.target_id_user.usernametr br
       redirect "/flagging"
     end
   end

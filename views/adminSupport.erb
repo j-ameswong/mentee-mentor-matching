@@ -30,6 +30,9 @@
                     <div class="row centerer">
                       <p id="ticket-sender"><%= ticket.ticket_type.desc_brief %></p>
                     </div>
+                    <div class="row centerer">
+                      <p><%= ticket.ticket_type.description %></p>
+                    </div>
                     <% if ticket.type == 1 %> <!-- Withdrawal -->
                         <div class="row centerer">
                             <p id="ticket-receiver">Sent by: <a href=<%= "/profile?id=#{ticket.sent_by_user.id}" %>><%= ticket.sent_by_user.username %></a></p>
