@@ -15,6 +15,10 @@ end
 get "/accounts" do
   redirect "/login" unless session[:logged_in]
 
+  currentEndDate  = GlobalVariable.first(name: "SEMESTER_END_DATE").value
+  @endDate = Time.at(currentEndDate).to_date
+  puts @endDate
+
   if params[:flag_status]
     session[:account_filters] ||= {}
     session[:account_filters][:flag_status] = params[:flag_status]
@@ -195,6 +199,17 @@ post "/no-of-matches" do
         mentor_profile.save
       end
     end
+  end
+
+  redirect "/accounts"
+end
+
+post "/sem-end-date" do
+  redirect "/login" unless session[:logged_in]
+
+  if params[:sem_end]
+    sem_end = params[:sem_end]
+    GlobalVariable.set_semester_end_date(sem_end)
   end
 
   redirect "/accounts"
