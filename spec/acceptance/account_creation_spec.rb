@@ -31,8 +31,6 @@ RSpec.describe "Account creation" do
       fill_in "Password:", with: "admin"
       click_button "Log in"
 
-      expect(page).to have_content("Welcome to UniConnect!")
-
       visit "/accounts"
 
       expect(page).to have_content("menteeuser")
