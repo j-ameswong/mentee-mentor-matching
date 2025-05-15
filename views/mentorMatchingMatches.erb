@@ -11,7 +11,20 @@
 
 <body>
     <div class="content">
-        <h2 id="welcome" class="centerer">Mentees</h2>
+        <% @mentor = session[:user].mentor_profile %>
+        <h2 class="welcome" class="centerer">Mentees</h2>
+        <div class="content-box filter-box">
+            <form id="max-mentees-form" action="/matches/mentor/set-max" method="post">
+            <label class="bold" for="mentor-max-mentees">Pick maximum mentees: </label>
+            <select name="mentor_max_mentees" id="mentor-max-mentees">
+                <% ([@mentor.num_matches+1, 1].max..GlobalVariable.MAX_MATCHES).each do |i| %>
+                <option value=<%= i %> <%= "selected" if @mentor.max_matches == i%>><%=i%></option>
+                <% end %>
+            </select>
+            <p>Current: <%= "(#{Match.where(mentor_id: @mentor.user_id, status: "active").count} / #{@mentor.max_matches})" %></p>
+            <button id="max-mentees-button" class="centerer">Set</button>
+            </form>
+        </div>
         <div id="matching-list" class="content-box">
             <div id="mentee-applicants">
                 <h2>Matched Mentees</h2>
@@ -39,12 +52,17 @@
                                 </p>
                             </div>
                             <div class="bio-and-accept">
-                                <p class="profile-bio-detailed">Bio: <%= mentee.bio_detailed %></p>
+                                <p class="profile-bio-detailed">Bio: <%= mentee.bio_brief %></p>
+                                <% if SupportTicket.withdrawing?(row) %>
+                                    <p class="profile-bio-detailed" style="color: red"><%= TicketType.first(id: SupportTicket.withdraw?).description %></p>
+                                <% end %>
                                 <div class="matching-wrapper" id="<%= mentee.user_id %>-wrapper">
-                                    <a class="view-profile" href=<%="/profile?id=#{mentee.user_id}"%>>View profile and contact information</a>
+                                    <a class="view-profile" href=<%="/profile?id=#{mentee.user_id}"%>>View detailed profile and contact information</a>
                                   <form method="post" action="/matches/matched/mentor">
                                     <input hidden name="target_id" value=<%= mentee.user_id %>>
-                                    <button type="submit" name="withdrawal" class="withdraw-mentor" id="<%= mentee.user_id %>-withdraw">Withdraw</button>
+                                    <% unless SupportTicket.withdrawing?(row) %>
+                                      <button type="submit" name="withdrawal" class="withdraw-mentor" id="<%= mentee.user_id %>-withdraw">Withdraw</button>
+                                    <% end %>
                                     <button type="submit" name="report" class="report-mentor" id="<%= mentee.user_id %>-report">Report</button>
                                   </form>
                                 </div>

@@ -11,13 +11,30 @@ def send_match_notification(sent_by, received_by, message_type)
   end
 end
 
+def check_match_end
+  # Check for match end
+  return session[:user].mentee_matches.first.check_end if session[:user].mentee? && Match.first(mentee_id: session[:user].id, status: "active")
+
+  if session[:user].mentor? && Match.first(mentor_id: session[:user].id, status: "active")
+    session[:user].mentor_matches.each do |match|
+      return match.check_end if match.status == "active"
+    end
+  end
+
+  false
+end
+
 get "/matches" do
   redirect "/login" unless session[:logged_in]
   redirect "/matches/mentee" if session[:user].mentee?
   redirect "/matches/mentor" if session[:user].mentor?
+
+  #redirect "/matches" if check_match_end
 end
 
 get "/matches/matched" do
+  redirect "/login" unless session[:logged_in]
+
   if session[:user].mentor?
     redirect "/matches/matched/mentor"
   else
@@ -38,7 +55,7 @@ get "/matches/mentee" do
       @currentMentor = match.mentor
     end
 
-    erb :menteeMatching
+    check_match_end ? (redirect "/matches") : (erb :menteeMatching)
   end
 end
 
@@ -71,11 +88,15 @@ end
 get "/matches/mentor" do
   redirect "/login" unless session[:logged_in]
   redirect "/matches/mentee" if session[:user].mentee?
+  redirect "matches/matched/mentor" if !session[:user].mentor_profile.below_limit?  
+
 
   mentor_id = session[:user].id
+
   @menteeApplicants = Match.where(mentor_id: mentor_id, status: 'pending')
   @mentees = MenteeProfile.where(availability: true)
-  erb :mentorMatching
+
+  check_match_end ? (redirect "/matches") : (erb :mentorMatching)
 end
 
 post "/matches/matched/mentee" do
@@ -86,7 +107,7 @@ post "/matches/matched/mentee" do
   if params[:report]
     redirect "/support?target_id=#{target_id}&type=#{TicketType.first(name: "report").id}"
   elsif params[:withdrawal]
-    redirect "/matches/matched/withdrawal"
+    redirect "/support?target_id=#{target_id}&type=#{TicketType.first(name: "withdrawal").id}"
   else
     redirect "/matches/mentee"
   end
@@ -98,7 +119,8 @@ get "/matches/matched/mentor" do
 
   mentor_id = session[:user].id
   @mentees = Match.where(mentor_id: mentor_id, status: 'active')
-  erb :mentorMatchingMatches
+
+  check_match_end ? (redirect "/matches") : (erb :mentorMatchingMatches)
 end
 
 post "/matches/matched/mentor" do
@@ -107,9 +129,9 @@ post "/matches/matched/mentor" do
 
   target_id = params[:target_id]
   if params[:report]
-    redirect "/support?target_id=#{target_id}&type=#{TicketType.first(name: "report").id}"
+    redirect "/support?target_id=#{target_id}&type=#{SupportTicket.report?}"
   elsif params[:withdrawal]
-    redirect "/matches/matched/withdrawal"
+    redirect "/support?target_id=#{target_id}&type=#{SupportTicket.withdraw?}"
   else
     redirect "/matches/matched/mentor"
   end
@@ -204,18 +226,5 @@ post "/matches/mentor/set-max" do
   session[:user].mentor_profile.save
 
   #puts session[:user].mentor_profile.inspect
-  redirect "/matches/mentor"
+  redirect "/matches/matched/mentor"
 end
-
-# WHERE ARE MATHCES COMPLETED?
-# UserMessage.send_message(
-#       sent_by: "System",
-#       received_by: match.mentee_id,
-#       message_type: 'match_completed'
-#     )
-    
-#     UserMessage.send_message(
-#       sent_by: "System",
-#       received_by: match.mentor_id,
-#       message_type: 'match_completed'
-#     )

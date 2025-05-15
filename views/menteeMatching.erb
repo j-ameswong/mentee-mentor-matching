@@ -11,8 +11,9 @@
 
 <body>
 <div class="content">
+  <% if Date.today.to_datetime < Time.at(GlobalVariable.END_DATE).to_datetime %>
     <% if @currentMentor %>
-        <h2 id="welcome" class="centerer">Your Mentor</h2>
+        <h2 class="welcome" class="centerer">Your Mentor</h2>
         <div id="current-mentor-box" class="content-box">
             <div class="profile-box">
             <% @mentor = @currentMentor.profile %>
@@ -25,6 +26,10 @@
                         <% end %>
                     </div>
                     <p class="profile-name"><%= @mentor.first_name %> <%= @mentor.last_name %></p>
+                    <!-- Whoever is working on the badges, please place it here in the basic-info div-->
+                    <p class="badge-text">
+                        <%=@currentMentor.mentor_profile.badges%>
+                    </p>
                 </div>
                 <div class="detailed-info">
                     <p class="detailed-info-content">Age: <%= @mentor.age %></p>
@@ -37,18 +42,23 @@
                 </div>
                 <div class="bio-and-accept">
                     <p class="profile-bio-detailed">Bio: <%= @mentor.bio_brief %></p>
+                    <% if SupportTicket.withdrawing?(session[:user].mentee_matches.first) %>
+                      <p class="profile-bio-detailed" style="color: red"><%= TicketType.first(id: SupportTicket.withdraw?).description %></p>
+                    <% end %>
                     <a class="view-profile" href=<%="/profile?id=#{@mentor.user_id}"%>>View profile and contact information</a>
                     <div class="matching-wrapper" id="<%= @mentor.user_id %>-wrapper">
                       <form method="post" action="/matches/matched/mentee">
                         <input hidden name="target_id" value=<%= @mentor.user_id %>>
-                        <button name="withdrawal" type="submit" class="withdraw-mentor" id="<%= @mentor.user_id %>-withdraw">Withdraw</button>
+                        <% unless SupportTicket.withdrawing?(Match.first(mentee_id: session[:user].id, status: "active")) %>
+                          <button name="withdrawal" type="submit" class="withdraw-mentor" id="<%= @mentor.user_id %>-withdraw">Withdraw</button>
+                        <% end %>
                         <button name="report" type="submit" class="report-mentor" id="<%= @mentor.user_id %>-report">Report</button>
                       </form>
                     </div>
                 </div>
             </div>
         </div>
-    <% else %>
+    <% elsif session[:user].mentee_profile.available? %>
         <h2 id="welcome" class="centerer">Mentors</h2>
         <div id="matching-list" class="content-box">
             <div id="mentor-applicants">
@@ -65,8 +75,12 @@
                                         <img class="pfp-img" src="/images/blankProfilePicture.webp" alt="Profile Picture">
                                     <% end %>
                                 </div>
-                                <p class="profile-name"><%= @mentor.first_name %> <%=@mentor.last_name %></p>
-                                <!-- Whoever is working on the badges, please place it here in the basic-info div-->
+                                <p class="profile-name"><%= h @mentor.first_name %> <%= h @mentor.last_name %> </p>
+                                <p class="badge-text">
+                                    <p class="badge-text">
+                                        <%=row.badges%>
+                                    </p>
+                                </p>
                             </div>
                             <div class="detailed-info">
                                 <p class="detailed-info-content"><%="Year " + row.year_of_study.to_s %></p>
@@ -86,7 +100,7 @@
                                 </p>
                             </div>
                             <div class="bio-and-accept">
-                                <p class="profile-bio-detailed">Bio: <%= @mentor.bio_brief %></p>
+                                <p class="profile-bio-detailed">Bio: <%= h @mentor.bio_brief %></p>
                                 <div class="matching-wrapper" id="<%= row.user.id %>-wrapper">
                                     <button type="button" class="apply-mentor" id="<%= row.user.id %>-application" onclick="openMatching('<%= row.user.id %>')">Apply</button>
                                   <form method="post" action="/matches/mentee/report">
@@ -106,8 +120,10 @@
                                                     <img class="pfp-img" src="/images/blankProfilePicture.webp" alt="Profile Picture">
                                                 <% end %>
                                             </div>
-                                            <p class="profile-name"><%= @mentor.first_name %> <%= @mentor.last_name %></p>
-                                            <!-- Whoever is working on the badges, please place it here in the basic-info div-->
+                                            <p class="profile-name"><%= h @mentor.first_name %> <%= h @mentor.last_name %></p>
+                                            <p class="badge-text">
+                                                <%=@currentMentor.mentor_profile.badges%>
+                                            </p>
                                         </div>
                                         <div class="detailed-info popup-no-style popup-info">
                                             <p class="detailed-info-content"><%="Year " + row.year_of_study.to_s %></p>
@@ -127,7 +143,7 @@
                                             </p>
                                         </div>
                                     </div>
-                                    <p class="profile-bio-detailed popup-bio">Bio: <%= @mentor.bio_detailed %></p>
+                                    <p class="profile-bio-detailed popup-bio">Bio: <%= h @mentor.bio_detailed %></p>
                                     <div class="application-wrapper" id="<%= row.user.id %>-application-wrapper" data-mentor-id=<%= row.user.id %>>
                                     </div>
                                 </div>
@@ -136,10 +152,15 @@
                     <% end %>
                 <% end %>
             </div>
+    <% else %>
+      <p style="color: red">Please finish editing your profile first!</p>
     <% end %>
     <script src="/js/menteeMatching.js/?"></script>
     </div>
   </div>
+  <% else %>
+    <p style="color: red">Please wait for next semester to begin.</p>
+  <% end %>
 </body>
 
 </html>

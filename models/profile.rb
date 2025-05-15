@@ -90,11 +90,9 @@ class MentorProfile < Sequel::Model
     # TODO: temp fix please remove
     self.availability = params[:availability] if params.key?(:availability)
     # only do this update check if not signing up
-    self.availability = false unless self.availability
-    if num_matches >= max_matches
-      self.availability = false
-    end
+    self.availability = false if self.availability.nil?
     self.num_matches = Match.where(mentor_id: self.user_id, status: "active").count
+    self.availability = false if num_matches >= max_matches
   end
 
   def validate

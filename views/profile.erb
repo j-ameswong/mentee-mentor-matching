@@ -45,6 +45,9 @@
         </div>
 
         <% if @viewed_user.mentor? %>
+          <p class="badge-text">
+            <%=@viewed_user.mentor_profile.badges%>
+          </p>
           <div class="info row expertises">
           <p>Expertises: </p>
           <ul>

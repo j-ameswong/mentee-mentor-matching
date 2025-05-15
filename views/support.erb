@@ -22,7 +22,11 @@
         <label for="help-request-type">What do you need help with?:</label>
         <select name="type" id="help-category">
           <% TicketType.each do |row| %>
-            <option <%= "selected" if @type == row.id %> value="<%= row.id %>"><%= row.desc_brief %></option>
+            <option <%= "disabled" unless @errors || !User.first(id: @target_id) %>
+                    <%= "selected" if @type == row.id %> value="<%= row.id %>"><%= row.desc_brief %></option>
+          <% end %>
+          <% if User.first(id: @target_id) %>
+            <input hidden name="type" value=<%= @type %>>
           <% end %>
         </select>
 
@@ -49,7 +53,8 @@
         </select>
 
         <br><br><br><br><br>
-        <label for="help-request">Please Specify/Provide good reasoning: </label>
+        <label <%= "style='color: red'" if @errors && @errors[:details] %> for="help-request">Please Specify/Provide good reasoning: </label>
+        <p style="color: red"><%= @errors[:exists] if @errors && @errors[:exists] %></p>
         <br>
         <br>
         <textarea name="details" id="help-request"></textarea>
