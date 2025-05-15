@@ -40,6 +40,11 @@ get "/accounts" do
   if params[:show_reassign_modal] && session[:reassign_data]
     mentee_id = session[:reassign_data][:mentee_id]
     current_match = Match.where(mentee_id: mentee_id, status: "active").first
+  if $cond.nil?
+    @users = User.limit(@limit).offset($offset * @limit).all
+  else
+    @users = User.limit(@limit).offset($offset).where($cond).all
+  end
 
     if current_match
       @available_mentors = User.where(role: "mentor")

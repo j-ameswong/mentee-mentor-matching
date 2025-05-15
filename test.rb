@@ -35,11 +35,7 @@ elsif choice == "4"
   puts lang.id
 end
 
-ticket = SupportTicket.first(is_read: false)
-puts ticket.sent_by_user
-puts ticket.target_id_user
-puts ticket.ticket_type
-
-
+user = User.first(id: 215926686)
+user.delete_from_all
 
 

@@ -81,8 +81,11 @@ class User < Sequel::Model(DB)
     UserLanguage.where(user_id: self.id).delete
     UserExpertise.where(user_id: self.id).delete
 
-    Match.where(mentor_id: self.id).delete # if Match.first(mentor_id: self.id)
-    Match.where(mentee_id: self.id).delete # if Match.first(mentee_id: self.id)
+    Match.where(mentee_id: self.id).each { |match| match.cancel(true) }
+    Match.where(mentor_id: self.id).each { |match| match.cancel(true) }
+
+    SupportTicket.where(sent_by: self.id).delete
+    SupportTicket.where(target_id: self.id).delete
 
     mentee_profile = MenteeProfile.first(user_id: self.id)
     mentee_profile.delete if mentee_profile

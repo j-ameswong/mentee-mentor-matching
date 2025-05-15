@@ -37,11 +37,8 @@ class UserMessage < Sequel::Model
     options[:message_type] = nil unless options[:message_type]
       
     return false if options[:message_type].nil? || options[:received_by].nil?
-    
-    puts "YEP" if Message.first(message_type: options[:message_type])
     return unless Message.first(message_type: options[:message_type])
 
-    
     create(
       message_id: Message.first(message_type: options[:message_type]).id,
       sent_by: options[:sent_by],

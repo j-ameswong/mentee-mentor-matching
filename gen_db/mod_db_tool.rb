@@ -150,5 +150,5 @@ end
 DB.alter_table :user_messages do
   add_column :received_by, :text
 end
-  rename_column :recieved_by, :received_by
-end
+#  rename_column :recieved_by, :received_by
+#end

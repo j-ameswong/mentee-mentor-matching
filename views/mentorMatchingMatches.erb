@@ -11,7 +11,20 @@
 
 <body>
     <div class="content">
-        <h2 id="welcome" class="centerer">Mentees</h2>
+        <% @mentor = session[:user].mentor_profile %>
+        <h2 class="welcome" class="centerer">Mentees</h2>
+        <div class="content-box filter-box">
+            <form id="max-mentees-form" action="/matches/mentor/set-max" method="post">
+            <label class="bold" for="mentor-max-mentees">Pick maximum mentees: </label>
+            <select name="mentor_max_mentees" id="mentor-max-mentees">
+                <% ([@mentor.num_matches+1, 1].max..GlobalVariable.MAX_MATCHES).each do |i| %>
+                <option value=<%= i %> <%= "selected" if @mentor.max_matches == i%>><%=i%></option>
+                <% end %>
+            </select>
+            <p>Current: <%= "(#{Match.where(mentor_id: @mentor.user_id, status: "active").count} / #{@mentor.max_matches})" %></p>
+            <button id="max-mentees-button" class="centerer">Set</button>
+            </form>
+        </div>
         <div id="matching-list" class="content-box">
             <div id="mentee-applicants">
                 <h2>Matched Mentees</h2>
@@ -22,7 +35,7 @@
                             <div class="basic-info centerer">
                                 <div class="profile_pic">
                                 <% if mentee.profile_picture %>
-                                    <img class="pfp-img" src="<%= "/images/user/#{mentee.profile_picture}" %>" alt="Profile Picture" onerror="this.src='/images/blankProfilePicture.webp'">
+                                    <img class="pfp-img" src="<%= "/images/user/#{mentee.id}" %>" alt="Profile Picture" onerror="this.src='/images/blankProfilePicture.webp'">
                                 <% else %>
                                     <img class="pfp-img" src="/images/blankProfilePicture.webp" alt="Profile Picture">
                                 <% end %>

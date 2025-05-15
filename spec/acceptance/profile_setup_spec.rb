@@ -7,8 +7,8 @@ RSpec.describe "Edit Profile" do
       visit "/"
       expect(page).to have_content("Sign up instead")
 
-      fill_in "Username", with: "user"
-      fill_in "Password", with: "user"
+      fill_in "Username", with: "user1"
+      fill_in "Password", with: "user1"
       click_button "Log in"
       expect(page).to have_content("Welcome to UniConnect!")
 
@@ -16,7 +16,7 @@ RSpec.describe "Edit Profile" do
       visit "/profile/edit"
       attach_file("Upload Profile Picture", "spec/fixtures/profile_picture.png")
       click_button "Save"
-      expect(text).to include("User's Profile")
+      expect(text).to include("User1's Profile")
     end
 
     it "displays an error message for invalid format" do
@@ -24,8 +24,8 @@ RSpec.describe "Edit Profile" do
       visit "/"
       expect(page).to have_content("Sign up instead")
 
-      fill_in "Username", with: "user"
-      fill_in "Password", with: "user"
+      fill_in "Username", with: "user1"
+      fill_in "Password", with: "user1"
       click_button "Log in"
       expect(page).to have_content("Welcome to UniConnect!")
 
@@ -33,7 +33,7 @@ RSpec.describe "Edit Profile" do
       visit "/profile/edit"
       attach_file("Upload Profile Picture", "spec/fixtures/profile_picture.webp")
       click_button "Save"
-      expect(page).to have_content("Edit Profile")
+      expect(text).to include("Profile pic is an invalid file format. Please upload a PNG or JPG file.")
     end
 
     it "displays an error message for oversized file" do
@@ -41,18 +41,16 @@ RSpec.describe "Edit Profile" do
       visit "/"
       expect(page).to have_content("Sign up instead")
 
-      fill_in "Username", with: "user"
-      fill_in "Password", with: "user"
+      fill_in "Username", with: "user1"
+      fill_in "Password", with: "user1"
       click_button "Log in"
       expect(page).to have_content("Welcome to UniConnect!")
 
       # Simulate uploading an oversized file
       visit "/profile/edit"
       attach_file("Upload Profile Picture", "spec/fixtures/oversized_profile_picture.jpg")
-      pp text.inspect
       click_button "Save"
-      pp text.inspect
-      expect(text).to include("Edit Profile")
+      expect(text).to include("Profile pic file size exceeds 5MB limit.")
     end
   end
 
@@ -61,8 +59,8 @@ RSpec.describe "Edit Profile" do
       visit "/"
       expect(page).to have_content("Sign up instead")
 
-      fill_in "Username", with: "user"
-      fill_in "Password", with: "user"
+      fill_in "Username", with: "user1"
+      fill_in "Password", with: "user1"
       click_button "Log in"
       expect(page).to have_content("Welcome to UniConnect!")
 
@@ -80,8 +78,8 @@ RSpec.describe "Edit Profile" do
       visit "/"
       expect(page).to have_content("Sign up instead")
 
-      fill_in "Username", with: "user"
-      fill_in "Password", with: "user"
+      fill_in "Username", with: "user1"
+      fill_in "Password", with: "user1"
       click_button "Log in"
       expect(page).to have_content("Welcome to UniConnect!")
 
@@ -91,15 +89,15 @@ RSpec.describe "Edit Profile" do
 
       click_button "Save"
 
-      expect(page).to have_content("bio brief is invalid")
+      expect(page).to have_content("bio brief: is invalid")
     end
 
     it "provides an error message for invalid full bio" do
       visit "/"
       expect(page).to have_content("Sign up instead")
 
-      fill_in "Username", with: "user"
-      fill_in "Password", with: "user"
+      fill_in "Username", with: "user1"
+      fill_in "Password", with: "user1"
       click_button "Log in"
       expect(page).to have_content("Welcome to UniConnect!")
 
@@ -109,23 +107,7 @@ RSpec.describe "Edit Profile" do
 
       click_button "Save"
 
-      expect(page).to have_content("bio detailed is invalid")
-    end
-  end
-
-  context "Contact details are only visible to matched users" do
-    it "allows matched users to see each others' contact details" do
-    visit "/"
-    expect(page).to have_content("Sign up instead")
-
-    fill_in "Username", with: "user"
-    fill_in "Password", with: "user"
-    click_button "Log in"
-    expect(page).to have_content("Welcome to UniConnect!")
-    end
-
-    it "doesn't show users' contact details if not matched with the viewer" do
-
+      expect(page).to have_content("bio detailed: is invalid")
     end
   end
 end

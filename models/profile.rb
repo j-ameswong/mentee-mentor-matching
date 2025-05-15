@@ -15,13 +15,13 @@ class Profile < Sequel::Model
     self.nationality_id = params[:nationality] if params.key?(:nationality)
     self.gender = params[:gender] if params.key?(:gender)
     if params.key?(:profile_picture)
-      if File.exist?("/public/images/user/#{self.profile_picture}")
-        File.delete("/public/images/user/#{self.profile_picture}")
+      if File.exist?("/public/images/user/#{self[:profile_picture]}")
+        File.delete("/public/images/user/#{self[:profile_picture]}")
         puts "File deleted"
       else
         puts "File does not exist"
       end
-      self.profile_picture = params[:profile_picture]
+      self[:profile_picture] = params[:profile_picture]
     end
     self.bio_brief = params[:bio_brief] if params.key?(:bio_brief)
     self.bio_detailed = params[:bio_detailed] if params.key?(:bio_detailed)
@@ -39,7 +39,7 @@ class Profile < Sequel::Model
   end
 
   def profile_pic
-    "#{profile_picture}"
+    "#{self[:profile_picture]}"
   end
 
   def return_hash(value)

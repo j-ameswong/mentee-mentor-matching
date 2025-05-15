@@ -150,6 +150,7 @@ CREATE TABLE "user_messages" (
     "sent_by" TEXT,
     "received_by" TEXT,
     "message_id" INTEGER,
+    "content" TEXT,
     "read_status" Boolean,
     "created_at" DateTime,
     FOREIGN KEY ("message_id") REFERENCES "messages" ("id")
@@ -176,7 +177,7 @@ CREATE TABLE "support_tickets" (
     "id" INTEGER PRIMARY KEY AUTOINCREMENT,
     "sent_by" INTEGER,
     "target_id" INTEGER,
-    "is_read" Boolean,
+    "is_resolved" Boolean,
     "type" INTEGER,
     "details" TEXT,
     "created_at" DateTime,

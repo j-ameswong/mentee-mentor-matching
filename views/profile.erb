@@ -21,7 +21,7 @@
       <form method="post" action="/profile?id=<%= @viewed_user.id %>" enctype="multipart/form-data">
         <figure class="row centerer">
           <%# If profile pic has not been set by user, use default profile picture %>
-          <img class="profile_pic" width="100" height="100" src="/images/user/<%= @viewed_user.profile.profile_picture %>" alt="Not Found"
+          <img class="profile_pic" width="100" height="100" src="/images/user/<%= @viewed_user.id %>" alt="Not Found"
               onerror="this.src='/images/blankProfilePicture.webp'"/>
         </figure>
 
@@ -45,6 +45,9 @@
         </div>
 
         <% if @viewed_user.mentor? %>
+          <p class="badge-text">
+            <%=@viewed_user.mentor_profile.badges%>
+          </p>
           <div class="info row expertises">
           <p>Expertises: </p>
           <ul>
