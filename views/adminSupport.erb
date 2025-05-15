@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
-  <title>Matches</title>
+  <title>Support</title>
   <meta name="author" content="Team 17">
   <link rel="stylesheet" href="/css/styles.css"/>
 </head>
@@ -62,7 +62,11 @@
                         <div class="approval-decision centerer">
                           <form action="/support/decision" method="post" id="decision-form">
                             <input type="hidden" name="ticket_id" value="<%= ticket.id %>">
-                            <button name="flag" type="submit" class="approval-btn">Flag</button>
+                            <% if FlaggedAccount.first(user_id: ticket.target_id) %>
+                              <button style="color: red" name="flag" type="submit" class="approval-btn">Flagged</button>
+                            <% else %>
+                              <button name="flag" type="submit" class="approval-btn">Flag</button>
+                            <% end %>
                             <button name="dismiss" type="submit" class="approval-btn">Dismiss</button>
                           </form>
                         </div>
