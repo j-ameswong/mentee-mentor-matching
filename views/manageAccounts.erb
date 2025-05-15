@@ -29,8 +29,10 @@
     }
 
     .modal-content {
+      overflow-y: scroll;
+      height: 70%;
       background-color: #fefefe;
-      margin: 15% auto;
+      margin: 10% auto;
       padding: 20px;
       border: 1px solid #888;
       width: 50%;
@@ -118,6 +120,16 @@
         <input type="submit" value="Update Max Matches" class="row centerer">
       </form>
     </div>
+    <div class="content-box centerer">
+      <h3>Semester End Date</h3>
+      <p>Set the semester end date where all mentees will be unmatched with their mentor</p>
+      <form action="/sem-end-date" method="post">
+        <label for="sem_end" class="row centerer">Semester End Date:</label>
+        <input type="date" name="sem_end" value="<%=@endDate%>" min="<%= Date.today.strftime('%Y-%m-%d') %>" class="row centerer">
+        <br>
+        <input type="submit" style="width: 100%;" value="Update End Date" class="row centerer">
+      </form>
+    </div>
   </div>
 
   <div class="row centerer">
@@ -179,11 +191,11 @@
                 <div class="row centerer">
                   <select name="action" id="action">
                     <option value="" selected>Select an action</option>
-                    <% @actions[i].each do |action| %>
+                    
+                    <% action_list = @actions.fetch(user.id.to_s, []) %>
+                    <% puts user.username + "-" + user.role + "-" + action_list[0] %>
+                    <% action_list.each do |action| %>
                       <option value="<%= action %>"><%= action.capitalize %></option>
-                    <% end %>
-                    <% if user.role == "mentor" %>
-                      <option value="apply_badge">Apply Badge</option>
                     <% end %>
                   </select>
                 </div>
@@ -221,23 +233,65 @@
   </div>
 </section>
 
+<script src="/js/reassign.js"></script>
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const forms = document.querySelectorAll('form[action="/accounts/action"]');
-    
-    forms.forEach(form => {
-      form.addEventListener('submit', function(e) {
-        const action = form.querySelector('select[name="action"]').value;
-        const userId = form.querySelector('input[name="user_id"]').value;
-        if (action === 'delete') {
-          e.preventDefault();
-          if (confirm('Are you sure you want to delete this user?')) {
-            document.getElementById(`delete-form-${userId}`).submit();
-          }
-        }
-      });
+  <% if params[:show_reassign_modal] && session[:reassign_data] %>
+    document.addEventListener('DOMContentLoaded', function() {
+      openReassignModal(
+        "<%= session[:reassign_data][:mentee_id] %>",
+        "<%= session[:reassign_data][:mentee_username] %>", 
+        "<%= session[:reassign_data][:current_mentor_username] %>"
+      );
     });
-  });
+  <% end %>
 </script>
+
+<div id="reassignModal" class="modal">
+  <div class="modal-content">
+    <h4>Reassign Mentee: <span id="reassignMenteeName"></span></h4>
+    <p>Current Mentor: <span id="currentMentorName"></span></p>
+    <p>Select a new mentor from the list below:</p>
+    
+    <div class="mentor-list">
+      <table>
+        <thead>
+          <tr>
+            <th>Username</th>
+            <th>Current Mentees</th>
+            <th>Max Mentees</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if @available_mentors && @available_mentors.any? %>
+            <% @available_mentors.each do |mentor| %>
+              <tr>
+                <td><%= mentor[:username] %></td>
+                <td><%= @mentor_matches[mentor[:id]] %></td>
+                <td><%= mentor[:max_matches] || "N/A" %></td>
+                <td>
+                  <form action="/reassign-mentee" method="post">
+                    <input type="hidden" name="mentee_id" value="<%= session[:reassign_data][:mentee_id] if session[:reassign_data] %>">
+                    <input type="hidden" name="new_mentor_id" value="<%= mentor[:id] %>">
+                    <button type="submit" class="match-button">Match</button>
+                  </form>
+                </td>
+              </tr>
+            <% end %>
+          <% else %>
+            <tr>
+              <td colspan="4">No available mentors found</td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+    
+    <div class="modal-buttons">
+      <button type="button" class="close-modal" onclick="closeReassignModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
