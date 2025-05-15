@@ -7,6 +7,7 @@ get "/support" do
 end
 
 post "/support" do
+  redirect "/login" unless session[:logged_in]
   params.merge!(:sent_by => session[:user].id)
 
   errors = {}
@@ -24,6 +25,34 @@ post "/support" do
     params[:target_id] ? @target_id = params[:target_id].to_i : @target_id = -1
     erb :support
   end
+end
+
+post "/support/decision" do
+  redirect "/login" unless session[:logged_in]
+  redirect "/" unless session[:user].admin?
+
+  puts params
+  ticket = SupportTicket.first(id: params[:ticket_id])
+
+  case ticket.id
+  when SupportTicket.withdraw?
+    if params[:approve]
+      if ticket.sent_by_user.mentor?
+        match = Match.first(mentor_id: ticket.sent_by, mentee_id: ticket.target_id, status: "active")
+        match.cancel
+      elsif ticket.sent_by_user.mentee?
+        match = Match.first(mentee_id: ticket.sent_by, status: "active")
+        match.cancel
+      end
+    elsif params[:deny]
+      ticket.is_resolved = true
+      ticket.save
+    end
+  when SupportTicket.report?
+    puts "This is handling a report ticket"
+  end
+
+  redirect "/support/admin"
 end
 
 get "/support/admin" do

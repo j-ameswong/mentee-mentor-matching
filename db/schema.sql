@@ -177,7 +177,7 @@ CREATE TABLE "support_tickets" (
     "id" INTEGER PRIMARY KEY AUTOINCREMENT,
     "sent_by" INTEGER,
     "target_id" INTEGER,
-    "is_read" Boolean,
+    "is_resolved" Boolean,
     "type" INTEGER,
     "details" TEXT,
     "created_at" DateTime,
