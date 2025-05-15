@@ -226,5 +226,5 @@ post "/matches/mentor/set-max" do
   session[:user].mentor_profile.save
 
   #puts session[:user].mentor_profile.inspect
-  redirect "/matches/matched/mentor
+  redirect "/matches/matched/mentor"
 end
