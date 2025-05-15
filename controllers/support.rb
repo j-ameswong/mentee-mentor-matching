@@ -12,7 +12,7 @@ post "/support" do
 
   errors = {}
   errors[:details] = "Please provide your justification" if params[:details].empty?
-  if SupportTicket.first(sent_by: params[:sent_by], target_id: params[:target_id], type: params[:type])
+  if SupportTicket.first(sent_by: params[:sent_by], target_id: params[:target_id], type: params[:type], is_resolved: false)
     errors[:exists] = "A pending ticket has already been submitted"
   end
 
@@ -33,7 +33,7 @@ post "/support/decision" do
 
   ticket = SupportTicket.first(id: params[:ticket_id])
 
-  case ticket.id
+  case ticket.type
   when SupportTicket.withdraw?
     if params[:approve]
       if ticket.sent_by_user.mentor?
@@ -58,7 +58,7 @@ get "/support/admin" do
   redirect "/support" if (session[:user].mentor? || session[:user].mentee?)
 
   @filter = !params[:filter].nil? ? params[:filter] : "all"
-  @tickets = SupportTicket.all
+  @tickets = SupportTicket.where(is_resolved: false)
   erb :adminSupport
 end
 
