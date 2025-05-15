@@ -9,6 +9,8 @@ end
 post "/support" do
   redirect "/login" unless session[:logged_in]
   params.merge!(:sent_by => session[:user].id)
+  params[:type] ? @type = params[:type].to_i : @type = -1
+  params[:target_id] ? @target_id = params[:target_id].to_i : @target_id = -1
 
   errors = {}
   errors[:details] = "Please provide your justification" if params[:details].empty?
@@ -16,7 +18,7 @@ post "/support" do
     errors[:exists] = "A pending ticket has already been submitted"
   end
 
-  if @target_id == -1 || @type == -1 || @target_id.nil? || @target_id.empty?
+  if @target_id == -1 || @type == -1
     errors[:invalid] = "Invalid ticket"
   end
 
@@ -57,7 +59,7 @@ post "/support/decision" do
       ticket.resolve
     elsif params[:flag]
       session[:flag_filters] ||= {}
-      session[:flag_filters][:username] = ticket.target_id_user.usernametr br
+      session[:flag_filters][:username] = ticket.target_id_user.username
       redirect "/flagging"
     end
   end
