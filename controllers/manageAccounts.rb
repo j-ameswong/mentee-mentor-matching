@@ -330,7 +330,6 @@ post "/no-of-matches" do
   redirect "/accounts"
 end
 
-<<<<<<< HEAD
 post "/reassign-mentee" do
   redirect "/login" unless session[:logged_in]
 
@@ -425,8 +424,7 @@ post "/reassign-mentee" do
 
   redirect "/accounts"
 end
-      
-=======
+
 post "/sem-end-date" do
   redirect "/login" unless session[:logged_in]
 
@@ -437,4 +435,3 @@ post "/sem-end-date" do
 
   redirect "/accounts"
 end
->>>>>>> frontend

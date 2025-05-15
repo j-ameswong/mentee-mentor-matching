@@ -16,6 +16,10 @@ post "/support" do
     errors[:exists] = "A pending ticket has already been submitted"
   end
 
+  if @target_id == -1 || @type == -1 || @target_id.nil? || @target_id.empty?
+    errors[:invalid] = "Invalid ticket"
+  end
+
   if errors.empty?
     SupportTicket.create!(params.merge!(:sent_by => session[:user].id))
     redirect "/support"
