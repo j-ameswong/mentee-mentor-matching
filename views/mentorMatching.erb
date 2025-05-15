@@ -10,119 +10,96 @@
 <%= erb :"common/header" %>
 
 <div class="content">
-  <% if Date.today.to_datetime < Time.at(GlobalVariable.END_DATE).to_datetime %>
-    <% @mentor = session[:user].mentor_profile %>
-      <h2 id="welcome" class="centerer">Mentees</h2>
-      <p style="color: red"><%= "Profile not setup or mentee limit reached" unless @mentor.available? %></p>
-      <p style="color: red"><%= @error %></p>
-
-      <form id="max-mentees-form" action="/matches/mentor/set-max" method="post">
-        <label for="mentor-max-mentees">Pick maximum mentees</label>
-        <select name="mentor_max_mentees" id="mentor-max-mentees">
-          <% ([@mentor.num_matches+1, 1].max..GlobalVariable.MAX_MATCHES).each do |i| %>
-            <option value=<%= i %> <%= "selected" if @mentor.max_matches == i%>><%=i%></option>
-          <% end %>
-        </select>
-        <p>Current: <%= "(#{Match.where(mentor_id: @mentor.user_id, status: "active").count} / #{@mentor.max_matches})" %></p>
-        <button id="max-mentees-button" class="centerer">Set</button>
-      </form>
-
-      <section id="matching-list" class="content-box">
-        <section id="mentee-applicants">
-          <h2>Mentee Applications</h2>
-          <% unless @menteeApplicants.nil? %>
-            <% @menteeApplicants.all.each do |row| %>
-              <div class="profile-box applicant">
-                <% mentee = row.mentee.profile %>
-                <div id="applicant-basic-info" class="basic-info centerer">
-                  <div class="profile_pic">
-                    <% if mentee.profile_picture %>
-                      <img class="pfp-img" src="<%= "/images/user/#{mentee.profile_picture}" %>" alt="Profile Picture">
-                    <% else %>
-                      <img class="pfp-img" src="/images/blankProfilePicture.webp" alt="Profile Picture">
+    <section id="matching-list" class="content-box">
+      <section id="mentee-applicants">
+        <h2>Mentee Applications</h2>
+        <% unless @menteeApplicants.nil? %>
+          <% @menteeApplicants.all.each do |row| %>
+            <div class="profile-box applicant">
+              <% mentee = row.mentee.profile %>
+              <div id="applicant-basic-info" class="basic-info centerer">
+                <div class="profile_pic">
+                  <% if mentee.profile_picture %>
+                    <img class="pfp-img" src="<%= "/images/user/#{mentee.profile_picture}" %>" alt="Profile Picture">
+                  <% else %>
+                    <img class="pfp-img" src="/images/blankProfilePicture.webp" alt="Profile Picture">
+                  <% end %>
+                </div>
+                <p class="profile-name"><%= mentee.first_name %> <%= mentee.last_name %></p>
+              </div>
+              <div id="applicant-detailed-info" class="detailed-info">
+                <p class="detailed-info-content">Age: <%= mentee.age %></p>
+                <p class="detailed-info-content">Nationality: <%= Nationality.first(id: mentee.nationality_id).country_name unless mentee.nationality_id.nil? %></p>
+                <p class="detailed-info-content">Languages: 
+                    <% UserLanguage.where(user_id: row.mentee_id).each do |ulanguage| %>
+                        <%= ulanguage.language.language_name %>
                     <% end %>
-                  </div>
-                  <p class="profile-name"><%= mentee.first_name %> <%= mentee.last_name %></p>
-                </div>
-                <div id="applicant-detailed-info" class="detailed-info">
-                  <p class="detailed-info-content">Age: <%= mentee.age %></p>
-                  <p class="detailed-info-content">Nationality: <%= Nationality.first(id: mentee.nationality_id).country_name unless mentee.nationality_id.nil? %></p>
-                  <p class="detailed-info-content">Languages:
-                      <% UserLanguage.where(user_id: row.mentee_id).each do |ulanguage| %>
-                          <%= ulanguage.language.language_name %>
-                      <% end %>
-                  </p>
-                </div>
-                <div class="bio-and-accept">
-                  <p class="applicant-bio profile-bio-detailed">Bio: <%= mentee.bio_brief %></p>
-                  <p class="applicant-bio profile-bio-detailed">Application Message: <%= row.application_message %></p>
-                  <div class="matching-wrapper" id="<%= row.mentee.id %>-wrapper">
-                    <form method="post" action="/matches/mentor">
-                      <input type="hidden" name="mentee_id" value="<%= row.mentee.id %>">
-                      <button type="submit" class="apply-mentor" name="accept">Accept</button>
-                      <button type="submit" class="apply-mentor" name="decline">Decline</button>
-                    </form>
-                    <form method="post" action="/matches/mentor/report">
-                      <input type="hidden" name="target_id" value="<%= row.mentee.id %>">
-                      <button type="submit" class="apply-mentor" name="report">Report</button>
-                    </form>
-                  </div>
+                </p>
+              </div>
+              <div class="bio-and-accept">
+                <p class="applicant-bio profile-bio-detailed">Bio: <%= mentee.bio_brief %></p>
+                <p class="applicant-bio profile-bio-detailed">Application Message: <%= row.application_message %></p>
+                <div class="matching-wrapper" id="<%= row.mentee.id %>-wrapper">
+                  <form method="post" action="/matches/mentor">
+                    <input type="hidden" name="mentee_id" value="<%= row.mentee.id %>">
+                    <button type="submit" class="apply-mentor" name="accept">Accept</button>
+                    <button type="submit" class="apply-mentor" name="decline">Decline</button>
+                    <button type="submit" class="apply-mentor" name="report">Report</button>
+                  </form>
                 </div>
               </div>
-            <% end %>
+            </div>
           <% end %>
+        <% end %>
 
-          <section id="mentee-others">
-              <h2>Waitlisted Mentees</h2>
-              <% unless @mentees.nil? %>
-                <% @mentees.all.each do |row| %>
-                  <% if row.waitlisted? && row.available? %>
-                    <div class="profile-box">
-                        <% mentee = row.user.profile %>
-                        <div class="basic-info centerer">
-                            <div class="profile_pic">
-                                <% if mentee.profile_picture %>
-                                    <img class="pfp-img" src="<%= "/images/user/#{mentee.profile_picture}" %>" alt="Profile Picture">
-                                <% else %>
-                                    <img class="pfp-img" src="/images/blankProfilePicture.webp" alt="Profile Picture">
+        <section id="mentee-others">
+            <h2>Waitlisted Mentees</h2>
+            <% unless @mentees.nil? %>
+              <% @mentees.all.each do |row| %>
+                <% if row.waitlisted? && row.available? %>
+                  <div class="profile-box">
+                      <% mentee = row.user.profile %>
+                      <div class="basic-info centerer">
+                          <div class="profile_pic">
+                              <% if mentee.profile_picture %>
+                                  <img class="pfp-img" src="<%= "/images/user/#{mentee.profile_picture}" %>" alt="Profile Picture">
+                              <% else %>
+                                  <img class="pfp-img" src="/images/blankProfilePicture.webp" alt="Profile Picture">
+                              <% end %>
+                          </div>
+                          <p class="profile-name"><%= mentee.first_name %> <%= mentee.last_name %></p>
+                      </div>
+                      <div class="detailed-info">
+                            <p class="detailed-info-content">Age: <%= mentee.age %></p>
+                            <p class="detailed-info-content">Nationality:
+                              <%= Nationality.first(id: mentee.nationality_id).country_name unless mentee.nationality_id.nil? %></p>
+                            <p class="detailed-info-content">Languages: 
+                                <% UserLanguage.where(user_id: row.user.id).each do |ulanguage| %>
+                                    <%= ulanguage.language.language_name %>,
                                 <% end %>
-                            </div>
-                            <p class="profile-name"><%= mentee.first_name %> <%= mentee.last_name %></p>
-                        </div>
-                        <div class="detailed-info">
-                              <p class="detailed-info-content">Age: <%= mentee.age %></p>
-                              <p class="detailed-info-content">Nationality:
-                                <%= Nationality.first(id: mentee.nationality_id).country_name unless mentee.nationality_id.nil? %></p>
-                              <p class="detailed-info-content">Languages:
-                                  <% UserLanguage.where(user_id: row.user.id).each do |ulanguage| %>
-                                      <%= ulanguage.language.language_name %>,
-                                  <% end %>
-                              </p>
-                        </div>
-                        <div class="bio-and-accept">
-                            <p class="profile-bio-detailed">Bio: <%= mentee.bio_brief %></p>
-                            <div class="matching-wrapper" id="<%= row.user.id %>-wrapper">
-                              <form method="post" action="/matches/mentor">
-                                <input type="hidden" name="mentee_id" value="<%= row.user.id %>">
-                                <input type="hidden" name="waitlisted_mentee">
-                                <button type="submit" class="apply-mentor" name="accept">Match</button>
-                              </form>
-                              <form method="post" action="/matches/mentor/report">
-                                <input type="hidden" name="target_id" value="<%= row.user.id %>">
-                                <button type="submit" class="apply-mentor" name="report">Report</button>
-                              </form>
-                            </div>
-                        </div>
-                    </div>
-                  <% end %>
+                            </p>
+                      </div>
+                      <div class="bio-and-accept">
+                          <p class="profile-bio-detailed">Bio: <%= mentee.bio_brief %></p>
+                          <div class="matching-wrapper" id="<%= row.user.id %>-wrapper">
+                            <form method="post" action="/matches/mentor">
+                              <input type="hidden" name="mentee_id" value="<%= row.user.id %>">
+                              <input type="hidden" name="waitlisted_mentee">
+                              <button type="submit" class="apply-mentor" name="accept">Match</button>
+                            </form>
+                            <form method="post" action="/matches/report">
+                              <input type="hidden" name="mentee_id" value="<%= row.user.id %>">
+                              <input type="hidden" name="waitlisted_mentee">
+                              <button type="submit" class="apply-mentor" name="report">Report</button>
+                            </form>
+                          </div>
+                      </div>
+                  </div>
                 <% end %>
               <% end %>
-          </section>
-      </section>
+            <% end %>
+        </section>
     </section>
-  <% else %>
-    <p style="color: red">Please wait for next semester to begin.</p>
-  <% end %>
 </div>
 
   </div>

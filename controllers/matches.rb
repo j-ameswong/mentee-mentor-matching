@@ -88,8 +88,11 @@ end
 get "/matches/mentor" do
   redirect "/login" unless session[:logged_in]
   redirect "/matches/mentee" if session[:user].mentee?
+  redirect "matches/matched/mentor" if !session[:user].mentor_profile.below_limit?  
 
+  
   mentor_id = session[:user].id
+
   @menteeApplicants = Match.where(mentor_id: mentor_id, status: 'pending')
   @mentees = MenteeProfile.where(availability: true)
 

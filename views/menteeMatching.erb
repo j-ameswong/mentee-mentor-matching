@@ -27,9 +27,9 @@
                     </div>
                     <p class="profile-name"><%= @mentor.first_name %> <%= @mentor.last_name %></p>
                     <!-- Whoever is working on the badges, please place it here in the basic-info div-->
-                    <% if row.experience%>
-                        <p class="badge-text">Experienced Mentor</p>
-                    <% end %>
+                    <p class="badge-text">
+                        <%=@currentMentor.mentor_profile.badges%>
+                    </p>
                 </div>
                 <div class="detailed-info">
                     <p class="detailed-info-content">Age: <%= @mentor.age %></p>
@@ -75,11 +75,12 @@
                                         <img class="pfp-img" src="/images/blankProfilePicture.webp" alt="Profile Picture">
                                     <% end %>
                                 </div>
-                                <p class="profile-name"><%= @mentor.first_name %> <%=@mentor.last_name %> </p>
-                                <!-- Whoever is working on the badges, please place it here in the basic-info div-->
-                                <% if row.experience%>
-                                    <p class="badge-text">Experienced Mentor</p>
-                                <% end %>
+                                <p class="profile-name"><%= h @mentor.first_name %> <%= h @mentor.last_name %> </p>
+                                <p class="badge-text">
+                                    <% row.badges.each do |badge|%>
+                                        <%=badge%>
+                                    <% end %>
+                                </p>
                             </div>
                             <div class="detailed-info">
                                 <p class="detailed-info-content"><%="Year " + row.year_of_study.to_s %></p>
@@ -99,7 +100,7 @@
                                 </p>
                             </div>
                             <div class="bio-and-accept">
-                                <p class="profile-bio-detailed">Bio: <%= @mentor.bio_brief %></p>
+                                <p class="profile-bio-detailed">Bio: <%= h @mentor.bio_brief %></p>
                                 <div class="matching-wrapper" id="<%= row.user.id %>-wrapper">
                                     <button type="button" class="apply-mentor" id="<%= row.user.id %>-application" onclick="openMatching('<%= row.user.id %>')">Apply</button>
                                   <form method="post" action="/matches/mentee/report">
@@ -119,8 +120,7 @@
                                                     <img class="pfp-img" src="/images/blankProfilePicture.webp" alt="Profile Picture">
                                                 <% end %>
                                             </div>
-                                            <p class="profile-name"><%= @mentor.first_name %> <%= @mentor.last_name %></p>
-                                            <!-- Whoever is working on the badges, please place it here in the basic-info div-->
+                                            <p class="profile-name"><%= h @mentor.first_name %> <%= h @mentor.last_name %></p>
                                         </div>
                                         <div class="detailed-info popup-no-style popup-info">
                                             <p class="detailed-info-content"><%="Year " + row.year_of_study.to_s %></p>
@@ -140,7 +140,7 @@
                                             </p>
                                         </div>
                                     </div>
-                                    <p class="profile-bio-detailed popup-bio">Bio: <%= @mentor.bio_detailed %></p>
+                                    <p class="profile-bio-detailed popup-bio">Bio: <%= h @mentor.bio_detailed %></p>
                                     <div class="application-wrapper" id="<%= row.user.id %>-application-wrapper" data-mentor-id=<%= row.user.id %>>
                                     </div>
                                 </div>
