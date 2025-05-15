@@ -77,9 +77,9 @@
                                 </div>
                                 <p class="profile-name"><%= h @mentor.first_name %> <%= h @mentor.last_name %> </p>
                                 <p class="badge-text">
-                                    <% row.badges.each do |badge|%>
-                                        <%=badge%>
-                                    <% end %>
+                                    <p class="badge-text">
+                                        <%=row.badges%>
+                                    </p>
                                 </p>
                             </div>
                             <div class="detailed-info">
@@ -121,6 +121,9 @@
                                                 <% end %>
                                             </div>
                                             <p class="profile-name"><%= h @mentor.first_name %> <%= h @mentor.last_name %></p>
+                                            <p class="badge-text">
+                                                <%=@currentMentor.mentor_profile.badges%>
+                                            </p>
                                         </div>
                                         <div class="detailed-info popup-no-style popup-info">
                                             <p class="detailed-info-content"><%="Year " + row.year_of_study.to_s %></p>
