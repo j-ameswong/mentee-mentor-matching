@@ -25,19 +25,17 @@ get "/accounts" do
   $offset = 0
   @users = User.limit(@limit).offset($offset * @limit).all
 
-  @actions = Array.new(@limit) { ["delete"] }
-
-  i = 0
-  @users.each { |user|
-    if user[:role] == "mentor" && !MentorProfile.where(user_id: user[:id]).limit(1).pluck(:year_of_study).first.nil? &&
-       MentorProfile.where(user_id: user[:id]).limit(1).pluck(:year_of_study).first >= 4
-      @actions[i] = ["delete","badges"]
+  # TP
+  @actions ||= {}
+  @users.each do |user|
+    @actions[user.id.to_s] = []
+    @actions[user.id.to_s] << "delete"
+    if user.mentor? && user.mentor_profile && user.mentor_profile.year_of_study >= 4 && Match.first(mentor_id: user.id, status: "completed")
+      @actions[user.id.to_s] << "badge"
+    elsif user.mentee? && Match.first(mentee_id: user.id, status: "active")
+      @actions[user.id.to_s] << "reassign"
     end
-    if user[:role] == "mentee"
-      @actions[i] = ["delete", "reassign"]
-    end
-    i += 1
-  }
+  end
 
   if params[:show_reassign_modal] && session[:reassign_data]
     mentee_id = session[:reassign_data][:mentee_id]
@@ -93,16 +91,16 @@ post "/accounts" do
   end
   # puts @users.inspect
 
-  @actions = Array.new(@limit) { ["delete", "reassign"] }
-
-  i = 0
-  @users.each { |user|
-    if user[:role] == "mentor" && !MentorProfile.where(user_id: user[:id]).limit(1).pluck(:year_of_study).first.nil? &&
-       MentorProfile.where(user_id: user[:id]).limit(1).pluck(:year_of_study).first >= 4
-      @actions[i] = ["delete", "reassign", "badges"]
+  @actions ||= {}
+  @users.each do |user|
+    @actions[user.id.to_s] = []
+    @actions[user.id.to_s] << "delete"
+    if user.mentor? && user.mentor_profile && user.mentor_profile.year_of_study >= 4 && Match.first(mentor_id: user.id, status: "completed")
+      @actions[user.id.to_s.to_s] << "badge"
+    elsif user.mentee? && Match.first(mentee_id: user.id, status: "active")
+      @actions[user.id.to_s.to_s] << "reassign"
     end
-    i += 1
-  }
+  end
 
   erb :manageAccounts
 end
@@ -205,18 +203,18 @@ post "/accounts/action" do
 
   $offset = 0
   @users = User.limit(@limit).offset($offset).where(@cond)
+  # TP
 
-  @actions = Array.new(@limit) { ["delete", "reassign"] }
-
-  i = 0
-  @users.each { |user|
-    if user[:role] == "mentor"
-      if MentorProfile.where(user_id: user[:id]).limit(1).pluck(:year_of_study).first >= 4
-        @actions[i] = ["delete", "reassign", "badges"]
-      end
+  @actions ||= {}
+  @users.each do |user|
+    @actions[user.id.to_s] = []
+    @actions[user.id.to_s] << "delete"
+    if user.mentor? && user.mentor_profile && user.mentor_profile.year_of_study >= 4 && Match.first(mentor_id: user.id, status: "completed")
+      @actions[user.id.to_s] << "badge"
+    elsif user.mentee? && Match.first(mentee_id: user.id, status: "active")
+      @actions[user.id.to_s] << "reassign"
     end
-    i += 1
-  }
+  end
 
   erb :manageAccounts
 end
@@ -250,17 +248,16 @@ post "/accounts/next" do
     @users = User.limit(@limit).offset($offset * @limit)
   end
 
-  @actions = Array.new(@limit) { ["delete", "reassign"] }
-
-  i = 0
-  @users.each { |user|
-    if user[:role] == "mentor"
-      if MentorProfile.where(user_id: user[:id]).limit(1).pluck(:year_of_study).first >= 4
-        @actions[i] = ["delete", "reassign", "badges"]
-      end
+  @actions ||= {}
+  @users.each do |user|
+    @actions[user.id.to_s] = []
+    @actions[user.id.to_s] << "delete"
+    if user.mentor? && user.mentor_profile && user.mentor_profile.year_of_study >= 4 && Match.first(mentor_id: user.id, status: "completed")
+      @actions[user.id.to_s] << "badge"
+    elsif user.mentee? && Match.first(mentee_id: user.id, status: "active")
+      @actions[user.id.to_s] << "reassign"
     end
-    i += 1
-  }
+  end
 
   erb :manageAccounts
 end
@@ -292,17 +289,16 @@ post "/accounts/prev" do
     @users = User.limit(@limit).offset($offset * @limit)
   end
 
-  @actions = Array.new(@limit) { ["delete", "reassign"] }
-
-  i = 0
-  @users.each { |user|
-    if user[:role] == "mentor"
-      if MentorProfile.where(user_id: user[:id]).limit(1).pluck(:year_of_study).first >= 4
-        @actions[i] = ["delete", "reassign", "badges"]
-      end
+  @actions ||= {}
+  @users.each do |user|
+    @actions[user.id.to_s] = []
+    @actions[user.id.to_s] << "delete"
+    if user.mentor? && user.mentor_profile && user.mentor_profile.year_of_study >= 4 && Match.first(mentor_id: user.id, status: "completed")
+      @actions[user.id.to_s] << "badge"
+    elsif user.mentee? && Match.first(mentee_id: user.id, status: "active")
+      @actions[user.id.to_s] << "reassign"
     end
-    i += 1
-  }
+  end
 
   erb :manageAccounts
 end
