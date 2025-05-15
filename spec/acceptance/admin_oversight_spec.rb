@@ -157,8 +157,59 @@ RSpec.describe "Admin oversight" do
 #   # 3. Each mentor can manually set their own capacity locally, which overrides the global limit.
 #   # 4. Admins can update the global maximum mentee limit dynamically.
 #   # 5. The updated global limit does not override local limits, if any.
+  context "Admins can set a global maximum number of mentees per mentor" do
+    it "allows admins to set a global maximum number of mentees per mentor" do
+      visit "/"
+      expect(page).to have_content("Sign up instead")
+
+      fill_in "Username/University Email Address:", with: "admin"
+      fill_in "Password:", with: "admin"
+      click_button "Log in"
+
+      expect(page).to have_content("Welcome to UniConnect!")
+
+      visit "/accounts"
+
+      expect(page).to have_content("Accounts Management")
+
+      fill_in "max_matches", with: "5"
+      click_button "Update Max Matches"
+      expect(page).to have_content("Current Max. Matches: 5")
+    end
+  end
 # # 5.5. Admin can apply an "Experienced Mentor" badge to fourth-year mentors with prior mentoring experience.
 # # Admin
 #   # 1. If a mentor is a fourth-year student and has a successful mentoring history (e.g., considering previous mentoring experiences and any reports that have been filed against the mentor), admins have the option to add an experienced mentor badge.
 #   # 2. If the badge is added, an icon representing the badge is displayed on the mentor’s profile.
+  context "Admins can apply an experienced badge to fourth year mentors with prior mentoring experience" do
+    it "allows admins to apply an experienced badge to fourth year mentors with prior mentoring experience" do
+      visit "/"
+      expect(page).to have_content("Sign up instead")
+
+      fill_in "Username/University Email Address:", with: "admin"
+      fill_in "Password:", with: "admin"
+      click_button "Log in"
+
+      expect(page).to have_content("Welcome to UniConnect!")
+
+      visit "/accounts"
+
+      expect(page).to have_content("Accounts Management")
+
+      fill_in "username", with: "user1"
+      click_button "Update Filters"
+      expect(page).to have_content("user1@sheffield.ac.uk")
+      select "Apply Badge", from: "action"
+      click_button "Submit"
+      visit "/logout"
+
+      expect(page).to have_content("Sign up instead")
+      fill_in "Username/University Email Address:", with: "user1"
+      fill_in "Password:", with: "user1"
+      click_button "Log in"
+      expect(page).to have_content("Welcome to UniConnect!")
+      visit "/profile"
+      expect(page).to have_content("Experienced Mentor")
+    end
+  end
 end

@@ -128,10 +128,10 @@ post "/accounts/action" do
         session[:flash] = { error: "Mentor must be a fourth year student to gain a badge." }
         puts "FLASH SET: #{session[:flash].inspect}"
         $cond = {}
-        unless params[:username].empty?
+        unless params[:username].nil?
           $cond[:username] = params[:username]
         end
-        unless params[:role].empty?
+        unless params[:role].nil?
           $cond[:role] = params[:role]
         end
       end
