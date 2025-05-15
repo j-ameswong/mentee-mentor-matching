@@ -90,7 +90,7 @@ get "/matches/mentor" do
   redirect "/matches/mentee" if session[:user].mentee?
   redirect "matches/matched/mentor" if !session[:user].mentor_profile.below_limit?  
 
-  
+
   mentor_id = session[:user].id
 
   @menteeApplicants = Match.where(mentor_id: mentor_id, status: 'pending')
@@ -226,5 +226,5 @@ post "/matches/mentor/set-max" do
   session[:user].mentor_profile.save
 
   #puts session[:user].mentor_profile.inspect
-  redirect "/matches/mentor"
+  redirect "/matches/matched/mentor
 end

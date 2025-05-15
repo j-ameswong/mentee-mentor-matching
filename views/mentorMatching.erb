@@ -10,6 +10,10 @@
 <%= erb :"common/header" %>
 
 <div class="content">
+    <% @mentor = session[:user].mentor_profile %>
+    <h2 class="welcome" class="centerer">Mentees</h2>
+    <p style="color: red"><%= "Profile not setup or mentee limit reached" unless @mentor.available? %></p>
+    <p style="color: red"><%= @error %></p>
     <section id="matching-list" class="content-box">
       <section id="mentee-applicants">
         <h2>Mentee Applications</h2>

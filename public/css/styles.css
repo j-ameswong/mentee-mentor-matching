@@ -217,7 +217,8 @@ p {
     flex-direction: column;
 }
 
-#welcome {
+.welcome {
+    text-align: center;
     color: var(--grey);
     grid-column: 1/2;
 }
@@ -374,7 +375,7 @@ label input[type="checkbox" i]:checked + span:before {
 
 select {
     border-radius: 25px;
-    outline: none;
+    outline: var(--grey) solid 1px;
     border: none;
     background-color: var(--lgrey);
     color: var(--grey);
@@ -505,6 +506,22 @@ footer {
     outline-style: solid;
     outline-width: medium;
     outline-color: var(--purple);
+}
+
+#max-mentees-button {
+    width: 10%;
+    padding: 0.5%;
+    min-width: 5vw;
+    outline: black solid 1px;
+}
+
+.filter-box {
+    text-align: left;
+    width: fit-content;
+}
+
+.bold {
+    font-weight: bold;
 }
 
 .pfp-img {
@@ -870,50 +887,50 @@ textarea {
       background-color: rgba(0,0,0,0.4);
     }
 
-    .modal-content {
-      background-color: #fefefe;
-      margin: 15% auto;
-      padding: 20px;
-      border: 1px solid #888;
-      width: 50%;
-      border-radius: 5px;
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 50%;
+    border-radius: 5px;
+}
+
+.modal-content h4 {
+    margin-top: 0;
+}
+
+.modal-content textarea {
+    width: 100%;
+    min-height: 100px;
+    margin-bottom: 10px;
+    resize: vertical;
     }
 
-    .modal-content h4 {
-      margin-top: 0;
-    }
+.modal-buttons {
+    display: flex;
+    justify-content: flex-end;
+}
 
-    .modal-content textarea {
-      width: 100%;
-      min-height: 100px;
-      margin-bottom: 10px;
-      resize: vertical;
-    }
+.modal-buttons button {
+    margin-left: 10px;
+    padding: 8px 16px;
+    cursor: pointer;
+}
 
-    .modal-buttons {
-      display: flex;
-      justify-content: flex-end;
-    }
+.close-modal {
+    background-color: #ccc;
+    border: none;
+    border-radius: 3px;
+}
 
-    .modal-buttons button {
-      margin-left: 10px;
-      padding: 8px 16px;
-      cursor: pointer;
-    }
+.submit-modal {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 3px;
+}
 
-    .close-modal {
-      background-color: #ccc;
-      border: none;
-      border-radius: 3px;
-    }
-
-    .submit-modal {
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      border-radius: 3px;
-    }
-
-    .login-error-msg {
-        display: inline-block;
-    }
+.login-error-msg {
+    display: inline-block;
+}

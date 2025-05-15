@@ -13,7 +13,7 @@
 <div class="content">
   <% if Date.today.to_datetime < Time.at(GlobalVariable.END_DATE).to_datetime %>
     <% if @currentMentor %>
-        <h2 id="welcome" class="centerer">Your Mentor</h2>
+        <h2 class="welcome" class="centerer">Your Mentor</h2>
         <div id="current-mentor-box" class="content-box">
             <div class="profile-box">
             <% @mentor = @currentMentor.profile %>
