@@ -45,7 +45,8 @@ post "/support/decision" do
       end
     end
   when SupportTicket.report?
-    puts "This is handling a report ticket"
+    if params[:dismiss]
+    end
   end
 
   ticket.resolve
