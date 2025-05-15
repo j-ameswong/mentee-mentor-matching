@@ -150,6 +150,7 @@ CREATE TABLE "user_messages" (
     "sent_by" TEXT,
     "received_by" TEXT,
     "message_id" INTEGER,
+    "content" TEXT,
     "read_status" Boolean,
     "created_at" DateTime,
     FOREIGN KEY ("message_id") REFERENCES "messages" ("id")
