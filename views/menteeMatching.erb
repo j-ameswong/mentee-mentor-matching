@@ -26,6 +26,10 @@
                         <% end %>
                     </div>
                     <p class="profile-name"><%= @mentor.first_name %> <%= @mentor.last_name %></p>
+                    <!-- Whoever is working on the badges, please place it here in the basic-info div-->
+                    <% if row.experience%>
+                        <p class="badge-text">Experienced Mentor</p>
+                    <% end %>
                 </div>
                 <div class="detailed-info">
                     <p class="detailed-info-content">Age: <%= @mentor.age %></p>
@@ -71,8 +75,11 @@
                                         <img class="pfp-img" src="/images/blankProfilePicture.webp" alt="Profile Picture">
                                     <% end %>
                                 </div>
-                                <p class="profile-name"><%= @mentor.first_name %> <%=@mentor.last_name %></p>
+                                <p class="profile-name"><%= @mentor.first_name %> <%=@mentor.last_name %> </p>
                                 <!-- Whoever is working on the badges, please place it here in the basic-info div-->
+                                <% if row.experience%>
+                                    <p class="badge-text">Experienced Mentor</p>
+                                <% end %>
                             </div>
                             <div class="detailed-info">
                                 <p class="detailed-info-content"><%="Year " + row.year_of_study.to_s %></p>

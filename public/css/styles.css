@@ -618,6 +618,13 @@ body {
     outline-color: #7300ff;
 }
 
+.badge-text {
+    font-weight: bold;
+    color: #440099;
+    margin-top: 0;
+    font-size: 0.7rem;
+}
+
 h4 {
     color: darkred;
     font-size: 1em;
@@ -628,7 +635,7 @@ h4 {
   display: flex;
   margin-bottom: 1%;
   flex-direction: row;
-  height: 18vh;
+  height: 22vh;
 }
 
 .basic-info {
