@@ -39,19 +39,26 @@ post "/support/decision" do
       if ticket.sent_by_user.mentor?
         match = Match.first(mentor_id: ticket.sent_by, mentee_id: ticket.target_id, status: "active")
         match.cancel
+        ticket.resolve
       elsif ticket.sent_by_user.mentee?
         match = Match.first(mentee_id: ticket.sent_by, status: "active")
         match.cancel
+        ticket.resolve
       end
+    elsif params[:deny]
+      ticket.resolve
     end
   when SupportTicket.report?
     if params[:dismiss]
+      ticket.resolve
+    elsif params[:flag]
+      session[:flag_filters] ||= {}
+      session[:flag_filters][:username] = ticket.target_id_user.username
+      redirect "/flagging"
     end
   end
 
-  ticket.resolve
-
-  redirect "/support/admin"
+  redirect "/support/admin" if ticket.is_resolved
 end
 
 get "/support/admin" do
