@@ -31,7 +31,6 @@ post "/support/decision" do
   redirect "/login" unless session[:logged_in]
   redirect "/" unless session[:user].admin?
 
-  puts params
   ticket = SupportTicket.first(id: params[:ticket_id])
 
   case ticket.id
@@ -44,13 +43,12 @@ post "/support/decision" do
         match = Match.first(mentee_id: ticket.sent_by, status: "active")
         match.cancel
       end
-    elsif params[:deny]
-      ticket.is_resolved = true
-      ticket.save
     end
   when SupportTicket.report?
     puts "This is handling a report ticket"
   end
+
+  ticket.resolve
 
   redirect "/support/admin"
 end

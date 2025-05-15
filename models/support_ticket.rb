@@ -64,5 +64,10 @@ class SupportTicket < Sequel::Model
     SupportTicket.first(sent_by: match.mentee_id, target_id: match.mentor_id, type: self.withdraw?, is_resolved: false) ||
       SupportTicket.first(sent_by: match.mentor_id, target_id: match.mentee_id, type: self.withdraw?, is_resolved: false)
   end
+
+  def resolve
+    self.is_resolved = true
+    save
+  end
 end
 
