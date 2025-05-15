@@ -122,7 +122,7 @@
                                             </div>
                                             <p class="profile-name"><%= h @mentor.first_name %> <%= h @mentor.last_name %></p>
                                             <p class="badge-text">
-                                                <%=@currentMentor.mentor_profile.badges%>
+                                                <%=@mentor.user.mentor_profile.badges%>
                                             </p>
                                         </div>
                                         <div class="detailed-info popup-no-style popup-info">
