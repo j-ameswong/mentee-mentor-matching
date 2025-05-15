@@ -8,6 +8,7 @@ SimpleCov.start do
   add_filter "/app.rb"
   add_filter "/db/db.rb"
   add_filter "/helpers/helpers.rb"
+  add_filter "/gen_db/*"
 end
 SimpleCov.coverage_dir "#{__dir__}/_coverage"
 

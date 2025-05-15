@@ -1,7 +1,3 @@
-# 3.1. Mentees and mentors can view each other's details after matching.
-# Mentor, Mentee
-  # 1. Both mentors and mentees can see names, profile pictures, and contact details after being matched.
-  # 2. Personal details are unblurred upon successful matching.
 # 3.2. Mentees are matched with the first mentor who selects them.
 # Mentee
   # 1. Once a mentor selects a mentee, the mentee's profile is no longer visible to other mentors (and removed from the waiting list if the mentee was on the list).

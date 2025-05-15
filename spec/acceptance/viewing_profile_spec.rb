@@ -7,6 +7,10 @@ require "rspec"
 
 RSpec.describe "Profile Viewing" do
 
+  # 3.1. Mentees and mentors can view each other's details after matching.
+  # Mentor, Mentee
+  # 1. Both mentors and mentees can see names, profile pictures, and contact details after being matched.
+  # 2. Personal details are unblurred upon successful matching.
   context "Contact details are only visible to matched users" do
     it "allows matched users to see each others' contact details" do
       visit "/"
@@ -35,7 +39,6 @@ RSpec.describe "Profile Viewing" do
 
     end
   end
-end
 # 2.2. Mentees need to write a description before submitting a mentor preference.
 # Mentee
   # 1. When submitting preferred mentors, mentees must enter a justification (max 100 words) in a text box.
@@ -54,3 +57,4 @@ end
 # Mentee
   # 1. Mentees who were not paired with a mentor for a week are moved to a waiting list visible to all available mentors.
   # 2. If there are no available mentors in the system, unpaired mentees are immediately moved to the waiting list.
+end
