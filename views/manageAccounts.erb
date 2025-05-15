@@ -120,6 +120,16 @@
         <input type="submit" value="Update Max Matches" class="row centerer">
       </form>
     </div>
+    <div class="content-box centerer">
+      <h3>Semester End Date</h3>
+      <p>Set the semester end date where all mentees will be unmatched with their mentor</p>
+      <form action="/sem-end-date" method="post">
+        <label for="sem_end" class="row centerer">Semester End Date:</label>
+        <input type="date" name="sem_end" value="<%=@endDate%>" min="<%= Date.today.strftime('%Y-%m-%d') %>" class="row centerer">
+        <br>
+        <input type="submit" style="width: 100%;" value="Update End Date" class="row centerer">
+      </form>
+    </div>
   </div>
 
   <div class="row centerer">
