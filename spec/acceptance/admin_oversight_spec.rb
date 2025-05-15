@@ -177,12 +177,13 @@ RSpec.describe "Admin oversight" do
       expect(page).to have_content("Current Max. Matches: 5")
     end
   end
-# # 5.5. Admin can apply an "Experienced Mentor" badge to fourth-year mentors with prior mentoring experience.
-# # Admin
-#   # 1. If a mentor is a fourth-year student and has a successful mentoring history (e.g., considering previous mentoring experiences and any reports that have been filed against the mentor), admins have the option to add an experienced mentor badge.
-#   # 2. If the badge is added, an icon representing the badge is displayed on the mentor’s profile.
+
   context "Admins can apply an experienced badge to fourth year mentors with prior mentoring experience" do
     it "allows admins to apply an experienced badge to fourth year mentors with prior mentoring experience" do
+      user = User.where(username: "user1").first
+      Match.where(mentor_id: user.id).update(status: "completed")
+      MentorProfile.where(user_id: user.id).update(year_of_study: 4)
+
       visit "/"
       expect(page).to have_content("Sign up instead")
 
@@ -199,7 +200,7 @@ RSpec.describe "Admin oversight" do
       fill_in "username", with: "user1"
       click_button "Update Filters"
       expect(page).to have_content("user1@sheffield.ac.uk")
-      select "Apply Badge", from: "action"
+      select "Badge", from: "action"
       click_button "Submit"
       visit "/logout"
 

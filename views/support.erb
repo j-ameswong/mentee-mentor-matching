@@ -43,7 +43,7 @@
           <% elsif session[:user].mentee? %>
             <% match = Match.first(mentee_id: session[:user].id, status: "active") %>
             <% if match.nil? || (match && User.first(id: @target_id) && @target_id != match.mentor_id) %>
-              <option value=<%= @target_id %>><%= User.first(id: @target_id).profile.full_name %></option>
+              <option value=<%= @target_id %>><%= User.first(id: @target_id).profile.full_name if User.first(id: @target_id) %></option>
             <% end %>
 
             <% unless match.nil? %>
@@ -55,6 +55,7 @@
         <br><br><br><br><br>
         <label <%= "style='color: red'" if @errors && @errors[:details] %> for="help-request">Please Specify/Provide good reasoning: </label>
         <p style="color: red"><%= @errors[:exists] if @errors && @errors[:exists] %></p>
+        <p style="color: red"><%= @errors[:invalid] if @errors && @errors[:invalid] %></p>
         <br>
         <br>
         <textarea name="details" id="help-request"></textarea>

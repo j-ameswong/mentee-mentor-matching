@@ -923,6 +923,10 @@ textarea {
     cursor: pointer;
 }
 
+.submit {
+    width: 100%;
+}
+
 .close-modal {
     background-color: #ccc;
     border: none;

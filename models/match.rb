@@ -144,6 +144,23 @@ class Match < Sequel::Model
       end
     end
 
-    self.delete if perma
+    if perma
+      begin
+        UserMessage.send_message(
+          sent_by: "System",
+          received_by: self.mentee_id,
+          message_type: "account_deleted"
+        )
+        UserMessage.send_message(
+          sent_by: "System",
+          received_by: self.mentor_id,
+          message_type: "account_deleted"
+        )
+        self.delete
+        puts "Account deleted successfully"
+      rescue => e
+        puts "Error sending match cancelled notification: #{e.message}"
+      end
+    end
   end
 end
