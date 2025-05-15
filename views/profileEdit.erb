@@ -76,10 +76,12 @@
             <% @edited_user.user_expertises.each do |user_expertise| %>
               <div class="expertise-select-wrapper">
                 <select class="expertise-select" name="user_expertises[]">
-                  <% @expertises.each do |row| %>
-                    <option value="<%= row.id %>" <%= 'selected' if row.id == user_expertise.expertise_id %>>
-                      <%= row.category + " - " + row.skill %>
-                    </option>
+                  <% unless @expertises.nil? %>
+                    <% @expertises.each do |row| %>
+                      <option value="<%= row.id %>" <%= 'selected' if row.id == user_expertise.expertise_id %>>
+                        <%= row.category + " - " + row.skill %>
+                      </option>
+                    <% end %>
                   <% end %>
                 </select>
                 <button type="button" class="remove-expertise">Remove</button>

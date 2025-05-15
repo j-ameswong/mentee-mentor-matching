@@ -73,7 +73,7 @@
                                 <p class="detailed-info-content">Age: <%= @mentor.age %></p>
                                 <p class="detailed-info-content">Languages: 
                                     <% UserLanguage.where(user_id: row.user.id).each do |ulanguage| %>
-                                        <%= ulanguage.language.language_name %>
+                                        <%= ulanguage.language.language_name unless ulanguage.language.nil? %>
                                     <% end %>
                                 </p>
                                 <p class="detailed-info-content" >Expertise:
@@ -114,7 +114,7 @@
                                             <p class="detailed-info-content">Age: <%= @mentor.age %></p>
                                             <p class="detailed-info-content">Languages: 
                                                 <% UserLanguage.where(user_id: row.user.id).each do |ulanguage| %>
-                                                    <%= ulanguage.language.language_name %>
+                                                    <%= ulanguage.language.language_name unless ulanguage.language.nil? %>
                                                 <% end %>
                                             </p>
                                             <p class="detailed-info-content">Expertise:

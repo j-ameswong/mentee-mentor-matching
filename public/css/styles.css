@@ -827,6 +827,17 @@ textarea {
     grid-column: 5;
     position: sticky;
     align-self: center;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    right: 5vw;
+    top: 0vw;
+
+    width: 8vw;
+    height: 10vh;
 }
 
 #bell-icon {

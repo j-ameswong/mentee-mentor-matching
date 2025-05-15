@@ -7,8 +7,8 @@ RSpec.describe "Edit Profile" do
       visit "/"
       expect(page).to have_content("Sign up instead")
 
-      fill_in "Username", with: "user"
-      fill_in "Password", with: "user"
+      fill_in "Username", with: "user1"
+      fill_in "Password", with: "user1"
       click_button "Log in"
       expect(page).to have_content("Welcome to UniConnect!")
 
@@ -16,7 +16,7 @@ RSpec.describe "Edit Profile" do
       visit "/profile/edit"
       attach_file("Upload Profile Picture", "spec/fixtures/profile_picture.png")
       click_button "Save"
-      expect(text).to include("User's Profile")
+      expect(text).to include("User1's Profile")
     end
 
     it "displays an error message for invalid format" do
@@ -24,8 +24,8 @@ RSpec.describe "Edit Profile" do
       visit "/"
       expect(page).to have_content("Sign up instead")
 
-      fill_in "Username", with: "user"
-      fill_in "Password", with: "user"
+      fill_in "Username", with: "user1"
+      fill_in "Password", with: "user1"
       click_button "Log in"
       expect(page).to have_content("Welcome to UniConnect!")
 
@@ -41,8 +41,8 @@ RSpec.describe "Edit Profile" do
       visit "/"
       expect(page).to have_content("Sign up instead")
 
-      fill_in "Username", with: "user"
-      fill_in "Password", with: "user"
+      fill_in "Username", with: "user1"
+      fill_in "Password", with: "user1"
       click_button "Log in"
       expect(page).to have_content("Welcome to UniConnect!")
 
@@ -59,8 +59,8 @@ RSpec.describe "Edit Profile" do
       visit "/"
       expect(page).to have_content("Sign up instead")
 
-      fill_in "Username", with: "user"
-      fill_in "Password", with: "user"
+      fill_in "Username", with: "user1"
+      fill_in "Password", with: "user1"
       click_button "Log in"
       expect(page).to have_content("Welcome to UniConnect!")
 
@@ -78,8 +78,8 @@ RSpec.describe "Edit Profile" do
       visit "/"
       expect(page).to have_content("Sign up instead")
 
-      fill_in "Username", with: "user"
-      fill_in "Password", with: "user"
+      fill_in "Username", with: "user1"
+      fill_in "Password", with: "user1"
       click_button "Log in"
       expect(page).to have_content("Welcome to UniConnect!")
 
@@ -96,8 +96,8 @@ RSpec.describe "Edit Profile" do
       visit "/"
       expect(page).to have_content("Sign up instead")
 
-      fill_in "Username", with: "user"
-      fill_in "Password", with: "user"
+      fill_in "Username", with: "user1"
+      fill_in "Password", with: "user1"
       click_button "Log in"
       expect(page).to have_content("Welcome to UniConnect!")
 

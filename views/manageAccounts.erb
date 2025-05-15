@@ -8,8 +8,13 @@
   <link rel="stylesheet" href="/css/styles.css"/>
   <link rel="icon" href="/images/UniConnectLogo.png" type="image/x-icon">
   <style>
-    tr.flagged {
+   td.flagged {
       background-color: #fff0f0;
+      border-radius: 10vw;
+      border-style:  solid;
+      border-color: #ff0000;
+      border-width: 2px;
+      font-weight: bold;
     }
     
     .modal {
@@ -164,10 +169,10 @@
         <% i = 0 %>
         <% @users.each do |user| %>
           <tr <%= user.flagged? ? 'class="flagged"' : '' %>>
-            <td><%= user.username %></td>
+            <td <%= user.flagged? ? 'class="flagged"' : '' %>><%= user.username %></td>
             <td><%= user.email %></td>
             <td><%= user.role.capitalize %></td>
-            <td><%= user.flagged? ? 'Flagged' : 'Not Flagged' %></td>
+            <td <%= user.flagged? ? 'class="flagged"' : '' %>><%= user.flagged? ? 'Flagged' : 'Not Flagged' %></td>
             <td>
               <form action="/accounts/action" method="post">
                 <input type="hidden" name="user_id" value="<%= user.id %>">

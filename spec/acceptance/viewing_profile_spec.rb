@@ -12,8 +12,8 @@ RSpec.describe "Profile Viewing" do
       visit "/"
       expect(page).to have_content("Sign up instead")
 
-      fill_in "Username", with: "user"
-      fill_in "Password", with: "user"
+      fill_in "Username", with: "user1"
+      fill_in "Password", with: "user1"
       click_button "Log in"
       expect(page).to have_content("Welcome to UniConnect!")
 

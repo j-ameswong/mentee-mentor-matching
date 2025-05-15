@@ -33,16 +33,6 @@ get "/accounts" do
 
   @users = User.limit(@limit).offset($offset * @limit).all
 
-  @actions = Array.new(@limit) { ["delete", "reassign"] }
-
-  i = 0
-  @users.each do |user|
-    if user[:role] == "mentor" && !MentorProfile.where(user_id: user[:id]).limit(1).pluck(:year_of_study).first.nil? &&
-       MentorProfile.where(user_id: user[:id]).limit(1).pluck(:year_of_study).first >= 4
-      @actions[i] = ["delete", "reassign", "badges"]
-    end
-  end
-
   if $cond.nil?
     @users = User.limit(@limit).offset($offset * @limit).all
   else
@@ -54,18 +44,7 @@ get "/accounts" do
     @users = @users.select { |user| user.flagged? == flag_status }
   end
 
-  @actions = []
-  @users.each do |user|
-    actions = ["reassign"]
-
-    if user[:role] == "mentor" &&
-       !MentorProfile.where(user_id: user[:id]).limit(1).pluck(:year_of_study).first.nil? &&
-       MentorProfile.where(user_id: user[:id]).limit(1).pluck(:year_of_study).first >= 4
-      actions << "badges"
-    end
-
-    @actions << actions
-  end
+  @actions = Array.new(@limit) { %w[delete reassign] }
 
   erb :manageAccounts
 end
@@ -108,15 +87,6 @@ post "/accounts" do
   # puts @users.inspect
 
   @actions = Array.new(@limit) { %w[delete reassign] }
-
-  i = 0
-  @users.each { |user|
-    if user[:role] == "mentor" && !MentorProfile.where(user_id: user[:id]).limit(1).pluck(:year_of_study).first.nil? &&
-       MentorProfile.where(user_id: user[:id]).limit(1).pluck(:year_of_study).first >= 4
-      @actions[i] = %w[delete reassign badges]
-    end
-    i += 1
-  }
 
   erb :manageAccounts
 end
