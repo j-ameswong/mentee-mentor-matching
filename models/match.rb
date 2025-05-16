@@ -69,9 +69,11 @@ class Match < Sequel::Model
     match.mentor_id = params[:mentor_id].to_i
     match.mentee_id = params[:mentee_id].to_i
     match.application_message = params[:message]
+    return false if params[:message].split(" ").length > 100
 
     puts match.inspect
     match.save
+    true
   end
 
   def activate
