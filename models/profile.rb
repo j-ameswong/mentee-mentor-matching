@@ -176,4 +176,28 @@ class MenteeProfile < Sequel::Model
     end
     waitlisted
   end
+
+  def self.user_id
+    user_id
+  end
+
+  def self.mentee_id
+    mentee_id
+  end
+
+  def self.mentor_id
+    mentor_id
+  end
+
+  def self.year_of_study
+    year_of_study
+  end
+
+  def self.max_matches
+    max_matches
+  end
+
+  def self.num_matches
+    num_matches
+  end
 end

@@ -30,8 +30,10 @@ get "/accounts" do
     $num_pages = (@limit / 10).to_i
     @limit = 10
   end
+  if $offset.nil?
+    $offset = 0
+  end
 
-  $offset = 0
   @users = User.limit(@limit).offset($offset * @limit).all
 
   # TP
@@ -39,9 +41,9 @@ get "/accounts" do
   @users.each do |user|
     @actions[user.id.to_s] = []
     @actions[user.id.to_s] << "delete"
-    if user.mentor? && user.mentor_profile && user.mentor_profile.year_of_study >= 4 && Match.first(mentor_id: user.id, status: "completed")
+    if user.mentor? && user.mentor_profile && user.mentor_profile.year_of_study >= 4 && Match.where(mentor_id: user.id, status: "completed")
       @actions[user.id.to_s] << "badge"
-    elsif user.mentee? && Match.first(mentee_id: user.id, status: "active")
+    elsif user.mentee? && Match.where(mentee_id: user.id, status: "active")
       @actions[user.id.to_s] << "reassign"
     end
   end
@@ -67,7 +69,7 @@ get "/accounts" do
       @mentor_matches = {}
 
       @available_mentors.each do |mentor|
-        @mentor_matches[mentor[:id]] = Match.where(mentor_id: mentor[:id], status: "active").count  
+        @mentor_matches[mentor[:id]] = Match.where(mentor_id: mentor[:id], status: "active").count
       end
     end
   end
@@ -109,9 +111,9 @@ post "/accounts" do
   @users.each do |user|
     @actions[user.id.to_s] = []
     @actions[user.id.to_s] << "delete"
-    if user.mentor? && user.mentor_profile && user.mentor_profile.year_of_study >= 4 && Match.first(mentor_id: user.id, status: "completed")
+    if user.mentor? && user.mentor_profile && user.mentor_profile.year_of_study >= 4 && Match.where(mentor_id: user.id, status: "completed")
       @actions[user.id.to_s.to_s] << "badge"
-    elsif user.mentee? && Match.first(mentee_id: user.id, status: "active")
+    elsif user.mentee? && Match.where(mentee_id: user.id, status: "active")
       @actions[user.id.to_s.to_s] << "reassign"
     end
   end
@@ -123,7 +125,7 @@ post "/accounts/action" do
   redirect "/login" unless session[:logged_in]
   #DEBUG
   puts "Action: #{params[:action]}, User ID: #{params[:user_id]}"
-  
+
   if params[:action] == "delete"
     @users = User.where(id: params[:user_id])
     @users.each do |user|
@@ -184,16 +186,17 @@ post "/accounts/action" do
     end
   end
 
-  if params[:action] == "badges"
+  if params[:action] == "badge"
     @mentors = MentorProfile.where(user_id: params[:user_id])
     @mentors.each do |mentor|
       mentor[:badges] = "Experienced Mentor"
-      mentor.save  
-    UserMessage.send_message(
-      sent_by: "Badge System",
-      received_by: mentor.user_id,
-      message_type: 'badge_applied'
-    )
+      mentor.save
+      puts mentor.inspect
+      UserMessage.send_message(
+        sent_by: "Badge System",
+        received_by: mentor.user_id,
+        message_type: 'badge_applied'
+      )
       # puts mentor.inspect
       # puts mentor[:badges].inspect
     end
@@ -223,9 +226,9 @@ post "/accounts/action" do
   @users.each do |user|
     @actions[user.id.to_s] = []
     @actions[user.id.to_s] << "delete"
-    if user.mentor? && user.mentor_profile && user.mentor_profile.year_of_study >= 4 && Match.first(mentor_id: user.id, status: "completed")
+    if user.mentor? && user.mentor_profile && user.mentor_profile.year_of_study >= 4 && Match.where(mentor_id: user.id, status: "completed")
       @actions[user.id.to_s] << "badge"
-    elsif user.mentee? && Match.first(mentee_id: user.id, status: "active")
+    elsif user.mentee? && Match.where(mentee_id: user.id, status: "active")
       @actions[user.id.to_s] << "reassign"
     end
   end
@@ -266,9 +269,9 @@ post "/accounts/next" do
   @users.each do |user|
     @actions[user.id.to_s] = []
     @actions[user.id.to_s] << "delete"
-    if user.mentor? && user.mentor_profile && user.mentor_profile.year_of_study >= 4 && Match.first(mentor_id: user.id, status: "completed")
+    if user.mentor? && user.mentor_profile && user.mentor_profile.year_of_study >= 4 && Match.where(mentor_id: user.id, status: "completed")
       @actions[user.id.to_s] << "badge"
-    elsif user.mentee? && Match.first(mentee_id: user.id, status: "active")
+    elsif user.mentee? && Match.where(mentee_id: user.id, status: "active")
       @actions[user.id.to_s] << "reassign"
     end
   end
@@ -307,9 +310,9 @@ post "/accounts/prev" do
   @users.each do |user|
     @actions[user.id.to_s] = []
     @actions[user.id.to_s] << "delete"
-    if user.mentor? && user.mentor_profile && user.mentor_profile.year_of_study >= 4 && Match.first(mentor_id: user.id, status: "completed")
+    if user.mentor? && user[:mentor_profile] && user[:mentor_profile][:year_of_study] >= 4 && Match.where(mentor_id: user.id, status: "completed")
       @actions[user.id.to_s] << "badge"
-    elsif user.mentee? && Match.first(mentee_id: user.id, status: "active")
+    elsif user.mentee? && Match.where(mentee_id: user.id, status: "active")
       @actions[user.id.to_s] << "reassign"
     end
   end
@@ -321,10 +324,12 @@ post "/no-of-matches" do
   redirect "/login" unless session[:logged_in]
 
   if params[:max_matches]
-    @users = User.where(role: "mentor").all
+    @users = MentorProfile.all
     @users.each do |user|
-      user[:num_matches] = params[:max_matches]
+      user[:max_matches] = params[:max_matches]
+      user.save
     end
+    puts MentorProfile.first[:max_matches]
   end
 
   redirect "/accounts"
@@ -349,7 +354,7 @@ post "/reassign-mentee" do
     #DEBUG
     puts "Cancelled the current match for mentee #{mentee_id} with mentor #{old_mentor_id}"
 
-    begin 
+    begin
       puts "Attempting to create a new match"
       new_match = Match.generate!({
         mentor_id: new_mentor_id,
@@ -370,7 +375,7 @@ post "/reassign-mentee" do
           received_by: mentee_id,
           message_type: 'match_reassigned'
         )
-        
+
         # Inform the old mentor about reassignment
         UserMessage.send_message(
           sent_by: "System",
@@ -384,14 +389,14 @@ post "/reassign-mentee" do
           received_by: mentee_id,
           message_type: 'match_success'
         )
-        
+
         # Notify new mentor about new match
         UserMessage.send_message(
           sent_by: "System",
           received_by: new_mentor_id,
           message_type: 'match_success'
         )
-        
+
         puts "Sent notifications about match reassignment and success"
       rescue => e
         puts "Error sending notifications: #{e.message}"

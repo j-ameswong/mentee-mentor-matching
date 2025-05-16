@@ -7,9 +7,26 @@ require "rspec"
 
 RSpec.describe "Profile Viewing" do
 
-  context "Contact details are only visible to matched users" do
-    it "allows matched users to see each others' contact details" do
+  # 3.1. Mentees and mentors can view each other's details after matching.
+  # Mentor, Mentee
+  # 1. Both mentors and mentees can see names, profile pictures, and contact details after being matched.
+  # 2. Personal details are unblurred upon successful matching.
+  context "Contact details are only visible to matched users", js: true do
+    it "doesn't show users' contact details if not matched with the viewer" do
       visit "/"
+      expect(page).to have_content("Sign up instead")
+
+      fill_in "Username", with: "user"
+      fill_in "Password", with: "user"
+      click_button "Log in"
+      expect(page).to have_content("Welcome to UniConnect!")
+
+      visit "/matches"
+      expect(text).to include("Us Er")
+      expect(page).not_to have_content("University Email: user1@sheffield.ac.uk")
+
+      visit "/logout"
+
       expect(page).to have_content("Sign up instead")
 
       fill_in "Username", with: "user1"
@@ -18,6 +35,24 @@ RSpec.describe "Profile Viewing" do
       expect(page).to have_content("Welcome to UniConnect!")
 
       visit "/matches"
+      expect(page).not_to have_content("University Email: user1@sheffield.ac.uk")
+    end
+
+    it "allows matched users to see each others' contact details", js: true do
+      visit "/"
+      expect(page).to have_content("Sign up instead")
+
+      fill_in "Username", with: "user"
+      fill_in "Password", with: "user"
+      click_button "Log in"
+      expect(page).to have_content("Welcome to UniConnect!")
+
+      visit "/matches"
+      expect(page).to have_content("Us Er")
+      click_button "Apply"
+      fill_in "message", with: "I am interested in your profile because I also enjoy fish and chips."
+      expect(page).to have_content("Submit")
+      click_button "Submit"
 
       visit "/logout"
       visit "/"
@@ -29,13 +64,32 @@ RSpec.describe "Profile Viewing" do
       expect(page).to have_content("Welcome to UniConnect!")
 
       visit "/matches"
-    end
+      expect(page).to have_content("Us Er")
+      click_button "Accept"
+      visit "/matches/matched/mentor"
+      expect(page).to have_content("View detailed profile and contact information")
+      click_link "View detailed profile and contact information"
+      expect(page).to have_content("University Email: user@sheffield.ac.uk")
 
-    it "doesn't show users' contact details if not matched with the viewer" do
+      visit "/logout"
 
+      expect(page).to have_content("Sign up instead")
+      fill_in "Username", with: "user"
+      fill_in "Password", with: "user"
+      click_button "Log in"
+      expect(page).to have_content("Welcome to UniConnect!")
+
+      visit "/matches/mentee"
+      expect(page).to have_content("Us Er")
+      expect(page).to have_content("View detailed profile and contact information")
+      click_link "View detailed profile and contact information"
+      expect(page).to have_content("University Email: user1@shefffield.ac.uk")
+
+      @user = User.where(username: "user").first
+      @user1 = User.where(username: "user1").first
+      Match.where(mentee_id: @user.id, mentor_id: @user1.id).first.cancel
     end
   end
-end
 # 2.2. Mentees need to write a description before submitting a mentor preference.
 # Mentee
   # 1. When submitting preferred mentors, mentees must enter a justification (max 100 words) in a text box.
@@ -54,3 +108,4 @@ end
 # Mentee
   # 1. Mentees who were not paired with a mentor for a week are moved to a waiting list visible to all available mentors.
   # 2. If there are no available mentors in the system, unpaired mentees are immediately moved to the waiting list.
+end

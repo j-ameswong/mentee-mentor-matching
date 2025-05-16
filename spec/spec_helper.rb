@@ -1,3 +1,6 @@
+# Ensures tests only run in db_test and don't affect db
+ENV['RACK_ENV'] = 'test'
+
 # SimpleCov
 require "simplecov"
 SimpleCov.start do
@@ -8,6 +11,7 @@ SimpleCov.start do
   add_filter "/app.rb"
   add_filter "/db/db.rb"
   add_filter "/helpers/helpers.rb"
+  add_filter "/gen_db/*"
 end
 SimpleCov.coverage_dir "#{__dir__}/_coverage"
 
@@ -31,10 +35,6 @@ RSpec.configure do |config|
   config.before(:suite) do
     spec_before
   end
-
-  # config.after(:all) do
-  #   spec_after
-  # end
 end
 
 # This is to be overridden if needed in spec/spec_functions,

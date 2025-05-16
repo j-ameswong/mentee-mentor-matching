@@ -11,6 +11,10 @@ def spec_before
         auth.save
         puts "Unflagged user #{user.username}"
       end
+      match = Match.where(mentee_id: user.id).first || Match.where(mentor_id: user.id).first
+      unless match.nil?
+        match.end
+      end
       puts "Kept user #{user.username}"
     else
       # wipes all other data

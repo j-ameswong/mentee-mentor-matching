@@ -21,11 +21,11 @@ class SupportTicket < Sequel::Model
   end
 
   def self.report?
-    TicketType.first(name: "report").id
+    TicketType.where(name: "report").first.id
   end
 
   def self.withdraw?
-    TicketType.first(name: "withdrawal").id
+    TicketType.where(name: "withdrawal").first.id
   end
 
   def self.report!(params)
@@ -61,8 +61,8 @@ class SupportTicket < Sequel::Model
   end
 
   def self.withdrawing?(match)
-    SupportTicket.first(sent_by: match.mentee_id, target_id: match.mentor_id, type: self.withdraw?, is_resolved: false) ||
-      SupportTicket.first(sent_by: match.mentor_id, target_id: match.mentee_id, type: self.withdraw?, is_resolved: false)
+    SupportTicket.where(sent_by: match[:mentee_id], target_id: match[:mentor_id], is_resolved: false, type: self.withdraw?).first ||
+      SupportTicket.where(sent_by: match[:mentor_id], target_id: match[:mentee_id], type: self.withdraw?, is_resolved: false).first
   end
 
   def resolve

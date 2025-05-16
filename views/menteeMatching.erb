@@ -13,154 +13,150 @@
 <div class="content">
   <% if Date.today.to_datetime < Time.at(GlobalVariable.END_DATE).to_datetime %>
     <% if @currentMentor %>
-        <h2 class="welcome" class="centerer">Your Mentor</h2>
-        <div id="current-mentor-box" class="content-box">
-            <div class="profile-box">
-            <% @mentor = @currentMentor.profile %>
+      <h2 class="welcome centerer">Your Mentor</h2>
+      <div id="current-mentor-box" class="content-box">
+        <div class="profile-box">
+          <% @mentor = @currentMentor.profile %>
+          <div class="basic-info centerer">
+            <div class="profile_pic">
+              <img class="pfp-img" src="<%= "/images/user/#{@currentMentor.id}" %>" alt="Profile Picture" onerror="this.src='/images/blankProfilePicture.webp'">
+            </div>
+            <p class="profile-name"><%= @mentor.first_name %> <%= @mentor.last_name %></p>
+            <!-- Whoever is working on the badges, please place it here in the basic-info div-->
+            <p class="badge-text">
+              <%= @currentMentor.mentor_profile.badges %>
+            </p>
+          </div>
+          <div class="detailed-info">
+            <p class="detailed-info-content">Age: <%= @mentor.age %></p>
+            <p class="detailed-info-content">Nationality: <%= Nationality.where(id: @mentor.nationality_id)[:country_name] %></p>
+            <p class="detailed-info-content">Languages:
+              <% UserLanguage.where(user_id: @currentMentor.id).each do |ulanguage| %>
+                <%= ulanguage.language.language_name %>
+              <% end %>
+            </p>
+          </div>
+          <div class="bio-and-accept">
+            <p class="profile-bio-detailed">Bio: <%= @mentor.bio_brief %></p>
+            <% if SupportTicket.withdrawing?(session[:user].mentee_matches.first) %>
+              <p class="profile-bio-detailed" style="color: red"><%= TicketType.where(id: SupportTicket.withdraw?).first.description %></p>
+            <% end %>
+            <a class="view-profile" href=<%= "/profile?id=#{@mentor.user_id}" %>>View profile and contact
+              information</a>
+            <div class="matching-wrapper" id="<%= @mentor.user_id %>-wrapper">
+              <form method="post" action="/matches/matched/mentee">
+                <input hidden name="target_id" value=<%= @mentor.user_id %>>
+                <% unless SupportTicket.withdrawing?(Match.where(mentee_id: session[:user].id, status: "active").first) %>
+                  <button name="withdrawal" type="submit" class="withdraw-mentor" id="<%= @mentor.user_id %>-withdraw">Withdraw</button>
+                <% end %>
+                <button name="report" type="submit" class="report-mentor" id="<%= @mentor.user_id %>-report">Report</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% elsif session[:user].mentee_profile.available? %>
+      <h2 id="welcome" class="centerer">Mentors</h2>
+      <div id="matching-list" class="content-box">
+        <div id="mentor-applicants">
+          <h2>Available Mentors</h2>
+          <% MentorProfile.all.each do |row| %>
+            <% puts "#{User.where(id: row.user_id).first.username}; #{row.available?} and #{!Match.exists?(session[:user].id, row.user.id)}" %>
+            <% statuses = %w[active inactive pending declined cancelled] %>
+            <% @match_check = Match.where(mentee_id: session[:user].id, mentor_id: row.user.id, status: statuses).first %>
+            <% if row.available? && @match_check.nil? %>
+              <div class="profile-box">
+                <% @mentor = row.user.profile %>
                 <div class="basic-info centerer">
-                    <div class="profile_pic">
-                        <% if @mentor %>
-                            <img class="pfp-img" src="<%= "/images/user/#{@mentor.user_id}" %>" alt="Profile Picture" onerror="this.src='/images/blankProfilePicture.webp'">
-                        <% else %>
-                            <img class="pfp-img" src="/images/blankProfilePicture.webp" alt="Profile Picture">
-                        <% end %>
-                    </div>
-                    <p class="profile-name"><%= @mentor.first_name + ' ' + @mentor.last_name %></p>
-                    <!-- Whoever is working on the badges, please place it here in the basic-info div-->
-                    <p class="badge-text">
-                        <%=@currentMentor.mentor_profile.badges%>
-                    </p>
+                  <div class="profile_pic centerer">
+                    <% if @mentor %>
+                      <img class="pfp-img" src="<%= "/images/user/#{@mentor.user_id}" %>" alt="Profile Picture" onerror="this.src='/images/blankProfilePicture.webp';">
+                    <% end %>
+                  </div>
+                  <p class="profile-name"><%= h @mentor.user.username %></p>
+                  <p class="badge-text">
+                  <p class="badge-text">
+                    <%= row.badges %>
+                  </p>
+                  </p>
                 </div>
                 <div class="detailed-info">
-                    <p class="detailed-info-content">Age: <%= @mentor.age %></p>
-                    <p class="detailed-info-content">Nationality: <%= Nationality.first(id: @mentor.nationality_id).country_name %></p>
-                    <p class="detailed-info-content">Languages: 
-                        <% UserLanguage.where(user_id: @currentMentor.id).each do |ulanguage| %>
-                            <%= ulanguage.language.language_name %>
-                        <% end %>
-                    </p>
+                  <p class="detailed-info-content"><%= "Year " + row.year_of_study.to_s %></p>
+                  <p class="detailed-info-content">Age: <%= @mentor.age %></p>
+                  <p class="detailed-info-content">Languages:
+                    <% UserLanguage.where(user_id: row.user.id).each do |ulanguage| %>
+                      <%= ulanguage.language.language_name unless ulanguage.language.nil? %>
+                    <% end %>
+                  </p>
+                  <p class="detailed-info-content">Expertise:
+                    <% row.user.user_expertises.each do |skill| %>
+                      <% expertise = skill.expertise %>
+                      <% if expertise %>
+                        <span class="expertise-tag"><%= expertise.skill %></span>
+                      <% end %>
+                    <% end %>
+                  </p>
                 </div>
                 <div class="bio-and-accept">
-                    <p class="profile-bio-detailed">Bio: <%= @mentor.bio_brief %></p>
-                    <% if SupportTicket.withdrawing?(session[:user].mentee_matches.first) %>
-                      <p class="profile-bio-detailed" style="color: red"><%= TicketType.first(id: SupportTicket.withdraw?).description %></p>
-                    <% end %>
-                    <a class="view-profile" href=<%="/profile?id=#{@mentor.user_id}"%>>View profile and contact information</a>
-                    <div class="matching-wrapper" id="<%= @mentor.user_id %>-wrapper">
-                      <form method="post" action="/matches/matched/mentee">
-                        <input hidden name="target_id" value=<%= @mentor.user_id %>>
-                        <% unless SupportTicket.withdrawing?(Match.first(mentee_id: session[:user].id, status: "active")) %>
-                          <button name="withdrawal" type="submit" class="withdraw-mentor" id="<%= @mentor.user_id %>-withdraw">Withdraw</button>
-                        <% end %>
-                        <button name="report" type="submit" class="report-mentor" id="<%= @mentor.user_id %>-report">Report</button>
-                      </form>
-                    </div>
+                  <p class="profile-bio-detailed">Bio: <%= h @mentor.bio_brief %></p>
+                  <div class="matching-wrapper" id="<%= row.user.id %>-wrapper">
+                    <button type="button" class="apply-mentor" id="<%= row.user.id %>-application" onclick="openMatching('<%= row.user.id %>')">Apply</button>
+                    <form method="post" action="/matches/mentee/report">
+                      <input hidden name="target_id" value=<%= row.user_id %>>
+                      <button type="submit" class="report-mentor" id="<%= row.user.id %>-report">Report</button>
+                    </form>
+                  </div>
                 </div>
-            </div>
-        </div>
-    <% elsif session[:user].mentee_profile.available? %>
-        <h2 id="welcome" class="centerer">Mentors</h2>
-        <div id="matching-list" class="content-box">
-            <div id="mentor-applicants">
-                <h2>Available Mentors</h2>
-                <% MentorProfile.all.each do |row| %>
-                    <% if row.available? && !Match.exists?(session[:user].id, row.user.id) %>
-                        <div class="profile-box">
-                            <% @mentor = row.user.profile %>
-                            <div class="basic-info centerer">
-                                <div class="profile_pic centerer">
-                                    <% if @mentor.profile_picture %>
-                                        <img class="pfp-img" src="<%= "/images/user/#{@mentor.id}" %>" alt="Profile Picture">
-                                    <% else %>
-                                        <img class="pfp-img" src="/images/blankProfilePicture.webp" alt="Profile Picture">
-                                    <% end %>
-                                </div>
-                                <p class="profile-name"><%= h @mentor.user.username %> </p>
-                                <p class="badge-text">
-                                    <p class="badge-text">
-                                        <%=row.badges%>
-                                    </p>
-                                </p>
-                            </div>
-                            <div class="detailed-info">
-                                <p class="detailed-info-content"><%="Year " + row.year_of_study.to_s %></p>
-                                <p class="detailed-info-content">Age: <%= @mentor.age %></p>
-                                <p class="detailed-info-content">Languages: 
-                                    <% UserLanguage.where(user_id: row.user.id).each do |ulanguage| %>
-                                        <%= ulanguage.language.language_name unless ulanguage.language.nil? %>
-                                    <% end %>
-                                </p>
-                                <p class="detailed-info-content" >Expertise:
-                                    <% row.user.user_expertises.each do |skill| %>
-                                        <% expertise = skill.expertise %>
-                                        <% if expertise %>
-                                            <span class="expertise-tag"><%= expertise.skill %></span>
-                                        <% end %>
-                                    <% end %>
-                                </p>
-                            </div>
-                            <div class="bio-and-accept">
-                                <p class="profile-bio-detailed">Bio: <%= h @mentor.bio_brief %></p>
-                                <div class="matching-wrapper" id="<%= row.user.id %>-wrapper">
-                                    <button type="button" class="apply-mentor" id="<%= row.user.id %>-application" onclick="openMatching('<%= row.user.id %>')">Apply</button>
-                                  <form method="post" action="/matches/mentee/report">
-                                    <input hidden name="target_id" value=<%= row.user_id %>>
-                                    <button type="submit" class="report-mentor" id="<%= row.user.id %>-report">Report</button>
-                                  </form>
-                                </div>
-                            </div>
-                            <div id="matchPopup<%= row.user.id %>" class="match-popup">
-                                <div class="match-popup-content">
-                                    <div class="inline-wrapper">
-                                        <div class="basic-info centerer popup-no-style">
-                                            <div class="profile_pic">
-                                                <% if @mentor.profile_picture%>
-                                                    <img class="pfp-img" src="<%= "/images/user/#{@mentor.id}" %>" alt="Profile Picture">
-                                                <% else %>
-                                                    <img class="pfp-img" src="/images/blankProfilePicture.webp" alt="Profile Picture">
-                                                <% end %>
-                                            </div>
-                                            <p class="profile-name"><%= h @mentor.first_name %> <%= h @mentor.last_name %></p>
-                                            <p class="badge-text">
-                                                <%=@mentor.user.mentor_profile.badges%>
-                                            </p>
-                                        </div>
-                                        <div class="detailed-info popup-no-style popup-info">
-                                            <p class="detailed-info-content"><%="Year " + row.year_of_study.to_s %></p>
-                                            <p class="detailed-info-content">Age: <%= @mentor.age %></p>
-                                            <p class="detailed-info-content">Languages: 
-                                                <% UserLanguage.where(user_id: row.user.id).each do |ulanguage| %>
-                                                    <%= ulanguage.language.language_name unless ulanguage.language.nil? %>
-                                                <% end %>
-                                            </p>
-                                            <p class="detailed-info-content">Expertise:
-                                                <% row.user.user_expertises.each do |skill| %>
-                                                    <% expertise = skill.expertise %>
-                                                    <% if expertise %>
-                                                        <span class="expertise-tag"><%= expertise.skill %></span>
-                                                    <% end %>
-                                                <% end %>
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <p class="profile-bio-detailed popup-bio">Bio: <%= h @mentor.bio_detailed %></p>
-                                    <div class="application-wrapper" id="<%= row.user.id %>-application-wrapper" data-mentor-id=<%= row.user.id %>>
-                                    </div>
-                                </div>
-                            </div>
+                <div id="matchPopup<%= row.user.id %>" class="match-popup">
+                  <div class="match-popup-content">
+                    <div class="inline-wrapper">
+                      <div class="basic-info centerer popup-no-style">
+                        <div class="profile_pic">
+                          <% if @mentor %>
+                            <img class="pfp-img" src="/images/user/<%= @mentor.user_id %>" alt="Profile Picture" onerror="this.src='/images/blankProfilePicture.webp';">
+                          <% end %>
                         </div>
-                    <% end %>
-                <% end %>
-            </div>
+                        <p class="profile-name"><%= h @mentor.user.username %></p>
+                        <p class="badge-text">
+                          <%= @mentor.user.mentor_profile.badges %>
+                        </p>
+                      </div>
+                      <div class="detailed-info popup-no-style popup-info">
+                        <p class="detailed-info-content"><%= "Year " + row.year_of_study.to_s %></p>
+                        <p class="detailed-info-content">Age: <%= @mentor.age %></p>
+                        <p class="detailed-info-content">Languages:
+                          <% UserLanguage.where(user_id: row.user.id).each do |ulanguage| %>
+                            <%= ulanguage.language.language_name unless ulanguage.language.nil? %>
+                          <% end %>
+                        </p>
+                        <p class="detailed-info-content">Expertise:
+                          <% row.user.user_expertises.each do |skill| %>
+                            <% expertise = skill.expertise %>
+                            <% if expertise %>
+                              <span class="expertise-tag"><%= expertise.skill %></span>
+                            <% end %>
+                          <% end %>
+                        </p>
+                      </div>
+                    </div>
+                    <p class="profile-bio-detailed popup-bio">Bio: <%= h @mentor.bio_detailed %></p>
+                    <div class="application-wrapper" id="<%= row.user.id %>-application-wrapper" data-mentor-id=<%= row.user.id %>>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
     <% else %>
       <p style="color: red">Please finish editing your profile first!</p>
     <% end %>
     <script src="/js/menteeMatching.js/?"></script>
     </div>
-  </div>
+    </div>
   <% else %>
     <p style="color: red">Please wait for next semester to begin.</p>
   <% end %>
-</body>
+  </body>
 
 </html>
