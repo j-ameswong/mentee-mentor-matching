@@ -114,14 +114,14 @@ RSpec.describe "Admin oversight" do
 
       fill_in "username", with: "deletable"
       click_button "Update Filters"
-      expect(page).to have_content("deletable")
+      expect(page).to have_content("dtable@sheffield.ac.uk")
 
       message = accept_confirm do
         click_button("Delete")
       end
 
       expect(message).to eq("Are you sure you want to delete this user?")
-      expect(page).not_to have_content("deletable")
+      expect(page).not_to have_content("dtable@sheffield.ac.uk")
     end
   end
 # # 5.3. Admin can manually reassign mentors/mentees in extenuating circumstances.
@@ -151,12 +151,7 @@ RSpec.describe "Admin oversight" do
       expect(page).to have_content("user1@sheffield.ac.uk")
     end
   end
-# # Admin
-#   # 1. Admins set an integer limit for maximum mentees per mentor globally.
-#   # 2. The global limit becomes the default capacity for a new mentor.
-#   # 3. Each mentor can manually set their own capacity locally, which overrides the global limit.
-#   # 4. Admins can update the global maximum mentee limit dynamically.
-#   # 5. The updated global limit does not override local limits, if any.
+
   context "Admins can set a global maximum number of mentees per mentor" do
     it "allows admins to set a global maximum number of mentees per mentor" do
       visit "/"

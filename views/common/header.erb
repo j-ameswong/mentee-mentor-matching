@@ -1,4 +1,8 @@
 <%# for when not logged in (without any options) %>
+<head>
+  <link rel="icon" href="/images/UniConnectLogo.png" type="image/x-icon">
+</head>
+
 <% @user = session[:user]%>
 <% @accountType = "" %>
 <%if !(@user.nil?) %>

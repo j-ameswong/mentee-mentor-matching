@@ -23,17 +23,15 @@
               <% mentee = row.mentee.profile %>
               <div id="applicant-basic-info" class="basic-info centerer">
                 <div class="profile_pic">
-                  <% if mentee.profile_picture %>
-                    <img class="pfp-img" src="<%= "/images/user/#{mentee.profile_picture}" %>" alt="Profile Picture">
-                  <% else %>
-                    <img class="pfp-img" src="/images/blankProfilePicture.webp" alt="Profile Picture">
-                  <% end %>
+                    <img class="pfp-img" src="<%= "/images/user/#{mentee.user_id}" %>" alt="Profile Picture">
                 </div>
                 <p class="profile-name"><%= mentee.first_name %> <%= mentee.last_name %></p>
               </div>
               <div id="applicant-detailed-info" class="detailed-info">
                 <p class="detailed-info-content">Age: <%= mentee.age %></p>
-                <p class="detailed-info-content">Nationality: <%= Nationality.first(id: mentee.nationality_id).country_name unless mentee.nationality_id.nil? %></p>
+                <p class="detailed-info-content">Nationality:
+                  <%= Nationality.where(id: mentee.nationality_id).first.country_name unless mentee.nationality_id.nil? %>
+                </p>
                 <p class="detailed-info-content">Languages:
                     <% UserLanguage.where(user_id: row.mentee_id).each do |ulanguage| %>
                         <%= ulanguage.language.language_name %>
