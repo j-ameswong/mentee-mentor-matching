@@ -52,7 +52,7 @@ RSpec.describe "Profile Viewing" do
       click_button "Apply"
       fill_in "message", with: "I am interested in your profile because I also enjoy fish and chips."
       expect(page).to have_content("Submit")
-      send_keys :enter
+      click_button "Confirm Message"
       click_button "Submit"
 
       visit "/logout"
@@ -64,9 +64,9 @@ RSpec.describe "Profile Viewing" do
       click_button "Log in"
       expect(page).to have_content("Welcome to UniConnect!")
 
-      visit "/matches/matched/mentor"
+      visit "/matches"
       expect(page).to have_content("user")
-      click_button "Accept"
+      click_button "Match"
       visit "/matches/matched/mentor"
       expect(page).to have_content("View detailed profile and contact information")
       click_link "View detailed profile and contact information"
@@ -82,9 +82,8 @@ RSpec.describe "Profile Viewing" do
 
       visit "/matches/mentee"
       expect(page).to have_content("Us Er")
-      expect(text).to include("View detailed profile and contact information")
-      click_link "View detailed profile and contact information"
-      expect(page).to have_content("University Email: user1@shefffield.ac.uk")
+      click_link "View profile and contact information"
+      expect(text).to include("University Email: user1@sheffield.ac.uk")
 
       @user = User.where(username: "user").first
       @user1 = User.where(username: "user1").first

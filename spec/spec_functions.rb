@@ -15,6 +15,7 @@ def spec_before
       unless match.nil?
         match.end
       end
+      user.authentication.update(:first_time_login => false)
       puts "Kept user #{user.username}"
     else
       # wipes all other data
