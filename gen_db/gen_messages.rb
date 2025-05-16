@@ -8,13 +8,13 @@ messages = [
   { message_type: 'match_success', message_description: 'You have successfully been matched' },
   { message_type: 'match_completed', message_description: 'Your match has been completed' },
   { message_type: 'match_reassigned', message_description: 'Your match has been reassigned due to extenuating circumstances' },
-  { message_type: 'match_pending', message_description: 'You have no matches yet' },
+  { message_type: 'match_pending', message_description: 'You have a new pending match request' },
   { message_type: 'match_declined', message_description: 'You have been declined by the mentor you have applied for' },
   { message_type: 'match_cancelled', message_description: 'Your match with your mentor has been cancelled' },
   { message_type: 'badge_applied', message_description: 'You have received the Experienced Mentor badge' },
   { message_type: 'waitlisted', message_description: 'You have been waitlisted for a potential match' },
   { message_type: 'match_pending', message_description: 'You have received a new mentee application' },
-  { message_type: 'report', message_description: 'Your account has been reported for misconduct' }
+  { message_type: 'report', message_description: 'Your account has been reported for misconduct' },
 ]
 
 messages.each do |msg|
