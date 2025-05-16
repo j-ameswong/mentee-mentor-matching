@@ -94,7 +94,7 @@ get "/profile" do
   @viewed_user = User.first(id: params[:id]) unless params[:id].nil? || Match.exists?(session[:user].id, params[:id])
   if @viewed_user.nil?
     @viewed_user = session[:user]
-    redirect "/profile?id=#{@viewed_user&.id}"
+    redirect "/profile?id=#{@viewed_user.id}"
   end
 
   erb :profile
