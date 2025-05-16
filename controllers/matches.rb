@@ -64,17 +64,20 @@ post "/matches/mentee" do
   redirect "/matches/mentor" if session[:user].mentor?
 
   unless Match.exists?(session[:user].id, params[:mentor_id])
-    Match.generate!(params.merge(:mentee_id => session[:user].id))
-    puts "Match application created by #{session[:user].id} to #{params[:mentor_id]}"
+    if Match.generate!(params.merge(:mentee_id => session[:user].id))
+      puts "Match application created by #{session[:user].id} to #{params[:mentor_id]}"
 
-    send_match_notification(
-      session[:user].username,
-      params[:mentor_id],
-      'match_pending'
-    )
+      send_match_notification(
+        session[:user].username,
+        params[:mentor_id],
+        'match_pending'
+      )
+      redirect "/matches/mentee"
+    else
+      @error = "Match failed or word count exceeded 100, please try again"
+      erb :menteeMatching
+    end
   end
-
-  redirect "/matches/mentee"
 end
 
 post "/matches/mentee/report" do

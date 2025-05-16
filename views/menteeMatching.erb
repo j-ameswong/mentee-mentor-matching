@@ -60,6 +60,7 @@
       <div id="matching-list" class="content-box">
         <div id="mentor-applicants">
           <h2>Available Mentors</h2>
+          <p style="color: red"><%= @error if @error %></p>
           <% MentorProfile.all.each do |row| %>
             <% puts "#{User.where(id: row.user_id).first.username}; #{row.available?} and #{!Match.exists?(session[:user].id, row.user.id)}" %>
             <% statuses = %w[active inactive pending declined cancelled] %>

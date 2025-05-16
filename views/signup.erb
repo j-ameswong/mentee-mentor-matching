@@ -98,7 +98,7 @@
               <br>
 
               <div class="row centerer">
-                <input id="date_of_birth" name="date_of_birth" type="date" value="<%= @params[:date_of_birth] if @params %>" required/>
+                <input id="date_of_birth" max=<%= Date.today - 11.years %> name="date_of_birth" type="date" value="<%= @params[:date_of_birth] if @params %>" required/>
                 <% if @user && @user.errors[:date_of_birth] %>
                   <% @user.errors[:date_of_birth].each do |error| %>
                     <p class="error"><%= "DoB" + error.tr(':', '') %></p>
