@@ -22,14 +22,14 @@ post "/profile/edit" do
     # take the file extension from the uploaded file
     file_ext = params[:profile_pic][:filename].split('.').last
     # create path to save the file
-    path = "public/images/user/#{@edited_user.id}.#{file_ext}"
+    path = "public/images/user/#{@edited_user.id}"
     File.open(path, "wb") do |f|
       # write the file to the path
       f.write(params[:profile_pic][:tempfile].read)
       puts "File saved to #{path}"
       # update the profile picture in the database
       @profile = Profile.where(:user_id => @edited_user.id).first
-      @profile.profile_picture = "#{@edited_user.id}.#{file_ext}"
+      @profile.update(profile_picture: "#{@edited_user.id}")
       @profile.save
       puts @profile.inspect
     end
@@ -57,7 +57,7 @@ post "/profile/edit" do
     @edited_user.errors.add(:email, inv) unless valid_email?(params[:email])
     @edited_user.errors.add(:bio_brief, inv) if html_unsafe?(params[:bio_brief])
     @edited_user.errors.add(:bio_detailed, inv) if html_unsafe?(params[:bio_detailed])
-    @err_str = @edited_user.errors.inspect.tr(':{"[]}', '')
+    @err_str = @edited_user.errors.inspect.tr('{"[]}', '')
     @err_str = @err_str.tr('_', ' ')
     puts " #{@err_str}"
   end
@@ -73,7 +73,7 @@ post "/profile/edit" do
     @edited_user.profile.save
     @edited_user.mentor_profile.save if @edited_user.mentor?
     @edited_user.mentee_profile.save if @edited_user.mentee?
-    puts params
+    # puts params
 
     redirect "/profile?id=#{@edited_user.id}"
   end

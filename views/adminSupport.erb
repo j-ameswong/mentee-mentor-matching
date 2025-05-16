@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
-  <title>Matches</title>
+  <title>Support</title>
   <meta name="author" content="Team 17">
   <link rel="stylesheet" href="/css/styles.css"/>
 </head>
@@ -29,29 +29,50 @@
             <% if @filter == "all" || ticket.type.to_s == @filter %>
                 <div class="centerer content-box approvals">
                     <div class="row centerer">
-                        <p id="ticket-sender">Sent by: <%= ticket.sent_by_user.username %> </p>
+                      <p id="ticket-sender"><%= ticket.ticket_type.desc_brief %></p>
+                    </div>
+                    <div class="row centerer">
+                      <p><%= ticket.ticket_type.description %></p>
                     </div>
                     <% if ticket.type == 1 %> <!-- Withdrawal -->
                         <div class="row centerer">
-                            <p id="ticket-receiver">Target: <%= ticket.target_id_user.username %> </p>
+                            <p id="ticket-receiver">Sent by: <a href=<%= "/profile?id=#{ticket.sent_by_user.id}" %>><%= ticket.sent_by_user.username %></a></p>
+                        </div>
+                        <div class="row centerer">
+                          <p id="ticket-receiver">Target: <a href=<%= "/profile?id=#{ticket.target_id_user.id}" %>><%= ticket.target_id_user.username %></a></p>
                         </div>
                         <div class="row centerer">
                             <p id="ticket-details">Reason: <%= ticket.details %> </p>
                         </div>
                         <div class="approval-decision centerer">
-                            <a class="approval-btn" href="<%= %>">Approve</a>
-                            <a class="deny-btn" href="<%= %>">Deny</a>
+                          <form action="/support/decision" method="post" id="decision-form">
+                            <input type="hidden" name="ticket_id" value="<%= ticket.id %>">
+                            <div class="row centerer">
+                              <button name="approve" type="submit" class="approval-btn column">Approve</button>
+                              <button name="deny" class="deny-btn column">Deny</button>
+                            </div>
+                          </form>
                         </div>
                     <% elsif ticket.type == 2 %> <!-- Report -->
                         <div class="row centerer">
-                            <p id="ticket-receiver">Target: <%= ticket.target_id_user.username %> </p>
+                          <p id="ticket-receiver">Sent by: <a href=<%= "/profile?id=#{ticket.sent_by_user.id}" %>><%= ticket.sent_by_user.username %></a></p>
+                        </div>
+                        <div class="row centerer">
+                          <p id="ticket-receiver">Target: <a href=<%= "/profile?id=#{ticket.target_id_user.id}" %>><%= ticket.target_id_user.username %></a></p>
                         </div>
                         <div class="row centerer">
                             <p id="ticket-details">Reason: <%= ticket.details %> </p>
                         </div>
                         <div class="approval-decision centerer">
-                            <a class="approval-btn" href="<%= %>">Approve</a>
-                            <a class="deny-btn" href="<%= %>">Deny</a>
+                          <form action="/support/decision" method="post" id="decision-form">
+                            <input type="hidden" name="ticket_id" value="<%= ticket.id %>">
+                            <% if FlaggedAccount.first(user_id: ticket.target_id) %>
+                              <button style="color: red" name="flag" type="submit" class="approval-btn">Flagged</button>
+                            <% else %>
+                              <button name="flag" type="submit" class="approval-btn">Flag</button>
+                            <% end %>
+                            <button name="dismiss" type="submit" class="approval-btn">Dismiss</button>
+                          </form>
                         </div>
                     <% elsif ticket.type == 4 %> <!-- Account deletion -->
                         <div class="row centerer">

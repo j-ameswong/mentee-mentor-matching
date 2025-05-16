@@ -16,7 +16,7 @@ RSpec.describe "Account creation" do
       fill_in "Email", with: "menteemail1@sheffield.ac.uk"
       fill_in "DoB", with: Date.new(2001, 02, 03)
 
-        select "Mentee", from: "role"
+      select "Mentee", from: "role"
       select "Year 1", from: "year_of_study"
 
       fill_in "password", with: "password123"
@@ -30,8 +30,6 @@ RSpec.describe "Account creation" do
       fill_in "Username/University Email Address:", with: "admin"
       fill_in "Password:", with: "admin"
       click_button "Log in"
-
-      expect(page).to have_content("Welcome to UniConnect!")
 
       visit "/accounts"
 

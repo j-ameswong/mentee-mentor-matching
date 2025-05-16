@@ -857,11 +857,16 @@ textarea {
     grid-column: 5;
     position: sticky;
     align-self: center;
-    top: 0;
-    z-index: 1000;
+
     display: flex;
-    justify-content: flex-end;
+    flex-direction: column;
+    justify-content: center;
     align-items: center;
+
+    right: 5vw;
+    top: 0vw;
+
+    width: 8vw;
     height: 10vh;
 }
 
@@ -916,6 +921,10 @@ textarea {
     margin-left: 10px;
     padding: 8px 16px;
     cursor: pointer;
+}
+
+.submit {
+    width: 100%;
 }
 
 .close-modal {
