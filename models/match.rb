@@ -43,7 +43,24 @@ class Match < Sequel::Model
     status == "declined"
   end
 
-  def self.exists?(mentee_id, mentor_id)
+  def self.exists?(id_1, id_2)
+    if User.first(id: id_1)&.mentee?
+      mentee_id = id_1
+      if User.first(id: id_2)&.mentee?
+        return false
+      elsif User.first(id: id_2)&.mentor?
+        mentor_id = id_2
+      end
+    elsif User.first(id: id_1)&.mentor?
+      mentor_id = id_1
+      if User.first(id: id_2)&.mentor?
+        return false
+      elsif User.first(id: id_2)&.mentee?
+        mentee_id = id_2
+      end
+    end
+    return false if mentee_id.nil? || mentor_id.nil?
+
     Match.first(mentee_id: mentee_id, mentor_id: mentor_id) ? true : false
   end
 
@@ -104,11 +121,11 @@ class Match < Sequel::Model
   end
 
   def check_end
-    puts "Checking end date..."
-    puts self.end_date
-    puts Date.today.to_datetime
+    #puts "Checking end date..."
+    #puts self.end_date
+    #puts Date.today.to_datetime
     if Date.today.to_datetime.to_i > self.end_date.to_datetime.to_i
-      puts "THE END TIMES HAVE ARRIVED"
+      #puts "THE END TIMES HAVE ARRIVED"
       return self.end
     end
     false
