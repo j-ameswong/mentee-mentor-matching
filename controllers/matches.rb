@@ -225,7 +225,7 @@ post "/matches/mentor/set-max" do
   redirect "/login" unless session[:logged_in]
   redirect "/matches" unless session[:user].mentor? || session[:user].admin?
 
-  session[:user].mentor_profile.update(:max_matches => params[:mentor_max_mentees])
+  session[:user].mentor_profile.update(:max_matches => params[:mentor_max_mentees], :availability => true)
   session[:user].mentor_profile.save
 
   #puts session[:user].mentor_profile.inspect
