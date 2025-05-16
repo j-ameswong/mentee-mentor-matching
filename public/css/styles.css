@@ -956,3 +956,11 @@ textarea {
 .login-error-msg {
     display: inline-block;
 }
+
+#edit_profile {
+    align-items: center;
+}
+
+#change-pass-submit {
+    margin-top: 1%;
+}
