@@ -1,10 +1,10 @@
+<% @user = session[:user] %>
 <% unless @user.nil? %>
   <% @username = session[:user].username %>
   <% @unread = false %>
-  <% UserMessage.where(received_by: @username).each do |message| %>
-    <% unless message.read? %>
+  <% UserMessage.where(received_by: session[:user].id)&.each do |msg| %>
+    <% if msg.read_status == false %>
       <% @unread = true %>
-      <% break %>
     <% end %>
   <% end %>
 
