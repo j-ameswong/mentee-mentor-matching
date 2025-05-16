@@ -125,9 +125,13 @@ class Match < Sequel::Model
     # puts "end date--: #{self.end_date}"
     # puts User.where(id: self.mentor_id).first.username
     #puts Date.today.to_datetime
-    if Date.today.to_datetime.to_i > self.end_date.to_datetime.to_i
-      #puts "THE END TIMES HAVE ARRIVED"
-      return self.end
+    if self.end_date.nil?
+      self.end_date = Time.at(GlobalVariable.END_DATE).to_datetime
+    else
+      if Date.today.to_datetime.to_i > self.end_date.to_datetime.to_i
+        #puts "THE END TIMES HAVE ARRIVED"
+        return self.end
+      end
     end
     false
   end
@@ -140,10 +144,12 @@ class Match < Sequel::Model
       self.end_date = Date.today
       self.status = "cancelled"
       save
-      self.mentee.mentee_profile.update(availability: true)
-      self.mentee.mentee_profile.save
-      self.mentor.mentor_profile.update(availability: true)
-      self.mentor.mentor_profile.save
+      unless self[:mentee_profile].nil?
+        self.mentee.mentee_profile.update(availability: true)
+        self.mentee.mentee_profile.save
+        self.mentor.mentor_profile.update(availability: true)
+        self.mentor.mentor_profile.save
+      end
 
       begin
         UserMessage.send_message(

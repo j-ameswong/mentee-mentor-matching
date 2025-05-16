@@ -32,7 +32,7 @@ RSpec.configure do |config|
   config.include Rack::Test::Methods
 
   # before each suite of tests, run the spec_before function to clear the database
-  config.before(:suite) do
+  config.before(:all) do
     spec_before
   end
 end

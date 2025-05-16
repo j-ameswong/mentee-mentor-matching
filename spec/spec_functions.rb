@@ -8,6 +8,7 @@ def spec_before
       unless auth.nil?
         auth[:flagged] = false
         auth[:flag_reasoning] = nil
+        auth.update(:first_time_login => false)
         auth.save
         puts "Unflagged user #{user.username}"
       end
@@ -15,7 +16,6 @@ def spec_before
       unless match.nil?
         match.end
       end
-      user.authentication.update(:first_time_login => false)
       puts "Kept user #{user.username}"
     else
       # wipes all other data
