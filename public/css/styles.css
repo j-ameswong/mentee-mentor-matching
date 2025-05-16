@@ -506,6 +506,7 @@ footer {
     outline-style: solid;
     outline-width: medium;
     outline-color: var(--purple);
+    filter: blur(0px);
 }
 
 #max-mentees-button {
@@ -529,6 +530,7 @@ footer {
     max-height: 5vw;
     height: 5vw;
     border-radius: 50%;
+    filter: blur(5px);
 }
 
 #statements {

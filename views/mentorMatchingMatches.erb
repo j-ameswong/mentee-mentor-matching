@@ -34,7 +34,7 @@
                             <% mentee = row.mentee.profile %>
                             <div class="basic-info centerer">
                                 <div class="profile_pic">
-                                  <img class="pfp-img" src="<%= "/images/user/#{mentee.user_id}" %>" alt="Profile Picture" onerror="this.src='/images/blankProfilePicture.webp'">
+                                  <img class="profile_pic" src="<%= "/images/user/#{mentee.user_id}" %>" alt="Profile Picture" onerror="this.src='/images/blankProfilePicture.webp'">
                                 </div>
                                 <p class="profile-name"><%= mentee.first_name %> <%= mentee.last_name %></p>
                             </div>
