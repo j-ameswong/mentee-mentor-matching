@@ -172,7 +172,7 @@ header {
 }
 
 h1 {
-    color: white;
+    color: hsl(0, 0%, 100%);
     size: 3rem;
 }
 
@@ -643,7 +643,7 @@ body {
 }
 
 h4 {
-    color: darkred;
+    color: #8b0000;
     font-size: 1em;
     margin: 0;
 }
@@ -660,7 +660,7 @@ h4 {
     padding: 1%;
     border-top-left-radius: 10px;
     border-bottom-left-radius: 10px;
-    background-color: rgb(205, 205, 205);
+    background-color: #cdcdcd;
     align-self: auto;
 }
 
@@ -831,7 +831,7 @@ textarea {
 }
 
 .error {
-    color: darkred;
+    color: #8b0000;
     font-size: 1em;
     margin-top: 1%;
 }
@@ -928,7 +928,7 @@ textarea {
 }
 
 .close-modal {
-    background-color: #ccc;
+    background-color: #888888;
     border: none;
     border-radius: 3px;
 }
