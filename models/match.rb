@@ -71,7 +71,7 @@ class Match < Sequel::Model
     match.application_message = params[:message]
     return false if params[:message].split(" ").length > 100
 
-    puts match.inspect
+    #puts match.inspect
     match.save
     true
   end
