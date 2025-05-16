@@ -525,7 +525,11 @@ footer {
     font-weight: bold;
 }
 
+
+
 .pfp-img {
+    min-width: 5vw;
+    min-height: 5vw;
     max-width: 5vw;
     max-height: 5vw;
     height: 5vw;
