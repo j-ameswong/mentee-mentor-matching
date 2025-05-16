@@ -17,9 +17,10 @@
         <label for="account-filter" id="filter-label">Filter by:</label>
         <select name="filter-accounts" id="account-filter">
             <option <%= "selected" if @filter == "All" %> value="all">All</option>
-            <option <%= "selected" if @filter == "1" %> value="1">Withdrawals</option>
-            <option <%= "selected" if @filter == "2" %> value="2">Report</option>
-            <option <%= "selected" if @filter == "4" %> value="4">Account Deletion</option>
+            <option <%= "selected" if @filter == "Withdrawal" %> value="1">Withdrawals</option>
+            <option <%= "selected" if @filter == "Report" %> value="2">Report</option>
+            <option <%= "selected" if @filter == "Account Deletion" %> value="4">Account Deletion</option>
+            <option <%= "selected" if @filter == "Account Deletion" %> value="5">Other</option>
         </select>
         </form>
     </div>
@@ -80,6 +81,10 @@
                         <div class="approval-decision centerer">
                             <a class="approval-btn" href="<%= %>">Approve</a>
                             <a class="deny-btn" href="<%= %>">Deny</a>
+                        </div>
+                    <% else %>
+                        <div class="row centerer">
+                            <p id="ticket-details">Details: <%= ticket.details %> </p>
                         </div>
                     <% end %>
                 </div>
