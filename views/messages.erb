@@ -52,12 +52,12 @@
                 <tbody>
                     <% @messages.each do |user_message| %>
                     <% puts user_message %>
-                    <tr class="<%= user_message.read? ? 'read-message' : 'unread-message' %>">
+                    <tr class="<%= user_message.read_status ? 'read-message' : 'unread-message' %>">
                         <td><%= user_message.sent_by %></td>
                         <td><%= user_message.message.message_description %></td>
                         <td><%= user_message.created_at.strftime('%Y-%m-%d %H:%M') %></td>
                         <td>
-                        <% if user_message.read? %>
+                        <% if !user_message.read_status %>
                             <form action="/unread/<%= user_message.id %>" method="post" style="display: inline;">
                             <input type="submit" value="Unread" class="unread-button">
                             </form>

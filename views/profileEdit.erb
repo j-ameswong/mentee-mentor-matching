@@ -146,7 +146,7 @@
             <label for="description">Describe yourself briefly:</label>
           </div>
           <div class="row">
-            <textarea id="description" name="bio_brief" rows="5" cols="50"><%= @edited_user.profile.bio_brief %></textarea>
+            <textarea required id="description" name="bio_brief" rows="5" cols="50"><%= @edited_user.profile.bio_brief %></textarea>
           </div>
         </div>
         <div id="bio_detailed" class="info row">
@@ -154,7 +154,7 @@
             <label for="description2">Describe yourself in detail:</label>
           </div>
           <div class="row">
-            <textarea id="description2" name="bio_detailed" rows="20" cols="50"><%= @edited_user.profile.bio_detailed %></textarea>
+            <textarea required id="description2" name="bio_detailed" rows="20" cols="50"><%= @edited_user.profile.bio_detailed %></textarea>
           </div>
         </div>
 

@@ -8,7 +8,7 @@ class UserMessage < Sequel::Model
   many_to_one :message
   
   def read?
-    self[:read_status] == 1
+    self.read_status == 1
   end
   
   def mark_as_read!
