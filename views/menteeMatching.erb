@@ -19,7 +19,7 @@
           <% @mentor = @currentMentor.profile %>
           <div class="basic-info centerer">
             <div class="profile_pic">
-              <img class="pfp-img" src="<%= "/images/user/#{@currentMentor.id}" %>" alt="Profile Picture" onerror="this.src='/images/blankProfilePicture.webp'">
+              <img class="profile_pic" src="<%= "/images/user/#{@currentMentor.id}" %>" alt="Profile Picture" onerror="this.src='/images/blankProfilePicture.webp'">
             </div>
             <p class="profile-name"><%= @mentor.first_name %> <%= @mentor.last_name %></p>
             <!-- Whoever is working on the badges, please place it here in the basic-info div-->

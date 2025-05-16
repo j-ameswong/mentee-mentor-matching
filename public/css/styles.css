@@ -40,6 +40,7 @@ header {
     margin: 0%;
 
     padding-left: 2vw;
+    z-index: 50;
 }
 
 #logo {
@@ -107,6 +108,8 @@ header {
 
     grid-row: 1 / 2;
     grid-column: 6 / 7;
+
+    z-index: 60;
 
     width: 8vw;
     height: 10vh;
@@ -500,12 +503,15 @@ footer {
     text-align: left;
     justify-content: center;
 
-    max-width: 5vw;
-    max-height: 5vw;
+    min-width: 4.5vw;
+    min-height: 4.5vw;
+    max-width: 4.5vw;
+    max-height: 4.5vw;
     border-radius: 50%;
     outline-style: solid;
     outline-width: medium;
     outline-color: var(--purple);
+    filter: blur(0px);
 }
 
 #max-mentees-button {
@@ -524,11 +530,16 @@ footer {
     font-weight: bold;
 }
 
+
+
 .pfp-img {
+    min-width: 5vw;
+    min-height: 5vw;
     max-width: 5vw;
     max-height: 5vw;
     height: 5vw;
     border-radius: 50%;
+    filter: blur(5px);
 }
 
 #statements {
@@ -862,6 +873,8 @@ textarea {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+
+    z-index: 70;
 
     right: 5vw;
     top: 0vw;

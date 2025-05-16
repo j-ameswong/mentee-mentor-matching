@@ -71,6 +71,7 @@ get "/support/admin" do
   redirect "/login" unless session[:logged_in]
   redirect "/support" if (session[:user].mentor? || session[:user].mentee?)
 
+  @user = session[:user].id
   @filter = !params[:filter].nil? ? params[:filter] : "all"
   @tickets = SupportTicket.where(is_resolved: false)
   erb :adminSupport

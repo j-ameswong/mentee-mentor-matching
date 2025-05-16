@@ -23,7 +23,7 @@
               <% mentee = row.mentee.profile %>
               <div id="applicant-basic-info" class="basic-info centerer">
                 <div class="profile_pic">
-                    <img class="pfp-img" src="<%= "/images/user/#{mentee.user_id}" %>" alt="Profile Picture">
+                    <img class="pfp-img" src="<%= "/images/user/#{mentee.user_id}" %>" alt="Profile Picture", onerror="this.src='/images/blankProfilePicture.webp'">
                 </div>
                 <p class="profile-name"><%= mentee.user.username %></p>
               </div>
@@ -63,10 +63,8 @@
                       <% mentee = row.user.profile %>
                       <div class="basic-info centerer">
                           <div class="profile_pic">
-                              <% if mentee.profile_picture %>
-                                  <img class="pfp-img" src="<%= "/images/user/#{mentee.user_id}" %>" alt="Profile Picture">
-                              <% else %>
-                                  <img class="pfp-img" src="/images/blankProfilePicture.webp" alt="Profile Picture">
+                              <% if mentee %>
+                                  <img class="pfp-img" src="<%= "/images/user/#{mentee.user_id}" %>" alt="Profile Picture", onerror="this.src='/images/blankProfilePicture.webp' ">
                               <% end %>
                           </div>
                           <p class="profile-name"><%= mentee.user.username %></p>
