@@ -501,6 +501,8 @@ footer {
     text-align: left;
     justify-content: center;
 
+    min-width: 5vw;
+    min-height: 5vw;
     max-width: 5vw;
     max-height: 5vw;
     border-radius: 50%;
