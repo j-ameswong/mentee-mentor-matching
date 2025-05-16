@@ -20,6 +20,14 @@
         mentorInfo.value = mentorId;
         form.appendChild(mentorInfo);
 
+        const confirmButton = document.createElement('button');
+        confirmButton.type = 'button';
+        confirmButton.value = 'Confirm Message';
+        confirmButton.classList = 'mentee-confirm';
+        confirmButton.textContent = 'Confirm Message';
+        confirmButton.disabled = false;
+        form.appendChild(confirmButton);
+
         const submitButton = document.createElement('button');
         submitButton.type = 'submit';
         submitButton.value = 'Submit';
