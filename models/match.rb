@@ -44,24 +44,22 @@ class Match < Sequel::Model
   end
 
   def self.exists?(id_1, id_2)
-    if User.first(id: id_1)&.mentee?
-      mentee_id = id_1
-      if User.first(id: id_2)&.mentee?
-        return false
-      elsif User.first(id: id_2)&.mentor?
-        mentor_id = id_2
-      end
-    elsif User.first(id: id_1)&.mentor?
-      mentor_id = id_1
-      if User.first(id: id_2)&.mentor?
-        return false
-      elsif User.first(id: id_2)&.mentee?
-        mentee_id = id_2
-      end
-    end
-    return false if mentee_id.nil? || mentor_id.nil?
+    user1 = User.first(id: id_1)
+    user2 = User.first(id: id_2)
 
-    Match.first(mentee_id: mentee_id, mentor_id: mentor_id) ? true : false
+    # Return false if either user doesn't exist
+    return false unless user1 && user2
+
+    # Determine roles
+    if user1.mentee? && user2.mentor?
+      mentee_id, mentor_id = id_1, id_2
+    elsif user1.mentor? && user2.mentee?
+      mentor_id, mentee_id = id_1, id_2
+    else
+      return false # Either same roles or invalid roles
+    end
+
+    Match.first(mentee_id: mentee_id, mentor_id: mentor_id).present?
   end
 
   def self.generate!(params)

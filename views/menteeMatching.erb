@@ -19,8 +19,8 @@
             <% @mentor = @currentMentor.profile %>
                 <div class="basic-info centerer">
                     <div class="profile_pic">
-                        <% if @mentor.profile_picture %>
-                            <img class="pfp-img" src="<%= "/images/user/#{@mentor.id}" %>" alt="Profile Picture" onerror="this.src='/images/blankProfilePicture.webp'">
+                        <% if @mentor %>
+                            <img class="pfp-img" src="<%= "/images/user/#{@mentor.user_id}" %>" alt="Profile Picture" onerror="this.src='/images/blankProfilePicture.webp'">
                         <% else %>
                             <img class="pfp-img" src="/images/blankProfilePicture.webp" alt="Profile Picture">
                         <% end %>
