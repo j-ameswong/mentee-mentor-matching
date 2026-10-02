@@ -1,6 +1,10 @@
+require_relative 'scripts/legacy_safety'
+LegacySafety.verify!
+
 # Gems
 require "require_all"
 require "sinatra"
+set :bind, '127.0.0.1'
 require "./app"
 
 # Set up public folder

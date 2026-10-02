@@ -1,151 +1,78 @@
-# UniConnect - A Mentee-Mentor Matching Platform
+# UniConnect
 
-A full-stack web application that facilitates mentor-mentee matching at the University of Sheffield. Built as a team project for COM1001 (Software Development) in the second semester of first year (2024-25).
+**Student mentor–mentee matching demo**
 
-Ruby/Sinatra | SQLite | RSpec/Capybara
+An interactive portfolio of a University of Sheffield mentor–mentee matching project, originally built by Team 17 for COM1001 in 2024–25. The demo covers mentoring requests, mentor acceptance, account approvals and support, with separate views for mentees, mentors and administrators.
 
-## Overview
+The original Ruby/Sinatra/SQLite application remains in this repository. The public experience is a new React/TypeScript application with fictional, browser-local data. It requires no accounts, database, server functions, or homelab connection.
 
-The platform connects first-year students (mentees) with experienced students (mentors) through a structured matching workflow. Administrators oversee the process, approving accounts, moderating behaviour, and managing system-wide settings. The application handles the full lifecycle of a mentoring relationship: from registration and profile creation, through matching and active mentorship, to completion or withdrawal.
+![The UniConnect portfolio overview](docs/screenshots/desktop.png)
 
-## My Contributions
+[View the mobile layout](docs/screenshots/mobile.png).
 
-Lead developer and project architect, responsible for **250 of 471 total commits (53%)**, nearly three times the next highest contributor. My work spanned every layer of the application:
+## Run the portfolio
 
-### Project Foundation & Database Architecture
-- Scaffolded the initial project structure: first controllers, views, stylesheets, and landing page
-- Designed and implemented the **complete database schema** (16 tables, fully relational) in SQLite
-- Built the database generation system with CSV seed data (2,000+ entries) for testing
-- Led a major **database migration/refactoring** from a flat structure to a normalised relational schema using Sequel migrations
-- Created setup and initialisation scripts (`setup.sh`, `setup_test.sh`) for both production and test environments
+Use **Node.js 24 LTS** (`nvm use` if you use nvm).
 
-### Authentication & User Management
-- Built the **full authentication system**: login, signup, logout, session management
-- Implemented AES-128-CBC password encryption with PBKDF2-HMAC-SHA1 key derivation (20,000 iterations)
-- Created the admin signup and **account approval pipeline** (admin registers user -> approves -> user completes first-time login)
-- Implemented role-based access control across three user tiers (Admin, Mentor, Mentee)
-- Built the Terms & Conditions acceptance flow during registration
-
-### Profile System
-- Developed the **complete profile viewing and editing system** with fields for biography, nationality, languages, expertise, year of study, and profile pictures
-- Implemented file upload handling for profile pictures (PNG/JPG, max 5MB)
-- Added privacy features: **blurred profile pictures** and **hidden real names** before a match is established
-- Enforced access control so unmatched users cannot view each other's full profiles
-
-### Mentor-Mentee Matching Engine
-- Built the **end-to-end matching system**: mentees browse and apply to mentors, mentors review and accept/decline applications
-- Implemented match capacity enforcement (configurable max mentees per mentor)
-- Created a **waitlist mechanism** for mentees when no mentors are available (7+ day threshold)
-- Built match lifecycle management: pending -> active -> completed/cancelled/declined
-- Added automatic match completion based on the semester end date
-- Ensured availability status updates correctly when matches are formed or ended
-
-### Support, Reporting & Moderation
-- Created the **support ticketing system** with two ticket types: user reports and match withdrawal requests
-- Built the admin support dashboard for reviewing and resolving tickets
-- Implemented the **account flagging system** with flag reasoning, visual indicators, and unflag functionality
-- Developed the match withdrawal workflow with duplicate prevention and partner notification
-- Handled cascading user deletion: when an account is deleted, matched partners receive notification messages and orphaned data is cleaned up
-
-### Data Models & ORM Layer
-- Authored or was the primary contributor to **all 16 model classes**: User, Authentication, Profile, MentorProfile, MenteeProfile, Match, SupportTicket, TicketType, FlaggedAccount, GlobalVariable, UserExpertise, UserLanguage, Nationality, UserMessage, Expertise, Language
-- Implemented model validations, relational associations, and business logic methods throughout
-
-### Frontend & UX
-- Built and maintained the main stylesheet (`styles.css`)
-- Created JavaScript for dynamic UI: language/expertise tag selection, in-page application forms, matching filters
-- Implemented notification indicators for unread messages
-- Designed the mentee matching page layout with mentor cards and application flow
-
-### Files Primarily Authored
-
-Nearly every file in the `controllers/`, `models/`, and `views/` directories, plus all database infrastructure:
-
-| Layer | Files |
-|---|---|
-| **Controllers** | `login.rb`, `signup.rb`, `signupAdmin.rb`, `account.rb`, `profile.rb`, `matches.rb`, `approvals.rb`, `support.rb`, `flagging.rb`, `logout.rb` |
-| **Models** | `user.rb`, `authentication.rb`, `profile.rb`, `match.rb`, `support_ticket.rb`, `flagged_account.rb`, `global_variable.rb`, `user_expertise.rb`, `user_language.rb`, `nationality.rb`, `user_message.rb`, `ticket_type.rb` |
-| **Views** | `login.erb`, `signup.erb`, `profile.erb`, `profileEdit.erb`, `menteeMatching.erb`, `mentorMatching.erb`, `mentorMatchingMatches.erb`, `support.erb`, `adminSupport.erb`, `approvals.erb`, `account.erb`, `changepassword.erb`, `terms.erb`, `index.erb`, `header.erb` |
-| **Database** | `schema.sql`, `db.rb`, all migration files, `gen_db/` generation scripts, `setup.sh`, `setup_test.sh` |
-
-## Tech Stack
-
-| Component | Technology |
-|---|---|
-| Framework | Ruby with Sinatra |
-| Database | SQLite 3 via Sequel ORM |
-| Server | Puma |
-| Templating | ERB (Embedded Ruby) |
-| Testing | RSpec, Capybara, SimpleCov |
-| Encryption | OpenSSL (AES-128-CBC) |
-
-## Features
-
-- **Three-tier role system** — Admins, Mentors, and Mentees with role-specific dashboards
-- **Account approval workflow** — Admin review before users can access the platform
-- **Rich user profiles** — Bio, nationality, languages, expertise areas, profile pictures
-- **Matching engine** — Mentees apply to mentors; mentors accept/decline; configurable capacity limits
-- **Waitlist system** — Mentees are waitlisted when no mentors are available
-- **Messaging** — System-generated notifications for match events (accepted, declined, completed, cancelled)
-- **Support tickets** — User reporting and match withdrawal requests with admin resolution
-- **Account flagging** — Admin moderation tools with flag history and reasoning
-- **Privacy controls** — Profile information hidden until a match is established
-- **Semester end date** — Configurable deadline that automatically completes active matches
-
-## Project Structure
-
-```
-├── app.rb                  # Application entry point
-├── controllers/            # Route handlers (15 files)
-├── models/                 # Data models and business logic (16 files)
-├── views/                  # ERB templates (23 files)
-│   └── common/             # Shared partials (header, footer)
-├── helpers/                # Input validation utilities
-├── public/                 # Static assets (CSS, JS, images)
-├── db/                     # Database, schema, and migrations
-├── gen_db/                 # Database generation and seed scripts
-└── spec/                   # RSpec acceptance tests
+```sh
+npm ci
+npm run dev
 ```
 
-## Setup
+Open `http://127.0.0.1:5173`. For a production build with the deployment’s security headers:
 
-```bash
-# Set up with test data (pre-populated database)
-sh setup_test.sh
-
-# Or set up for production (clean database, admin account only)
-sh setup.sh
-
-# Start the server
-ruby app.rb
+```sh
+npm run build
+npm run preview
 ```
 
-### Default Test Credentials
+Open `http://127.0.0.1:4173`. Both servers bind to loopback. The preview serves only `dist/`.
 
-| Role | Username | Password |
-|---|---|---|
-| Admin | `admin` | `admin` |
-| Mentee | `user` | `user` |
-| Mentor | `user1` | `user1` |
+## Explore
 
-## Running Tests
+- **Guided tour:** eight steps covering mentoring requests, mentor acceptance, profile visibility, notifications, account approval and support. Perform actions yourself or select “Show me & continue.” The tour uses separate data and restores your previous changes on exit.
+- **Mentee:** search mentors, filter by subject and interests, edit a profile, send introductions, follow requests, view an accepted connection, or ask for support.
+- **Mentor:** accept or decline introductions, set availability, offer a place to a waitlisted student, and view active connections.
+- **Administrator:** approve members, review support and withdrawal requests, flag accounts, set capacity, and complete the demo semester.
+- **Reset:** restore the fictional starting data at any time. Changes persist across refresh in the current tab using a bounded, validated action log in `sessionStorage`. Storage-disabled browsers still work in memory.
 
-```bash
-# Run acceptance tests
-rspec
+Switch roles using **View as** above the main content. All data is fictional, all actions are simulations, and no email or message is delivered to a real person. Names and contact visibility demonstrate the original product’s rules; the synthetic fixture data itself is public. This is an independent student project, not an official university service.
 
-# View coverage report
-pushd spec/_coverage/; python3 -m http.server 9999; popd
-# Visit http://localhost:9999/#_AllFiles
+## Verification
+
+```sh
+npx playwright install chromium
+npm run check
+npm run audit:dependencies
 ```
 
-## Database Schema
+`check` runs strict TypeScript compilation, the production build, a deployment-file audit, model tests, and browser tests on desktop and mobile Chromium. Browser tests cover the entire request/withdrawal flow, tour isolation, approvals, capacity, waitlists, reset, storage failures, keyboard use, WCAG automated checks, and static security boundaries. CI also checks dependency advisories.
 
-16 tables covering users, authentication, profiles (general/mentor/mentee), matches, expertise, languages, nationalities, messages, support tickets, flagged accounts, and global configuration.
+The portfolio’s build copies only `assets/`, never the historical `public/` directory. Hash routes support direct navigation and refresh without a server rewrite. Fonts and icons are served locally.
 
-Key relationships:
-- Users have one authentication record, one profile, and optionally a mentor or mentee profile
-- Matches link a mentor and mentee with status tracking and date management
-- Users can have many expertises and languages (many-to-many via join tables)
-- Support tickets reference both the sender and the target user
-- System messages are templated and tracked with read/unread status
+## Deployment and security
+
+The recommended deployment is **static Vercel hosting only**. Nothing needs to run in the homelab, and existing Tailscale Funnel applications need no changes.
+
+The [verified preview](https://uniconnect-portfolio-jdpnpjx29-j-ameswongs-projects.vercel.app) requires the owner's Vercel sign-in. No production deployment is retained. The complete tour has also been checked on the hosted preview at desktop and mobile sizes.
+
+- [Deployment configuration, rationale, and exact next steps](docs/DEPLOYMENT.md)
+- [Security audit, legacy findings, and limitations](docs/SECURITY.md)
+- [Historical Ruby dependency findings](docs/legacy-dependencies.json)
+
+The archived Sinatra server refuses production startup and is disabled by default outside the test environment. Its application vulnerabilities remain unresolved because it is historical source rather than the deployed runtime. Do not expose it through Funnel, a reverse proxy, or a public port.
+
+## Source map
+
+| Location                                            | Purpose                                                       |
+| --------------------------------------------------- | ------------------------------------------------------------- |
+| `src/demo/model.ts`                                 | Fictional data, validated actions, matching rules, and replay |
+| `src/App.tsx`                                       | Role navigation, session persistence, and tour isolation      |
+| `src/pages/`                                        | Responsive mentee, mentor, administrator, and project screens |
+| `src/components/`                                   | Shared controls, accessible dialogs, and the guided tour      |
+| `tests/`                                            | Model and production-browser regression tests                 |
+| `scripts/`                                          | Static preview, deployment audit, and legacy startup guard    |
+| `assets/`                                           | Only the public assets intended for the portfolio             |
+| `controllers/`, `models/`, `views/`, `db/`, `spec/` | Original Ruby coursework source and tests                     |
+
+The original architecture, contribution history, feature descriptions, and local coursework setup are preserved in [the historical README](docs/COURSEWORK.md). Its setup scripts replace databases; they are unnecessary for the portfolio.

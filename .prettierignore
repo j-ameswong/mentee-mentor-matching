@@ -1,0 +1,9 @@
+node_modules
+dist
+Gemfile.lock
+package-lock.json
+public
+views
+test-results
+playwright-report
+docs/COURSEWORK.md

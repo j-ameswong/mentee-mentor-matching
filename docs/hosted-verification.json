@@ -1,0 +1,182 @@
+{
+  "previewUrl": "https://uniconnect-portfolio-jdpnpjx29-j-ameswongs-projects.vercel.app",
+  "verifiedAt": "2026-10-02",
+  "checks": [
+    {
+      "path": "/",
+      "status": 200,
+      "contentType": "text/html; charset=utf-8",
+      "csp": "default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; worker-src 'none'; manifest-src 'none'; upgrade-insecure-requests",
+      "nosniff": "nosniff",
+      "frame": "DENY",
+      "referrer": "no-referrer",
+      "permissions": "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
+      "coop": "same-origin",
+      "hsts": "max-age=63072000; includeSubDomains",
+      "robots": "noindex",
+      "matchesLocalBuild": true,
+      "toolbarInjected": false
+    },
+    {
+      "path": "/app.rb",
+      "status": 404,
+      "contentType": "text/plain; charset=utf-8",
+      "csp": "default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; worker-src 'none'; manifest-src 'none'; upgrade-insecure-requests",
+      "nosniff": "nosniff",
+      "frame": "DENY",
+      "referrer": "no-referrer",
+      "permissions": "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
+      "coop": "same-origin",
+      "hsts": "max-age=63072000; includeSubDomains",
+      "robots": "noindex"
+    },
+    {
+      "path": "/.env",
+      "status": 404,
+      "contentType": "text/plain; charset=utf-8",
+      "csp": "default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; worker-src 'none'; manifest-src 'none'; upgrade-insecure-requests",
+      "nosniff": "nosniff",
+      "frame": "DENY",
+      "referrer": "no-referrer",
+      "permissions": "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
+      "coop": "same-origin",
+      "hsts": "max-age=63072000; includeSubDomains",
+      "robots": "noindex"
+    },
+    {
+      "path": "/db/db_test.sqlite3",
+      "status": 404,
+      "contentType": "text/plain; charset=utf-8",
+      "csp": "default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; worker-src 'none'; manifest-src 'none'; upgrade-insecure-requests",
+      "nosniff": "nosniff",
+      "frame": "DENY",
+      "referrer": "no-referrer",
+      "permissions": "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
+      "coop": "same-origin",
+      "hsts": "max-age=63072000; includeSubDomains",
+      "robots": "noindex"
+    },
+    {
+      "path": "/public/images/user/970546678",
+      "status": 404,
+      "contentType": "text/plain; charset=utf-8",
+      "csp": "default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; worker-src 'none'; manifest-src 'none'; upgrade-insecure-requests",
+      "nosniff": "nosniff",
+      "frame": "DENY",
+      "referrer": "no-referrer",
+      "permissions": "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
+      "coop": "same-origin",
+      "hsts": "max-age=63072000; includeSubDomains",
+      "robots": "noindex"
+    },
+    {
+      "path": "/api",
+      "status": 404,
+      "contentType": "text/plain; charset=utf-8",
+      "csp": "default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; worker-src 'none'; manifest-src 'none'; upgrade-insecure-requests",
+      "nosniff": "nosniff",
+      "frame": "DENY",
+      "referrer": "no-referrer",
+      "permissions": "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
+      "coop": "same-origin",
+      "hsts": "max-age=63072000; includeSubDomains",
+      "robots": "noindex"
+    },
+    {
+      "path": "/signup/admin",
+      "status": 404,
+      "contentType": "text/plain; charset=utf-8",
+      "csp": "default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; worker-src 'none'; manifest-src 'none'; upgrade-insecure-requests",
+      "nosniff": "nosniff",
+      "frame": "DENY",
+      "referrer": "no-referrer",
+      "permissions": "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
+      "coop": "same-origin",
+      "hsts": "max-age=63072000; includeSubDomains",
+      "robots": "noindex"
+    },
+    {
+      "path": "/assets/index-C9FSI_cH.css",
+      "status": 200,
+      "contentType": "text/css; charset=utf-8",
+      "csp": "default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; worker-src 'none'; manifest-src 'none'; upgrade-insecure-requests",
+      "nosniff": "nosniff",
+      "frame": "DENY",
+      "referrer": "no-referrer",
+      "permissions": "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
+      "coop": "same-origin",
+      "hsts": "max-age=63072000; includeSubDomains",
+      "robots": "noindex",
+      "matchesLocalBuild": true
+    },
+    {
+      "path": "/assets/index-Cf-xENib.js",
+      "status": 200,
+      "contentType": "application/javascript; charset=utf-8",
+      "csp": "default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; worker-src 'none'; manifest-src 'none'; upgrade-insecure-requests",
+      "nosniff": "nosniff",
+      "frame": "DENY",
+      "referrer": "no-referrer",
+      "permissions": "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
+      "coop": "same-origin",
+      "hsts": "max-age=63072000; includeSubDomains",
+      "robots": "noindex",
+      "matchesLocalBuild": true
+    }
+  ],
+  "publicAccess": [
+    {
+      "url": "https://uniconnect-portfolio.vercel.app",
+      "initialStatus": 404,
+      "redirectHost": null,
+      "servesPortfolio": false
+    },
+    {
+      "url": "https://uniconnect-portfolio-jdpnpjx29-j-ameswongs-projects.vercel.app",
+      "initialStatus": 302,
+      "redirectHost": "vercel.com",
+      "servesPortfolio": false
+    },
+    {
+      "url": "https://uniconnect-portfolio-bfx9sj9bd-j-ameswongs-projects.vercel.app",
+      "initialStatus": 404,
+      "redirectHost": null,
+      "servesPortfolio": false
+    }
+  ],
+  "deployment": {
+    "id": "dpl_Ch65NxhBvDimo52UsnPkDgDbdGNz",
+    "readyState": "READY",
+    "environment": "preview",
+    "nodeVersion": "24.x",
+    "functions": 0,
+    "toolbarDisabled": true,
+    "temporaryVerificationBypassRevoked": true
+  },
+  "hostedBrowserChecks": [
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "tourStepsCompleted": 8,
+      "restoredExploration": true,
+      "horizontalOverflow": false,
+      "runtimeErrors": 0,
+      "externalRequests": 0,
+      "originRequests": 4
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "tourStepsCompleted": 8,
+      "restoredExploration": true,
+      "horizontalOverflow": false,
+      "runtimeErrors": 0,
+      "externalRequests": 0,
+      "originRequests": 4
+    }
+  ]
+}

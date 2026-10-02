@@ -1,0 +1,18 @@
+# Only the static showcase build inputs belong in Vercel's build context.
+/*
+!/package.json
+!/package-lock.json
+!/tsconfig.json
+!/vite.config.ts
+!/index.html
+!/vercel.json
+!/src
+!/src/**
+!/assets
+!/assets/**
+!/scripts
+/scripts/*
+!/scripts/audit-build.mjs
+!/tests
+!/tests/**
+!/playwright.config.ts

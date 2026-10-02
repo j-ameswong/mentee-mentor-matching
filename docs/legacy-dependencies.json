@@ -1,0 +1,418 @@
+{
+  "auditedAt": "2026-10-02 18:01:16 +0100",
+  "tool": "bundler-audit 0.9.3",
+  "scope": "Historical Gemfile.lock, excluded from the portfolio deployment. Version matches are not proof of reachable exploitation. Repeated platform records deduplicated.",
+  "lockSha256": "34d2fae9c325142d68a7ba32bb1d292bb2a394d2a94437932c8e6a5921a34454",
+  "advisoryDatabaseCommit": "cb6460a5876f3bf6ef908718457bfa9dd4ca9c06",
+  "uniqueFindings": 51,
+  "findings": [
+    {
+      "package": "activerecord",
+      "version": "5.2.8.1",
+      "advisory": "CVE-2025-55193",
+      "severity": "unrated",
+      "url": "https://github.com/rails/rails/security/advisories/GHSA-76r7-hhxj-r776",
+      "patchedVersions": ["~> 7.1.5, >= 7.1.5.2", "~> 7.2.2, >= 7.2.2.2", ">= 8.0.2.1"]
+    },
+    {
+      "package": "activesupport",
+      "version": "5.2.8.1",
+      "advisory": "CVE-2023-28120",
+      "severity": "medium",
+      "url": "https://discuss.rubyonrails.org/t/cve-2023-28120-possible-xss-security-vulnerability-in-safebuffer-bytesplice/82469",
+      "patchedVersions": ["~> 6.1.7, >= 6.1.7.3", ">= 7.0.4.3"]
+    },
+    {
+      "package": "activesupport",
+      "version": "5.2.8.1",
+      "advisory": "CVE-2023-38037",
+      "severity": "medium",
+      "url": "https://github.com/rails/rails/releases/tag/v7.0.7.1",
+      "patchedVersions": ["~> 6.1.7, >= 6.1.7.5", ">= 7.0.7.1"]
+    },
+    {
+      "package": "activesupport",
+      "version": "5.2.8.1",
+      "advisory": "CVE-2026-33169",
+      "severity": "unrated",
+      "url": "https://github.com/rails/rails/security/advisories/GHSA-cg4j-q9v8-6v38",
+      "patchedVersions": ["~> 7.2.3, >= 7.2.3.1", "~> 8.0.4, >= 8.0.4.1", ">= 8.1.2.1"]
+    },
+    {
+      "package": "activesupport",
+      "version": "5.2.8.1",
+      "advisory": "CVE-2026-33170",
+      "severity": "unrated",
+      "url": "https://github.com/rails/rails/security/advisories/GHSA-89vf-4333-qx8v",
+      "patchedVersions": ["~> 7.2.3, >= 7.2.3.1", "~> 8.0.4, >= 8.0.4.1", ">= 8.1.2.1"]
+    },
+    {
+      "package": "activesupport",
+      "version": "5.2.8.1",
+      "advisory": "CVE-2026-33176",
+      "severity": "unrated",
+      "url": "https://github.com/rails/rails/security/advisories/GHSA-2j26-frm8-cmj9",
+      "patchedVersions": ["~> 7.2.3, >= 7.2.3.1", "~> 8.0.4, >= 8.0.4.1", ">= 8.1.2.1"]
+    },
+    {
+      "package": "addressable",
+      "version": "2.8.7",
+      "advisory": "CVE-2026-35611",
+      "severity": "high",
+      "url": "https://github.com/sporkmonger/addressable/security/advisories/GHSA-h27x-rffw-24p4",
+      "patchedVersions": [">= 2.9.0"]
+    },
+    {
+      "package": "concurrent-ruby",
+      "version": "1.3.5",
+      "advisory": "CVE-2026-54904",
+      "severity": "high",
+      "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-54904",
+      "patchedVersions": [">= 1.3.7"]
+    },
+    {
+      "package": "concurrent-ruby",
+      "version": "1.3.5",
+      "advisory": "CVE-2026-54905",
+      "severity": "medium",
+      "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-54905",
+      "patchedVersions": [">= 1.3.7"]
+    },
+    {
+      "package": "concurrent-ruby",
+      "version": "1.3.5",
+      "advisory": "CVE-2026-54906",
+      "severity": "unrated",
+      "url": "https://www.cve.org/CVERecord/SearchResults?query=CVE-2026-54906",
+      "patchedVersions": [">= 1.3.7"]
+    },
+    {
+      "package": "nokogiri",
+      "version": "1.18.8",
+      "advisory": "GHSA-353f-x4gh-cqq8",
+      "severity": "unrated",
+      "url": "https://github.com/sparklemotion/nokogiri/security/advisories/GHSA-353f-x4gh-cqq8",
+      "patchedVersions": [">= 1.18.9"]
+    },
+    {
+      "package": "nokogiri",
+      "version": "1.18.8",
+      "advisory": "GHSA-5prr-v3j2-97mh",
+      "severity": "unrated",
+      "url": "https://github.com/sparklemotion/nokogiri/security/advisories/GHSA-5prr-v3j2-97mh",
+      "patchedVersions": [">= 1.19.4"]
+    },
+    {
+      "package": "nokogiri",
+      "version": "1.18.8",
+      "advisory": "GHSA-5v8h-3h3q-446p",
+      "severity": "unrated",
+      "url": "https://github.com/sparklemotion/nokogiri/security/advisories/GHSA-5v8h-3h3q-446p",
+      "patchedVersions": [">= 1.19.4"]
+    },
+    {
+      "package": "nokogiri",
+      "version": "1.18.8",
+      "advisory": "GHSA-8678-w3jw-xfc2",
+      "severity": "low",
+      "url": "https://github.com/sparklemotion/nokogiri/security/advisories/GHSA-8678-w3jw-xfc2",
+      "patchedVersions": [">= 1.19.4"]
+    },
+    {
+      "package": "nokogiri",
+      "version": "1.18.8",
+      "advisory": "GHSA-9cv2-cfxc-v4v2",
+      "severity": "unrated",
+      "url": "https://github.com/sparklemotion/nokogiri/security/advisories/GHSA-9cv2-cfxc-v4v2",
+      "patchedVersions": [">= 1.19.4"]
+    },
+    {
+      "package": "nokogiri",
+      "version": "1.18.8",
+      "advisory": "GHSA-c4rq-3m3g-8wgx",
+      "severity": "high",
+      "url": "https://github.com/sparklemotion/nokogiri/security/advisories/GHSA-c4rq-3m3g-8wgx",
+      "patchedVersions": [">= 1.19.3"]
+    },
+    {
+      "package": "nokogiri",
+      "version": "1.18.8",
+      "advisory": "GHSA-g9g8-vgvw-g3vf",
+      "severity": "unrated",
+      "url": "https://github.com/sparklemotion/nokogiri/security/advisories/GHSA-g9g8-vgvw-g3vf",
+      "patchedVersions": [">= 1.19.4"]
+    },
+    {
+      "package": "nokogiri",
+      "version": "1.18.8",
+      "advisory": "GHSA-p67v-3w7g-wjg7",
+      "severity": "unrated",
+      "url": "https://github.com/sparklemotion/nokogiri/security/advisories/GHSA-p67v-3w7g-wjg7",
+      "patchedVersions": [">= 1.19.4"]
+    },
+    {
+      "package": "nokogiri",
+      "version": "1.18.8",
+      "advisory": "GHSA-phwj-rprq-35pp",
+      "severity": "unrated",
+      "url": "https://github.com/sparklemotion/nokogiri/security/advisories/GHSA-phwj-rprq-35pp",
+      "patchedVersions": [">= 1.19.4"]
+    },
+    {
+      "package": "nokogiri",
+      "version": "1.18.8",
+      "advisory": "GHSA-v2fc-qm4h-8hqv",
+      "severity": "medium",
+      "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-79771",
+      "patchedVersions": [">= 1.19.3"]
+    },
+    {
+      "package": "nokogiri",
+      "version": "1.18.8",
+      "advisory": "GHSA-wfpw-mmfh-qq69",
+      "severity": "unrated",
+      "url": "https://github.com/sparklemotion/nokogiri/security/advisories/GHSA-wfpw-mmfh-qq69",
+      "patchedVersions": [">= 1.19.4"]
+    },
+    {
+      "package": "nokogiri",
+      "version": "1.18.8",
+      "advisory": "GHSA-wjv4-x9w8-wm3h",
+      "severity": "unrated",
+      "url": "https://github.com/sparklemotion/nokogiri/security/advisories/GHSA-wjv4-x9w8-wm3h",
+      "patchedVersions": [">= 1.19.4"]
+    },
+    {
+      "package": "nokogiri",
+      "version": "1.18.8",
+      "advisory": "GHSA-wx95-c6cv-8532",
+      "severity": "medium",
+      "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-79772",
+      "patchedVersions": [">= 1.19.1"]
+    },
+    {
+      "package": "puma",
+      "version": "6.6.0",
+      "advisory": "CVE-2026-47736",
+      "severity": "high",
+      "url": "https://www.cve.org/CVERecord?id=CVE-2026-47736",
+      "patchedVersions": ["~> 7.2.1", ">= 8.0.2"]
+    },
+    {
+      "package": "puma",
+      "version": "6.6.0",
+      "advisory": "CVE-2026-47737",
+      "severity": "high",
+      "url": "https://www.cve.org/CVERecord/SearchResults?query=CVE-2026-47737",
+      "patchedVersions": ["~> 7.2.1", ">= 8.0.2"]
+    },
+    {
+      "package": "rack",
+      "version": "3.1.13",
+      "advisory": "CVE-2025-46727",
+      "severity": "high",
+      "url": "https://github.com/rack/rack/security/advisories/GHSA-gjh7-p2fx-99vx",
+      "patchedVersions": ["~> 2.2.14", "~> 3.0.16", ">= 3.1.14"]
+    },
+    {
+      "package": "rack",
+      "version": "3.1.13",
+      "advisory": "CVE-2025-49007",
+      "severity": "unrated",
+      "url": "https://github.com/rack/rack/security/advisories/GHSA-47m2-26rw-j2jw",
+      "patchedVersions": [">= 3.1.16"]
+    },
+    {
+      "package": "rack",
+      "version": "3.1.13",
+      "advisory": "CVE-2025-61770",
+      "severity": "high",
+      "url": "https://github.com/rack/rack/security/advisories/GHSA-p543-xpfm-54cp",
+      "patchedVersions": ["~> 2.2.19", "~> 3.1.17", ">= 3.2.2"]
+    },
+    {
+      "package": "rack",
+      "version": "3.1.13",
+      "advisory": "CVE-2025-61771",
+      "severity": "high",
+      "url": "https://github.com/rack/rack/security/advisories/GHSA-w9pc-fmgc-vxvw",
+      "patchedVersions": ["~> 2.2.19", "~> 3.1.17", ">= 3.2.2"]
+    },
+    {
+      "package": "rack",
+      "version": "3.1.13",
+      "advisory": "CVE-2025-61772",
+      "severity": "high",
+      "url": "https://github.com/rack/rack/security/advisories/GHSA-wpv5-97wm-hp9c",
+      "patchedVersions": ["~> 2.2.19", "~> 3.1.17", ">= 3.2.2"]
+    },
+    {
+      "package": "rack",
+      "version": "3.1.13",
+      "advisory": "CVE-2025-61780",
+      "severity": "medium",
+      "url": "https://github.com/rack/rack/security/advisories/GHSA-r657-rxjc-j557",
+      "patchedVersions": ["~> 2.2.20", "~> 3.1.18", ">= 3.2.3"]
+    },
+    {
+      "package": "rack",
+      "version": "3.1.13",
+      "advisory": "CVE-2025-61919",
+      "severity": "high",
+      "url": "https://github.com/rack/rack/security/advisories/GHSA-6xw4-3v39-52mm",
+      "patchedVersions": ["~> 2.2.20", "~> 3.1.18", ">= 3.2.3"]
+    },
+    {
+      "package": "rack",
+      "version": "3.1.13",
+      "advisory": "CVE-2026-22860",
+      "severity": "high",
+      "url": "https://github.com/rack/rack/security/advisories/GHSA-mxw3-3hh2-x2mh",
+      "patchedVersions": ["~> 2.2.22", "~> 3.1.20", ">= 3.2.5"]
+    },
+    {
+      "package": "rack",
+      "version": "3.1.13",
+      "advisory": "CVE-2026-25500",
+      "severity": "medium",
+      "url": "https://github.com/rack/rack/security/advisories/GHSA-whrj-4476-wvmp",
+      "patchedVersions": ["~> 2.2.22", "~> 3.1.20", ">= 3.2.5"]
+    },
+    {
+      "package": "rack",
+      "version": "3.1.13",
+      "advisory": "CVE-2026-26961",
+      "severity": "low",
+      "url": "https://github.com/rack/rack/security/advisories/GHSA-vgpv-f759-9wx3",
+      "patchedVersions": ["~> 2.2.23", "~> 3.1.21", ">= 3.2.6"]
+    },
+    {
+      "package": "rack",
+      "version": "3.1.13",
+      "advisory": "CVE-2026-32762",
+      "severity": "medium",
+      "url": "https://github.com/rack/rack/security/advisories/GHSA-qfgr-crr9-7r49",
+      "patchedVersions": ["~> 3.1.21", ">= 3.2.6"]
+    },
+    {
+      "package": "rack",
+      "version": "3.1.13",
+      "advisory": "CVE-2026-34230",
+      "severity": "medium",
+      "url": "https://github.com/rack/rack/security/advisories/GHSA-v569-hp3g-36wr",
+      "patchedVersions": ["~> 2.2.23", "~> 3.1.21", ">= 3.2.6"]
+    },
+    {
+      "package": "rack",
+      "version": "3.1.13",
+      "advisory": "CVE-2026-34763",
+      "severity": "medium",
+      "url": "https://github.com/rack/rack/security/advisories/GHSA-7mqq-6cf9-v2qp",
+      "patchedVersions": ["~> 2.2.23", "~> 3.1.21", ">= 3.2.6"]
+    },
+    {
+      "package": "rack",
+      "version": "3.1.13",
+      "advisory": "CVE-2026-34785",
+      "severity": "high",
+      "url": "https://github.com/rack/rack/security/advisories/GHSA-h2jq-g4cq-5ppq",
+      "patchedVersions": ["~> 2.2.23", "~> 3.1.21", ">= 3.2.6"]
+    },
+    {
+      "package": "rack",
+      "version": "3.1.13",
+      "advisory": "CVE-2026-34786",
+      "severity": "medium",
+      "url": "https://github.com/rack/rack/security/advisories/GHSA-q4qf-9j86-f5mh",
+      "patchedVersions": ["~> 2.2.23", "~> 3.1.21", ">= 3.2.6"]
+    },
+    {
+      "package": "rack",
+      "version": "3.1.13",
+      "advisory": "CVE-2026-34826",
+      "severity": "medium",
+      "url": "https://github.com/rack/rack/security/advisories/GHSA-x8cg-fq8g-mxfx",
+      "patchedVersions": ["~> 2.2.23", "~> 3.1.21", ">= 3.2.6"]
+    },
+    {
+      "package": "rack",
+      "version": "3.1.13",
+      "advisory": "CVE-2026-34827",
+      "severity": "high",
+      "url": "https://github.com/rack/rack/security/advisories/GHSA-v6x5-cg8r-vv6x",
+      "patchedVersions": ["~> 3.1.21", ">= 3.2.6"]
+    },
+    {
+      "package": "rack",
+      "version": "3.1.13",
+      "advisory": "CVE-2026-34829",
+      "severity": "high",
+      "url": "https://github.com/rack/rack/security/advisories/GHSA-8vqr-qjwx-82mw",
+      "patchedVersions": ["~> 2.2.23", "~> 3.1.21", ">= 3.2.6"]
+    },
+    {
+      "package": "rack",
+      "version": "3.1.13",
+      "advisory": "CVE-2026-34830",
+      "severity": "medium",
+      "url": "https://github.com/rack/rack/security/advisories/GHSA-qv7j-4883-hwh7",
+      "patchedVersions": ["~> 2.2.23", "~> 3.1.21", ">= 3.2.6"]
+    },
+    {
+      "package": "rack",
+      "version": "3.1.13",
+      "advisory": "CVE-2026-34831",
+      "severity": "medium",
+      "url": "https://github.com/rack/rack/security/advisories/GHSA-q2ww-5357-x388",
+      "patchedVersions": ["~> 2.2.23", "~> 3.1.21", ">= 3.2.6"]
+    },
+    {
+      "package": "rack",
+      "version": "3.1.13",
+      "advisory": "CVE-2026-34835",
+      "severity": "medium",
+      "url": "https://github.com/rack/rack/security/advisories/GHSA-g2pf-xv49-m2h5",
+      "patchedVersions": ["~> 3.1.21", ">= 3.2.6"]
+    },
+    {
+      "package": "rack-session",
+      "version": "2.1.1",
+      "advisory": "CVE-2026-39324",
+      "severity": "unrated",
+      "url": "https://github.com/rack/rack-session/security/advisories/GHSA-33qg-7wpp-89cq",
+      "patchedVersions": [">= 2.1.2"]
+    },
+    {
+      "package": "sinatra",
+      "version": "4.1.1",
+      "advisory": "CVE-2025-61921",
+      "severity": "unrated",
+      "url": "https://nvd.nist.gov/vuln/detail/CVE-2025-61921",
+      "patchedVersions": [">= 4.2.0"]
+    },
+    {
+      "package": "sqlite3",
+      "version": "2.6.0",
+      "advisory": "CVE-2026-54619",
+      "severity": "unrated",
+      "url": "https://www.cve.org/CVERecord/SearchResults?query=CVE-2026-54619",
+      "patchedVersions": [">= 2.9.5"]
+    },
+    {
+      "package": "sqlite3",
+      "version": "2.6.0",
+      "advisory": "CVE-2026-54620",
+      "severity": "unrated",
+      "url": "https://www.cve.org/CVERecord/SearchResults?query=CVE-2026-54620",
+      "patchedVersions": [">= 2.9.5"]
+    },
+    {
+      "package": "sqlite3",
+      "version": "2.6.0",
+      "advisory": "GHSA-mwm8-39rw-8826",
+      "severity": "unrated",
+      "url": "https://github.com/sparklemotion/sqlite3-ruby/security/advisories/GHSA-mwm8-39rw-8826",
+      "patchedVersions": [">= 2.9.6"]
+    }
+  ]
+}

@@ -1,0 +1,178 @@
+{
+  "framework": {
+    "name": "Vite",
+    "slug": "vite"
+  },
+  "fileCount": 28,
+  "totalSize": 267202,
+  "files": [
+    {
+      "path": "assets/favicon.svg",
+      "size": 253,
+      "mode": 33188,
+      "sha": "da5dc19e101b49cedf2498471fdae45393cfa3bb"
+    },
+    {
+      "path": "assets/third-party-notices.txt",
+      "size": 12262,
+      "mode": 33188,
+      "sha": "c0c42cc7f54897c82c236ae41a7640c11656c15d"
+    },
+    {
+      "path": "index.html",
+      "size": 1226,
+      "mode": 33188,
+      "sha": "73c446377565f61756325bdcd13f3d4c7c8cc2cc"
+    },
+    {
+      "path": "package-lock.json",
+      "size": 55896,
+      "mode": 33188,
+      "sha": "9f59420bdd1fbb21cb2a584d3fe08c6c146592fa"
+    },
+    {
+      "path": "package.json",
+      "size": 989,
+      "mode": 33188,
+      "sha": "6443ea330760d6ac4eacb44e4af95d7be95b1747"
+    },
+    {
+      "path": "playwright.config.ts",
+      "size": 640,
+      "mode": 33188,
+      "sha": "01a1f23fcb340b13babe8629a90689aaaff5a2de"
+    },
+    {
+      "path": "scripts/audit-build.mjs",
+      "size": 1891,
+      "mode": 33188,
+      "sha": "03483e4c80ffa60d7fa3789d0db6636f309c3771"
+    },
+    {
+      "path": "src/App.tsx",
+      "size": 19230,
+      "mode": 33188,
+      "sha": "98ca9e0693e3c9936dc2418c473391f97b563485"
+    },
+    {
+      "path": "src/components/Tour.tsx",
+      "size": 5458,
+      "mode": 33188,
+      "sha": "6a5423ff1368a2be74dd6c97cb6c05ca64e36d55"
+    },
+    {
+      "path": "src/components/ui.tsx",
+      "size": 5225,
+      "mode": 33188,
+      "sha": "0bc7cfb9aad928b8f1d905c031d80001b686d986"
+    },
+    {
+      "path": "src/demo/context.tsx",
+      "size": 583,
+      "mode": 33188,
+      "sha": "9ee8776132bdee4913cab3e0159bb805278eb73b"
+    },
+    {
+      "path": "src/demo/model.ts",
+      "size": 22491,
+      "mode": 33188,
+      "sha": "06eaf716a91403235d48a9d494e5013b970abcee"
+    },
+    {
+      "path": "src/main.tsx",
+      "size": 1272,
+      "mode": 33188,
+      "sha": "00be7db643f78bca8934519afa1410277547966b"
+    },
+    {
+      "path": "src/pages/About.tsx",
+      "size": 3281,
+      "mode": 33188,
+      "sha": "d4b69b7944bf16e6b7cc70afa598b430f8e05b6a"
+    },
+    {
+      "path": "src/pages/Admin.tsx",
+      "size": 8472,
+      "mode": 33188,
+      "sha": "8d85fd14fcd4ee8d9a50b517650b073567326e73"
+    },
+    {
+      "path": "src/pages/Connections.tsx",
+      "size": 11105,
+      "mode": 33188,
+      "sha": "5355e4699ade5894878862d2454eda749be500c9"
+    },
+    {
+      "path": "src/pages/Discover.tsx",
+      "size": 9703,
+      "mode": 33188,
+      "sha": "daf060342bead0ec47ea31d739ad4f2e85081865"
+    },
+    {
+      "path": "src/pages/Overview.tsx",
+      "size": 8139,
+      "mode": 33188,
+      "sha": "195fec0e98020e5922bee1113a7691535015638c"
+    },
+    {
+      "path": "src/pages/Personal.tsx",
+      "size": 6591,
+      "mode": 33188,
+      "sha": "c8302fc5267cf53ff4c26d182c73db9823cb9938"
+    },
+    {
+      "path": "src/pages/Support.tsx",
+      "size": 10080,
+      "mode": 33188,
+      "sha": "14ed7e24fc05bf6ca88e9136e6e1da5c2b664904"
+    },
+    {
+      "path": "src/responsive.css",
+      "size": 18678,
+      "mode": 33188,
+      "sha": "56afcbff7bd018081d021b00f58f55c7e420642d"
+    },
+    {
+      "path": "src/styles.css",
+      "size": 36316,
+      "mode": 33188,
+      "sha": "bda39dcd2fc9266cd5c7b71b485bf68b60167247"
+    },
+    {
+      "path": "src/vite-env.d.ts",
+      "size": 38,
+      "mode": 33188,
+      "sha": "e2eac6bcc8767d416f859eb09486cc8709de95a5"
+    },
+    {
+      "path": "tests/model.test.ts",
+      "size": 11104,
+      "mode": 33188,
+      "sha": "56ece36c9398f4cc9faf1b44751b42222af56319"
+    },
+    {
+      "path": "tests/portfolio.e2e.ts",
+      "size": 14323,
+      "mode": 33188,
+      "sha": "d847fcda51ed49685682292553388a8f5163d76c"
+    },
+    {
+      "path": "tsconfig.json",
+      "size": 519,
+      "mode": 33188,
+      "sha": "7f99b7cac174c915e55e88b3edc60c0c1f2b4f55"
+    },
+    {
+      "path": "vercel.json",
+      "size": 1092,
+      "mode": 33188,
+      "sha": "4408d0b5a43383fb4d412a372cb52b78e5c7014e"
+    },
+    {
+      "path": "vite.config.ts",
+      "size": 345,
+      "mode": 33188,
+      "sha": "8bfa9a78d95a579227cf6c0e28eb2c00f4ff07cc"
+    }
+  ]
+}
